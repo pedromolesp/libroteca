@@ -1,0 +1,64 @@
+name: libroteca
+description: Programa para almacenar libros, valorar y puntuar.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  sqflite: ^1.3.1
+
+ 
+  cupertino_icons: ^0.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/
+    - assets/images/
+
+  fonts:
+  - family: muli-extra-bold
+    fonts:
+    - asset: assets/fonts/Muli-ExtraBold.ttf
+   
+  - family: muli-black
+    fonts:
+    - asset: assets/fonts/Muli-Black.ttf
+  - family: muli-extra-light
+    fonts:
+    - asset: assets/fonts/Muli-ExtraLight.ttf
+  
+  - family: muli-bold
+    fonts:
+    - asset: assets/fonts/Muli-Bold.ttf
+  - family: muli-italic
+    fonts:
+    - asset: assets/fonts/Muli-Italic.ttf
+  - family: muli-light
+    fonts:
+    - asset: assets/fonts/Muli-Light.ttf
+  - family: muli-medium
+    fonts:
+    - asset: assets/fonts/Muli-Medium.ttf
+  - family: muli-regular
+    fonts:
+    - asset: assets/fonts/Muli-Regular.ttf
+  - family: muli-semi-bold
+    fonts:
+    - asset: assets/fonts/Muli-SemiBold.ttf
