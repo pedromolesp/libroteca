@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:libroteca/src/styles/colors.dart';
+import 'package:libroteca/src/styles/fonts.dart';
 
-AppBar appBar = AppBar(
-  automaticallyImplyLeading: false,
-  title: Text(
-    "Libroteca",
-    style: TextStyle(color: whiteRed),
-  ),
-);
+getAppBar(String title, bool automaticallyImplyLeading, Size size) {
+  return AppBar(
+    automaticallyImplyLeading: automaticallyImplyLeading,
+    title: Text(
+      title,
+      style: TextStyle(
+          color: black,
+          fontSize: size.width * 0.05,
+          fontFamily: Fonts.muliBold),
+    ),
+  );
+}
