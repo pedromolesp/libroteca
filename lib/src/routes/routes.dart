@@ -7,6 +7,6 @@ Map<String, WidgetBuilder> getAplicationRoutes() {
   return <String, WidgetBuilder>{
     'loading': (BuildContext context) => LoadingPage(),
     'base': (BuildContext context) => BasePage(),
-    'create': (BuildContext context) => CreateBook()
+    'create': (BuildContext context) => CreateEditBook()
   };
 }

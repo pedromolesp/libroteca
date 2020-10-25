@@ -31,7 +31,7 @@ class DBProvider {
 
   static Future _onCreate(Database db, int version) async {
     await db.execute("""CREATE TABLE book (
-         id TEXT PRIMARY KEY,
+         id INTEGER PRIMARY KEY,
          paginas INTEGER,
          estado INTEGER,
          titulo TEXT,
@@ -49,7 +49,7 @@ class DBProvider {
 
   static Future _onUpgrade(Database db, int version, int newVersion) async {}
 
-  insertBook(Book book) async {
+  Future<int> insertBook(Book book) async {
     final db = await database;
     final res = await db.insert('book', book.toJson());
     return res;
