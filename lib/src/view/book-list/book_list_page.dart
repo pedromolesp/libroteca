@@ -61,6 +61,7 @@ class _BookListPageState extends State<BookListPage> {
                       child: Text(
                         "Biblioteca",
                         style: TextStyle(
+                            color: tabLibraryRead == 0 ? black : white,
                             fontFamily: Fonts.muliBold,
                             fontSize: size.width * 0.05),
                       ),
@@ -85,6 +86,7 @@ class _BookListPageState extends State<BookListPage> {
                       child: Text(
                         "Leídos",
                         style: TextStyle(
+                            color: tabLibraryRead == 1 ? black : white,
                             fontFamily: Fonts.muliBold,
                             fontSize: size.width * 0.05),
                       ),
@@ -96,7 +98,7 @@ class _BookListPageState extends State<BookListPage> {
           ),
         ),
       ),
-      body: tabLibraryRead == 0 ? LibraryList() : Container(),
+      body: tabLibraryRead == 0 ? LibraryList() : LibraryReadList(),
     );
   }
 
@@ -137,6 +139,37 @@ class LibraryList extends StatelessWidget {
           //     tapa: 0,
           //     titulo: "Los armarios negros");
           // books.add(book);
+          if (snapshot.data != null && snapshot.data.length > 0)
+            books = snapshot.data;
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              return ItemListBook(books[index]);
+            },
+            itemCount: books.length,
+          );
+        }
+      },
+    );
+  }
+}
+
+class LibraryReadList extends StatelessWidget {
+  const LibraryReadList({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: DBProvider.db.getAllReadBooks(),
+      builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
+        if (snapshot.connectionState != ConnectionState.done ||
+            snapshot.hasData == null) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          List<Book> books = [];
           if (snapshot.data != null && snapshot.data.length > 0)
             books = snapshot.data;
           return ListView.builder(

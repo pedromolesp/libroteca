@@ -38,12 +38,11 @@ class _ItemListBookState extends State<ItemListBook>
   Widget build(BuildContext context) {
     Size size = getMediaSize(context);
     return Dismissible(
-      // Show a red background as the item is swiped away.
       background: AnimatedContainer(
         duration: Duration(seconds: 1),
         width: size.width * 0.2,
-        height: size.height * 0.1,
-        margin: EdgeInsets.symmetric(vertical: size.height * 0.03),
+        height: size.height * 0.08,
+        margin: EdgeInsets.symmetric(vertical: size.height * 0.02),
         color: orangeDark,
         child: Icon(
           Icons.delete,
@@ -56,7 +55,7 @@ class _ItemListBookState extends State<ItemListBook>
         await DBProvider.db.deleteBook(widget.book.id);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: size.height * 0.03),
+        margin: EdgeInsets.symmetric(vertical: size.height * 0.02),
         width: size.width,
         height: size.height * 0.1,
         alignment: Alignment.centerRight,

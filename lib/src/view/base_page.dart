@@ -17,13 +17,14 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
     BookListPage(),
     Container(),
     Container(),
+    Container(),
   ];
   TextStyle ts;
 
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: 3);
+    _tabController = new TabController(vsync: this, length: 4);
     _tabController.addListener(_handleTabSelection);
   }
 
@@ -78,8 +79,10 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
           controller: _tabController,
           labelColor: black,
           indicatorColor: black,
+          labelPadding: EdgeInsets.symmetric(horizontal: 2),
           unselectedLabelColor: whiteRed,
-          labelStyle: TextStyle(fontFamily: Fonts.muliBold),
+          labelStyle: TextStyle(
+              fontFamily: Fonts.muliBold, fontSize: size.width * 0.035),
           tabs: [
             Tab(
               icon: Icon(
@@ -97,7 +100,13 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
               icon: Icon(
                 Icons.favorite,
               ),
-              text: 'Lista de deseos',
+              text: 'Deseos',
+            ),
+            Tab(
+              icon: Icon(
+                Icons.settings,
+              ),
+              text: 'Preferencias',
             ),
           ],
         ));
