@@ -3,7 +3,8 @@ description: Programa para almacenar libros, valorar y puntuar.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-
+module:
+  androidX: true
 version: 1.0.0+1
 
 environment:
@@ -17,6 +18,8 @@ dependencies:
   auto_size_text: ^2.1.0
   path_provider: ^1.6.22
   cupertino_icons: ^0.1.3
+  file_picker: ^2.0.11
+
 
 dev_dependencies:
   flutter_test:
@@ -62,3 +65,4 @@ flutter:
   - family: muli-semi-bold
     fonts:
     - asset: assets/fonts/Muli-SemiBold.ttf
+
