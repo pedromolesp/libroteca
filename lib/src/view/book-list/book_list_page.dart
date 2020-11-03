@@ -17,6 +17,7 @@ class _BookListPageState extends State<BookListPage> {
   int tabLibraryRead = 0;
 
   String search = "";
+  bool dragging = false;
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +115,7 @@ class LibraryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = getMediaSize(context);
     return FutureBuilder(
       future: DBProvider.db.getAllBooks(),
       builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
@@ -143,12 +145,65 @@ class LibraryList extends StatelessWidget {
             books = snapshot.data;
           return ListView.builder(
             itemBuilder: (context, index) {
-              return ItemListBook(books[index]);
+              return DragBox(books[index], size);
             },
             itemCount: books.length,
           );
         }
       },
+    );
+  }
+
+  Widget _getDragTargetView(List<Book> books, size) {
+    DragTarget(
+      onAccept: (Book book) {},
+      builder: (
+        BuildContext context,
+        List<dynamic> accepted,
+        List<dynamic> rejected,
+      ) {},
+    );
+  }
+}
+
+class DragBox extends StatefulWidget {
+  final Book book;
+  final Size size;
+
+  DragBox(this.book, this.size);
+
+  @override
+  DragBoxState createState() => DragBoxState();
+}
+
+class DragBoxState extends State<DragBox> {
+  Offset position = Offset(0.0, 0.0);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Draggable(
+        data: widget.book,
+        child: ItemListBook(widget.book),
+        onDraggableCanceled: (velocity, offset) {
+          setState(() {
+            position = offset;
+          });
+        },
+        feedback: Opacity(
+          opacity: 0.7,
+          child: Container(
+            child: Image.asset("assets/images/book_placeholder.png"),
+            width: widget.size.width * 0.2,
+            height: widget.size.width * 0.2,
+          ),
+        ),
+      ),
     );
   }
 }

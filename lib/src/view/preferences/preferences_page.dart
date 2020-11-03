@@ -7,8 +7,6 @@ import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:file_picker/file_picker.dart';
 
 class PreferencesPage extends StatelessWidget {
   @override
@@ -114,14 +112,14 @@ class PreferencesPage extends StatelessWidget {
   }
 
   importDatabase() async {
-    File file;
-    String json = "";
-    FilePickerResult result = await FilePicker.platform.pickFiles();
+    // File file;
+    // String json = "";
+    // FilePickerResult result = await FilePicker.platform.pickFiles();
 
-    if (result != null) {
-      file = File(result.files.single.path);
-      file.readAsString().then((value) => json = jsonDecode(value));
-      print(json);
-    }
+    // if (result != null) {
+    //   file = File(result.files.single.path);
+    //   file.readAsString().then((value) => json = jsonDecode(value));
+    //   print(json);
+    // }
   }
 }
