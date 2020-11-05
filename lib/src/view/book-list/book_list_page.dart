@@ -115,7 +115,6 @@ class LibraryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = getMediaSize(context);
     return FutureBuilder(
       future: DBProvider.db.getAllBooks(),
       builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
@@ -145,7 +144,7 @@ class LibraryList extends StatelessWidget {
             books = snapshot.data;
           return ListView.builder(
             itemBuilder: (context, index) {
-              return DragBox(books[index], size);
+              return ItemListBook(books[index]);
             },
             itemCount: books.length,
           );
@@ -154,59 +153,59 @@ class LibraryList extends StatelessWidget {
     );
   }
 
-  Widget _getDragTargetView(List<Book> books, size) {
-    DragTarget(
-      onAccept: (Book book) {},
-      builder: (
-        BuildContext context,
-        List<dynamic> accepted,
-        List<dynamic> rejected,
-      ) {},
-    );
-  }
+  // Widget _getDragTargetView(List<Book> books, size) {
+  //   DragTarget(
+  //     onAccept: (Book book) {},
+  //     builder: (
+  //       BuildContext context,
+  //       List<dynamic> accepted,
+  //       List<dynamic> rejected,
+  //     ) {},
+  //   );
+  // }
 }
 
-class DragBox extends StatefulWidget {
-  final Book book;
-  final Size size;
+// class DragBox extends StatefulWidget {
+//   final Book book;
+//   final Size size;
 
-  DragBox(this.book, this.size);
+//   DragBox(this.book, this.size);
 
-  @override
-  DragBoxState createState() => DragBoxState();
-}
+//   @override
+//   DragBoxState createState() => DragBoxState();
+// }
 
-class DragBoxState extends State<DragBox> {
-  Offset position = Offset(0.0, 0.0);
+// class DragBoxState extends State<DragBox> {
+//   Offset position = Offset(0.0, 0.0);
 
-  @override
-  void initState() {
-    super.initState();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Draggable(
-        data: widget.book,
-        child: ItemListBook(widget.book),
-        onDraggableCanceled: (velocity, offset) {
-          setState(() {
-            position = offset;
-          });
-        },
-        feedback: Opacity(
-          opacity: 0.7,
-          child: Container(
-            child: Image.asset("assets/images/book_placeholder.png"),
-            width: widget.size.width * 0.2,
-            height: widget.size.width * 0.2,
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: Draggable(
+//         data: widget.book,
+//         child: ItemListBook(widget.book),
+//         onDraggableCanceled: (velocity, offset) {
+//           setState(() {
+//             position = offset;
+//           });
+//         },
+//         feedback: Opacity(
+//           opacity: 0.7,
+//           child: Container(
+//             child: Image.asset("assets/images/book_placeholder.png"),
+//             width: widget.size.width * 0.2,
+//             height: widget.size.width * 0.2,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class LibraryReadList extends StatelessWidget {
   const LibraryReadList({

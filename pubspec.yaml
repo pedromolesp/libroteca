@@ -23,7 +23,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.0
 
+flutter_icons:
+  image_path: "assets/images/libro-logo.png"
+  ios: true
+  android: true
 
 flutter:
 

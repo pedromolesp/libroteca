@@ -18,6 +18,7 @@ class _ItemListBookState extends State<ItemListBook>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation animation;
+
   @override
   void initState() {
     super.initState();
@@ -72,7 +73,10 @@ class _ItemListBookState extends State<ItemListBook>
                 topLeft: Radius.circular(30),
               ),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, "detail",
+                      arguments: widget.book);
+                },
                 child: Container(
                   width: size.width * 0.95,
                   height: size.height * 0.1,
