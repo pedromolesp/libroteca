@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:libroteca/src/data/db_provider.dart';
@@ -7,6 +8,7 @@ import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PreferencesPage extends StatelessWidget {
   @override
@@ -98,17 +100,53 @@ class PreferencesPage extends StatelessWidget {
   }
 
   exportDatabase() async {
+    final PermissionHandler _permissionHandler = PermissionHandler();
+
     File file;
     DateTime date = DateTime.now();
+    Uint8List bytes;
+
     String json = "";
-    await getApplicationSupportDirectory().then((direction) {
-      file = new File("${direction.path}/$date-LIBROTECA.json");
+    await _permissionHandler
+        .requestPermissions([PermissionGroup.storage]).then((result) async {
+      switch (result[PermissionGroup.storage]) {
+        case PermissionStatus.granted:
+          try {
+            if (Platform.isAndroid) {
+              await getApplicationSupportDirectory().then((e) async {
+                print(e);
+
+                final String path = ('${e.path}/$date-LIBROTECA.json')
+                    .replaceAll(RegExp(r"\s\b|\b\s"), "-");
+                final File file = File(path);
+                await DBProvider.db.getAllBooks().then((books) async {
+                  json = jsonEncode(books);
+                  file.writeAsString(json);
+                  // await OpenFile.open(path);
+                  // print(json);
+                });
+              });
+            }
+          } catch (e) {
+            print("Error al descargar el pdf $e");
+          }
+
+          break;
+        case PermissionStatus.denied:
+          break;
+
+        case PermissionStatus.restricted:
+          break;
+      }
     });
-    await DBProvider.db.getAllBooks().then((books) {
-      json = jsonEncode(books);
-      file.writeAsString(json);
-      // print(json);
-    });
+    //   await getApplicationSupportDirectory().then((direction) {
+    //     file = new File("${direction.path}/$date-LIBROTECA.json");
+    //   });
+    //   await DBProvider.db.getAllBooks().then((books) {
+    //     json = jsonEncode(books);
+    //     file.writeAsString(json);
+    //     // print(json);
+    //   });
   }
 
   importDatabase() async {
