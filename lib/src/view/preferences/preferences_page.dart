@@ -114,7 +114,7 @@ class PreferencesPage extends StatelessWidget {
           try {
             if (Platform.isAndroid) {
               await getApplicationSupportDirectory().then((e) async {
-                print(e);
+                print(e.path);
 
                 final String path = ('${e.path}/$date-LIBROTECA.json')
                     .replaceAll(RegExp(r"\s\b|\b\s"), "-");
