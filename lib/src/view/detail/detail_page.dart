@@ -137,6 +137,9 @@ class DetailBookPage extends StatelessWidget {
                                 ),
                               )
                             : Container(),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
                         Container(
                           width: size.width * 0.45,
                           child: AutoSizeText(

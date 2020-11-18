@@ -32,10 +32,10 @@ class _CreateEditBookState extends State<CreateEditBook> {
   String edicion = "";
   String leido = "No";
   String idioma = "";
-  int paginas = 0;
+  String paginas = "0";
   int estado = 1;
   int tapa = 0;
-  int year = DateTime.now().year;
+  String year = DateTime.now().year.toString();
   int executeOnce = 0;
   Book book;
   int newOrUpdate = 0;
@@ -69,11 +69,11 @@ class _CreateEditBookState extends State<CreateEditBook> {
       autor = book.autor;
       editorial = book.editorial;
       genero = book.genero;
-      year = int.parse(book.fechaPublicacion);
+      year = int.parse(book.fechaPublicacion).toString();
       edicion = book.edicion;
       leido = book.leido;
       idioma = book.idioma;
-      paginas = book.paginas;
+      paginas = book.paginas.toString();
       estado = book.estado;
       tapa = book.tapa;
       executeOnce++;
@@ -469,7 +469,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           ),
         ),
         onChanged: (v) {
-          if (v is int) year = int.parse(v);
+          year = v;
         },
         keyboardType: TextInputType.number,
       ),
@@ -632,19 +632,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           ),
         ),
         onChanged: (v) {
-          if (v is int) {
-            paginas = int.parse(v);
-          }
-        },
-        validator: (v) {
-          if (!(v is int)) {
-            if (!(int.parse(v) > 0)) {
-              return "Debes rellenar el campo de páginas con un número";
-            } else {
-              return null;
-            }
-          } else
-            return null;
+          paginas = v;
         },
         keyboardType: TextInputType.number,
       ),
@@ -683,9 +671,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           ),
         ),
         onChanged: (v) {
-          if (v is int) {
-            edicion = v;
-          }
+          edicion = v;
         },
         keyboardType: TextInputType.number,
       ),
@@ -702,17 +688,20 @@ class _CreateEditBookState extends State<CreateEditBook> {
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
           onTap: () async {
-            if (this._formKey.currentState.validate()) {
+            int pags = int.parse(paginas);
+            int yearNumber = int.parse(year);
+
+            if (this._formKey.currentState.validate() && pags > 0) {
               book = new Book(
                   autor: autor,
                   edicion: edicion,
                   editorial: editorial,
                   estado: estado,
-                  fechaPublicacion: year.toString(),
+                  fechaPublicacion: yearNumber.toString(),
                   genero: genero,
                   idioma: idioma,
                   leido: leido,
-                  paginas: paginas,
+                  paginas: pags,
                   tapa: tapa,
                   titulo: titulo,
                   nombrePrestamo: "");
@@ -723,11 +712,11 @@ class _CreateEditBookState extends State<CreateEditBook> {
                   autor = "";
                   editorial = "";
                   genero = "";
-                  year = DateTime.now().year;
+                  year = DateTime.now().year.toString();
                   edicion = "";
                   leido = "";
                   idioma = "";
-                  paginas = 0;
+                  paginas = "0";
                   estado = 1;
                   tapa = 0;
                 }
