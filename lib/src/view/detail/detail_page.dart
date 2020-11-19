@@ -41,28 +41,36 @@ class DetailBookPage extends StatelessWidget {
           children: [
             Column(
               children: [
-                AutoSizeText(
-                  book.titulo,
-                  minFontSize: 12,
-                  maxFontSize: 22,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: black,
-                    fontSize: size.width * 0.045,
-                    fontFamily: Fonts.muliBlack,
+                Container(
+                  width: size.width,
+                  alignment: Alignment.center,
+                  child: AutoSizeText(
+                    book.titulo,
+                    minFontSize: 12,
+                    maxFontSize: 22,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: black,
+                      fontSize: size.width * 0.045,
+                      fontFamily: Fonts.muliBlack,
+                    ),
                   ),
                 ),
-                AutoSizeText(
-                  book.autor,
-                  minFontSize: 12,
-                  maxFontSize: 22,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: black,
-                    fontSize: size.width * 0.045,
-                    fontFamily: Fonts.muliRegular,
+                Container(
+                  width: size.width,
+                  alignment: Alignment.center,
+                  child: AutoSizeText(
+                    book.autor,
+                    minFontSize: 12,
+                    maxFontSize: 22,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: black,
+                      fontSize: size.width * 0.045,
+                      fontFamily: Fonts.muliRegular,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -103,40 +111,44 @@ class DetailBookPage extends StatelessWidget {
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: size.width * 0.45,
-                          child: AutoSizeText(
-                            "Nº páginas: " +
-                                (book.paginas is int
-                                    ? book.paginas.toString()
-                                    : "Nº páginas no indicado"),
-                            minFontSize: 12,
-                            maxFontSize: 22,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: black,
-                              fontSize: size.width * 0.035,
-                              fontFamily: Fonts.muliRegular,
-                            ),
-                          ),
-                        ),
-                        book.paginas is int
-                            ? Container(
-                                width: size.width * 0.45,
-                                alignment: Alignment.centerLeft,
-                                child: Icon(
-                                  Icons.lens,
-                                  color: getColorByNumOfPages(book.paginas),
+                        Row(
+                          children: [
+                            Container(
+                              width: size.width * 0.35,
+                              child: AutoSizeText(
+                                "Nº páginas: " +
+                                    (book.paginas is int
+                                        ? book.paginas.toString()
+                                        : "Nº páginas no indicado"),
+                                minFontSize: 12,
+                                maxFontSize: 22,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: black,
+                                  fontSize: size.width * 0.035,
+                                  fontFamily: Fonts.muliRegular,
                                 ),
-                              )
-                            : Container(),
+                              ),
+                            ),
+                            book.paginas is int
+                                ? Container(
+                                    width: size.width * 0.05,
+                                    alignment: Alignment.centerLeft,
+                                    child: Icon(
+                                      Icons.lens,
+                                      color: getColorByNumOfPages(book.paginas),
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
                         SizedBox(
                           height: size.height * 0.03,
                         ),
@@ -159,23 +171,21 @@ class DetailBookPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
                         Container(
                           width: size.width * 0.45,
                           child: AutoSizeText(
-                            "Estado: " +
-                                (book.estado != null
-                                    ? getEstadoByNumber(book.estado)
-                                    : "Estado no indicado"),
+                            "Idioma: " +
+                                (book.idioma.isNotEmpty
+                                    ? book.idioma
+                                    : "No ha sido indicado un idioma"),
                             minFontSize: 12,
                             maxFontSize: 22,
-                            textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
+                            textAlign: TextAlign.left,
                             style: TextStyle(
                               color: black,
                               fontSize: size.width * 0.035,
@@ -183,13 +193,128 @@ class DetailBookPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        (book.estado != null)
-                            ? Container(
-                                width: size.width * 0.45,
-                                alignment: Alignment.centerLeft,
-                                child:
-                                    Center(child: getIconByEstado(book.estado)))
-                            : Container()
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          children: [
+                            (book.estado != null)
+                                ? Container(
+                                    width: size.width * 0.05,
+                                    alignment: Alignment.centerRight,
+                                    child: Center(
+                                        child: getIconByEstado(book.estado)))
+                                : Container(),
+                            Container(
+                              width: size.width * 0.35,
+                              alignment: Alignment.centerRight,
+                              child: AutoSizeText(
+                                "Estado: " +
+                                    (book.estado != null
+                                        ? getEstadoByNumber(book.estado)
+                                        : "Estado no indicado"),
+                                minFontSize: 12,
+                                maxFontSize: 22,
+                                textAlign: TextAlign.end,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  color: black,
+                                  fontSize: size.width * 0.035,
+                                  fontFamily: Fonts.muliRegular,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        Container(
+                          width: size.width * 0.45,
+                          alignment: Alignment.centerRight,
+                          child: AutoSizeText(
+                            "Edición: " +
+                                (book.edicion.isNotEmpty
+                                    ? book.edicion
+                                    : "No ha sido indicada una edición"),
+                            minFontSize: 12,
+                            maxFontSize: 22,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: black,
+                              fontSize: size.width * 0.035,
+                              fontFamily: Fonts.muliRegular,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        Container(
+                          width: size.width * 0.45,
+                          alignment: Alignment.centerRight,
+                          child: AutoSizeText(
+                            "Género: " +
+                                (book.genero.isNotEmpty
+                                    ? book.genero
+                                    : "No ha sido indicado un género"),
+                            minFontSize: 12,
+                            maxFontSize: 22,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: black,
+                              fontSize: size.width * 0.035,
+                              fontFamily: Fonts.muliRegular,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        Container(
+                          width: size.width * 0.45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                alignment: Alignment.centerRight,
+                                width: size.width * 0.05,
+                                child: Image.asset(book.tapa == 1
+                                    ? "assets/images/diamond.png"
+                                    : "assets/images/papel.png"),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.03,
+                              ),
+                              Container(
+                                alignment: Alignment.centerRight,
+                                child: AutoSizeText(
+                                  "Tapa: " +
+                                      (book.tapa != null
+                                          ? (book.tapa == 1 ? "Dura" : "Blanda")
+                                          : "No ha sido indicado un tipo de tapa"),
+                                  minFontSize: 12,
+                                  maxFontSize: 22,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: black,
+                                    fontSize: size.width * 0.035,
+                                    fontFamily: Fonts.muliRegular,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ],

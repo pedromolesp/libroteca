@@ -96,7 +96,16 @@ class _ItemListBookState extends State<ItemListBook>
                         height: size.height * 0.08,
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.white38),
+                          shape: BoxShape.circle,
+                          color: Colors.white70,
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 2,
+                                color: fillerGrey,
+                                offset: Offset(0.0, 1.0),
+                                spreadRadius: 0.2)
+                          ],
+                        ),
                         child:
                             Image.asset("assets/images/book_placeholder.png"),
                       ),
