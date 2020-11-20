@@ -12,6 +12,8 @@ class Book {
   String nombrePrestamo;
   int tapa;
   String idioma;
+  int valoracion;
+  String opinion;
 
   Book(
       {this.id,
@@ -26,7 +28,9 @@ class Book {
       this.estado,
       this.nombrePrestamo,
       this.tapa,
-      this.idioma});
+      this.idioma,
+      this.opinion,
+      this.valoracion});
 
   Book.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -42,6 +46,8 @@ class Book {
     nombrePrestamo = json['nombre_prestamo'];
     tapa = json['tapa'];
     idioma = json['idioma'];
+    valoracion = json['valoracion'];
+    opinion = json['opinion'];
   }
 
   Map<String, dynamic> toJson() {
@@ -59,6 +65,8 @@ class Book {
     data['nombre_prestamo'] = this.nombrePrestamo;
     data['tapa'] = this.tapa;
     data['idioma'] = this.idioma;
+    data['valoracion'] = this.valoracion;
+    data['opinion'] = this.opinion;
     return data;
   }
 }
