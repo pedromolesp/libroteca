@@ -107,24 +107,21 @@ class PreferencesPage extends StatelessWidget {
     Uint8List bytes;
 
     String json = "";
+    String pathAndroid = "/storage/emulated/0/Download";
     await _permissionHandler
         .requestPermissions([PermissionGroup.storage]).then((result) async {
       switch (result[PermissionGroup.storage]) {
         case PermissionStatus.granted:
           try {
             if (Platform.isAndroid) {
-              await getApplicationSupportDirectory().then((e) async {
-                print(e.path);
-
-                final String path = ('${e.path}/$date-LIBROTECA.json')
-                    .replaceAll(RegExp(r"\s\b|\b\s"), "-");
-                final File file = File(path);
-                await DBProvider.db.getAllBooks().then((books) async {
-                  json = jsonEncode(books);
-                  file.writeAsString(json);
-                  // await OpenFile.open(path);
-                  // print(json);
-                });
+              final String path = ('${path}/$date-LIBROTECA.json')
+                  .replaceAll(RegExp(r"\s\b|\b\s"), "-");
+              final File file = File(path);
+              await DBProvider.db.getAllBooks().then((books) async {
+                json = jsonEncode(books);
+                file.writeAsString(json);
+                // await OpenFile.open(path);
+                // print(json);
               });
             }
           } catch (e) {

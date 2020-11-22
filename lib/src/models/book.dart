@@ -15,22 +15,23 @@ class Book {
   int valoracion;
   String opinion;
 
-  Book(
-      {this.id,
-      this.titulo,
-      this.autor,
-      this.editorial,
-      this.paginas,
-      this.edicion,
-      this.leido,
-      this.fechaPublicacion,
-      this.genero,
-      this.estado,
-      this.nombrePrestamo,
-      this.tapa,
-      this.idioma,
-      this.opinion,
-      this.valoracion});
+  Book({
+    this.id,
+    this.titulo,
+    this.autor,
+    this.editorial,
+    this.paginas,
+    this.edicion,
+    this.leido,
+    this.fechaPublicacion,
+    this.genero,
+    this.estado,
+    this.nombrePrestamo,
+    this.tapa,
+    this.idioma,
+    this.opinion,
+    this.valoracion,
+  });
 
   Book.fromJson(Map<String, dynamic> json) {
     id = json['id'];
