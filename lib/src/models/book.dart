@@ -70,6 +70,7 @@ class Book {
     data['opinion'] = this.opinion;
     return data;
   }
+  
 }
 
 class Books {

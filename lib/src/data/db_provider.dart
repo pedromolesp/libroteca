@@ -43,7 +43,9 @@ class DBProvider {
          leido TEXT, 
          nombre_prestamo TEXT,
          idioma TEXT,
-         tapa INTEGER
+         tapa INTEGER,
+         valoracion INTEGER,
+         opinion TEXT 
         )""");
   }
 

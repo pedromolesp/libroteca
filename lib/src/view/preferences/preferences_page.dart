@@ -114,7 +114,7 @@ class PreferencesPage extends StatelessWidget {
         case PermissionStatus.granted:
           try {
             if (Platform.isAndroid) {
-              final String path = ('${path}/$date-LIBROTECA.json')
+              final String path = ('$pathAndroid/$date-LIBROTECA.json')
                   .replaceAll(RegExp(r"\s\b|\b\s"), "-");
               final File file = File(path);
               await DBProvider.db.getAllBooks().then((books) async {
