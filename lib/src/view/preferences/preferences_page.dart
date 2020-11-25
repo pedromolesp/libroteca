@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/styles/colors.dart';
@@ -114,12 +115,21 @@ class PreferencesPage extends StatelessWidget {
         case PermissionStatus.granted:
           try {
             if (Platform.isAndroid) {
-              final String path = ('$pathAndroid/$date-LIBROTECA.json')
+              final String path = ('$pathAndroid/LIBROTECA-$date.json')
                   .replaceAll(RegExp(r"\s\b|\b\s"), "-");
               final File file = File(path);
               await DBProvider.db.getAllBooks().then((books) async {
-                json = jsonEncode(books);
-                file.writeAsString(json);
+                if (books.length > 0) {
+                  json = jsonEncode(books);
+                  file.writeAsString(json);
+                } else {
+                  Fluttertoast.showToast(
+                    msg: "Aún no hay datos",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIos: 2,
+                  );
+                }
                 // await OpenFile.open(path);
                 // print(json);
               });

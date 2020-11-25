@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/helpers/app_bar.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
@@ -43,6 +44,10 @@ class _CreateEditBookState extends State<CreateEditBook> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     _yearController = new TextEditingController(text: year.toString());
     _tituloController = new TextEditingController(text: titulo);
     _autorController = new TextEditingController(text: autor);
@@ -50,10 +55,6 @@ class _CreateEditBookState extends State<CreateEditBook> {
     _generoController = new TextEditingController(text: genero);
     _paginasController = new TextEditingController(text: paginas.toString());
     _edicionController = new TextEditingController(text: edicion);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     Size size = getMediaSize(context);
     ts = TextStyle(
       color: black,
@@ -704,21 +705,31 @@ class _CreateEditBookState extends State<CreateEditBook> {
                   paginas: pags,
                   tapa: tapa,
                   titulo: titulo,
-                  nombrePrestamo: "");
+                  nombrePrestamo: "",
+                  opinion: "",
+                  valoracion: 0);
 
               await DBProvider.db.insertBook(book).then((value) {
                 if (value > 0) {
-                  titulo = "";
-                  autor = "";
-                  editorial = "";
-                  genero = "";
-                  year = DateTime.now().year.toString();
-                  edicion = "";
-                  leido = "";
-                  idioma = "";
-                  paginas = "0";
-                  estado = 1;
-                  tapa = 0;
+                  setState(() {
+                    titulo = "";
+                    autor = "";
+                    editorial = "";
+                    genero = "";
+                    year = DateTime.now().year.toString();
+                    edicion = "";
+                    leido = "";
+                    idioma = "";
+                    paginas = "0";
+                    estado = 1;
+                    tapa = 0;
+                  });
+                  Fluttertoast.showToast(
+                    msg: "Libro añadido",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIos: 2,
+                  );
                 }
               });
             }
