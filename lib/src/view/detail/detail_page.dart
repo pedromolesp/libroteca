@@ -232,89 +232,15 @@ class DetailBookPage extends StatelessWidget {
                         SizedBox(
                           height: size.height * 0.02,
                         ),
-                        Container(
-                          width: size.width * 0.45,
-                          alignment: Alignment.centerRight,
-                          child: AutoSizeText(
-                            "Edición: " +
-                                (book.edicion.isNotEmpty
-                                    ? book.edicion
-                                    : "No ha sido indicada una edición"),
-                            minFontSize: 12,
-                            maxFontSize: 22,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: black,
-                              fontSize: size.width * 0.035,
-                              fontFamily: Fonts.muliRegular,
-                            ),
-                          ),
-                        ),
+                        getEditionView(size),
                         SizedBox(
                           height: size.height * 0.02,
                         ),
-                        Container(
-                          width: size.width * 0.45,
-                          alignment: Alignment.centerRight,
-                          child: AutoSizeText(
-                            "Género: " +
-                                (book.genero.isNotEmpty
-                                    ? book.genero
-                                    : "No ha sido indicado un género"),
-                            minFontSize: 12,
-                            maxFontSize: 22,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: black,
-                              fontSize: size.width * 0.035,
-                              fontFamily: Fonts.muliRegular,
-                            ),
-                          ),
-                        ),
+                        getGenView(size),
                         SizedBox(
                           height: size.height * 0.02,
                         ),
-                        Container(
-                          width: size.width * 0.45,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerRight,
-                                width: size.width * 0.05,
-                                child: Image.asset(book.tapa == 1
-                                    ? "assets/images/diamond.png"
-                                    : "assets/images/papel.png"),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.03,
-                              ),
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: AutoSizeText(
-                                  "Tapa: " +
-                                      (book.tapa != null
-                                          ? (book.tapa == 1 ? "Dura" : "Blanda")
-                                          : "No ha sido indicado un tipo de tapa"),
-                                  minFontSize: 12,
-                                  maxFontSize: 22,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: black,
-                                    fontSize: size.width * 0.035,
-                                    fontFamily: Fonts.muliRegular,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                        getPaperTypeView(size)
                       ],
                     ),
                   ],
@@ -325,6 +251,92 @@ class DetailBookPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Container getPaperTypeView(size) {
+    return Container(
+                        width: size.width * 0.45,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              alignment: Alignment.centerRight,
+                              width: size.width * 0.05,
+                              child: Image.asset(book.tapa == 1
+                                  ? "assets/images/diamond.png"
+                                  : "assets/images/papel.png"),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.03,
+                            ),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: AutoSizeText(
+                                "Tapa: " +
+                                    (book.tapa != null
+                                        ? (book.tapa == 1 ? "Dura" : "Blanda")
+                                        : "No ha sido indicado un tipo de tapa"),
+                                minFontSize: 12,
+                                maxFontSize: 22,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: black,
+                                  fontSize: size.width * 0.035,
+                                  fontFamily: Fonts.muliRegular,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+  }
+
+  Container getGenView(size) {
+    return Container(
+                        width: size.width * 0.45,
+                        alignment: Alignment.centerRight,
+                        child: AutoSizeText(
+                          "Género: " +
+                              (book.genero.isNotEmpty
+                                  ? book.genero
+                                  : "No ha sido indicado un género"),
+                          minFontSize: 12,
+                          maxFontSize: 22,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: black,
+                            fontSize: size.width * 0.035,
+                            fontFamily: Fonts.muliRegular,
+                          ),
+                        ),
+                      );
+  }
+
+  Container getEditionView(size) {
+    return Container(
+                        width: size.width * 0.45,
+                        alignment: Alignment.centerRight,
+                        child: AutoSizeText(
+                          "Edición: " +
+                              (book.edicion.isNotEmpty
+                                  ? book.edicion
+                                  : "No ha sido indicada una edición"),
+                          minFontSize: 12,
+                          maxFontSize: 22,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: black,
+                            fontSize: size.width * 0.035,
+                            fontFamily: Fonts.muliRegular,
+                          ),
+                        ),
+                      );
   }
 
   //Este método devuelve un objeto tipo Icon al
