@@ -81,7 +81,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
     }
     return Scaffold(
       backgroundColor: white,
-      appBar: getAppBar("Añadir libro", true, size),
+      appBar: getAppBar("Añadir libro", true, size, context),
       body: ListView(
         children: [
           Container(

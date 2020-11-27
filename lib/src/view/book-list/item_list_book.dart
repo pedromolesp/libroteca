@@ -5,6 +5,7 @@ import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
+import 'package:libroteca/src/view/detail/detail_page.dart';
 
 class ItemListBook extends StatefulWidget {
   Book book;
@@ -45,94 +46,89 @@ class _ItemListBookState extends State<ItemListBook>
       alignment: Alignment.centerRight,
       child: FadeTransition(
         opacity: animation,
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, "detail", arguments: widget.book);
-          },
-          child: Material(
-            color: white24,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              topLeft: Radius.circular(30),
-            ),
-            child: InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, "detail", arguments: widget.book);
-              },
-              child: Container(
-                width: size.width * 0.95,
-                height: size.height * 0.1,
-                decoration: BoxDecoration(
-                  color: white24,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    topLeft: Radius.circular(30),
-                  ),
+        child: Material(
+          color: white24,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            topLeft: Radius.circular(30),
+          ),
+          child: InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, "detail", arguments: widget.book);
+            },
+            child: Container(
+              width: size.width * 0.95,
+              height: size.height * 0.1,
+              decoration: BoxDecoration(
+                color: white24,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  topLeft: Radius.circular(30),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: size.height * 0.08,
-                      height: size.height * 0.08,
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white70,
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 2,
-                              color: fillerGrey,
-                              offset: Offset(0.0, 1.0),
-                              spreadRadius: 0.2)
-                        ],
-                      ),
-                      child: Image.asset("assets/images/book_placeholder.png"),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: size.height * 0.08,
+                    height: size.height * 0.08,
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white70,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 2,
+                            color: fillerGrey,
+                            offset: Offset(0.0, 1.0),
+                            spreadRadius: 0.2)
+                      ],
                     ),
-                    Container(
-                      width: size.width * 0.6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: size.width * 0.6,
-                            child: AutoSizeText(
-                              widget.book.titulo,
-                              minFontSize: 14,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                color: black,
-                                fontFamily: Fonts.muliBold,
-                                fontSize: size.width * 0.05,
-                              ),
-                            ),
-                          ),
-                          AutoSizeText(
-                            widget.book.autor,
+                    child: Image.asset("assets/images/book_placeholder.png"),
+                  ),
+                  Container(
+                    width: size.width * 0.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: size.width * 0.6,
+                          child: AutoSizeText(
+                            widget.book.titulo,
+                            minFontSize: 14,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            minFontSize: 14,
                             style: TextStyle(
                               color: black,
-                              fontFamily: Fonts.muliRegular,
-                              fontSize: size.width * 0.04,
+                              fontFamily: Fonts.muliBold,
+                              fontSize: size.width * 0.05,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        AutoSizeText(
+                          widget.book.autor,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          minFontSize: 14,
+                          style: TextStyle(
+                            color: black,
+                            fontFamily: Fonts.muliRegular,
+                            fontSize: size.width * 0.04,
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      height: size.height * 0.05,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: black,
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  Container(
+                    height: size.height * 0.05,
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: black,
+                    ),
+                  )
+                ],
               ),
             ),
           ),

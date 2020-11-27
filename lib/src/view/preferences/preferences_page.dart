@@ -148,14 +148,6 @@ class PreferencesPage extends StatelessWidget {
           break;
       }
     });
-    //   await getApplicationSupportDirectory().then((direction) {
-    //     file = new File("${direction.path}/$date-LIBROTECA.json");
-    //   });
-    //   await DBProvider.db.getAllBooks().then((books) {
-    //     json = jsonEncode(books);
-    //     file.writeAsString(json);
-    //     // print(json);
-    //   });
   }
 
   importDatabase() async {
@@ -167,17 +159,6 @@ class PreferencesPage extends StatelessWidget {
       final jsonDecoded = json.decode(database);
       books = BookToExports.fromJsonList(jsonDecoded).items;
       await DBProvider.db.insertBooksImport(books);
-    } else {
-      // User canceled the picker
     }
-    // File file;
-    // String json = "";
-    // FilePickerResult result = await FilePicker.platform.pickFiles();
-
-    // if (result != null) {
-    //   file = File(result.files.single.path);
-    //   file.readAsString().then((value) => json = jsonDecode(value));
-    //   print(json);
-    // }
   }
 }

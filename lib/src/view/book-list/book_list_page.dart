@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:libroteca/src/data/db_provider.dart';
+import 'package:libroteca/src/helpers/navigation_refresh.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 import 'package:libroteca/src/view/book-list/item_list_book.dart';
+import 'package:libroteca/src/view/create/create_book.dart';
 
 class BookListPage extends StatefulWidget {
   @override
@@ -104,7 +106,11 @@ class _BookListPageState extends State<BookListPage> {
   }
 
   _addBook(BuildContext context) {
-    Navigator.pushNamed(context, "create");
+    navigateAndRefresh(context, CreateEditBook()).then((value) {
+      if (value) {
+        setState(() {});
+      }
+    });
   }
 }
 

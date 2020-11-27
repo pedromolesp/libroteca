@@ -6,8 +6,14 @@ import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 
-class DetailBookPage extends StatelessWidget {
+class DetailBookPage extends StatefulWidget {
+  @override
+  _DetailBookPageState createState() => _DetailBookPageState();
+}
+
+class _DetailBookPageState extends State<DetailBookPage> {
   Book book;
+
   @override
   Widget build(BuildContext context) {
     book = ModalRoute.of(context).settings.arguments;
@@ -370,8 +376,6 @@ class DetailBookPage extends StatelessWidget {
     );
   }
 
-  //Este método devuelve un objeto tipo Icon al
-  //pasarle un número de estado del libro
   Widget getIconByEstado(int number) {
     Icon icon;
     switch (number) {
