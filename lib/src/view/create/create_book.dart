@@ -694,17 +694,17 @@ class _CreateEditBookState extends State<CreateEditBook> {
 
             if (this._formKey.currentState.validate() && pags > 0) {
               book = new Book(
-                  autor: autor,
+                  autor: autor.trim(),
                   edicion: edicion,
-                  editorial: editorial,
+                  editorial: editorial.trim(),
                   estado: estado,
                   fechaPublicacion: yearNumber.toString(),
-                  genero: genero,
-                  idioma: idioma,
+                  genero: genero.trim(),
+                  idioma: idioma.trim(),
                   leido: leido,
                   paginas: pags,
                   tapa: tapa,
-                  titulo: titulo,
+                  titulo: titulo.trim(),
                   nombrePrestamo: "",
                   opinion: "",
                   valoracion: 0);

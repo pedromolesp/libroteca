@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
+import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 import 'package:path_provider/path_provider.dart';
@@ -84,7 +86,9 @@ class PreferencesPage extends StatelessWidget {
           color: orangeDark,
           borderRadius: BorderRadius.circular(30),
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              importDatabase();
+            },
             child: Center(
               child: Text(
                 "Importar",
@@ -130,8 +134,6 @@ class PreferencesPage extends StatelessWidget {
                     timeInSecForIos: 2,
                   );
                 }
-                // await OpenFile.open(path);
-                // print(json);
               });
             }
           } catch (e) {
@@ -157,6 +159,17 @@ class PreferencesPage extends StatelessWidget {
   }
 
   importDatabase() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+    List<BookToExport> books;
+    if (result != null) {
+      File file = File(result.files.single.path);
+      dynamic database = await file.readAsString();
+      final jsonDecoded = json.decode(database);
+      books = BookToExports.fromJsonList(jsonDecoded).items;
+      await DBProvider.db.insertBooksImport(books);
+    } else {
+      // User canceled the picker
+    }
     // File file;
     // String json = "";
     // FilePickerResult result = await FilePicker.platform.pickFiles();

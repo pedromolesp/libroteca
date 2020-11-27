@@ -66,6 +66,15 @@ class DBProvider {
     return sales;
   }
 
+  Future<List<Book>> getAllBooksToExport() async {
+    final db = await database;
+    final res = await db.query('book');
+    List<Book> sales =
+        res.isNotEmpty ? res.map((e) => BookToExport.fromJson(e)).toList() : [];
+
+    return sales;
+  }
+
   Future<List<Book>> getAllReadBooks() async {
     final db = await database;
     final res = await db.query('book', where: "leido = ?", whereArgs: ["Si"]);
@@ -96,5 +105,15 @@ class DBProvider {
     final db = await database;
     final res = await db.delete('book', where: 'id = ?', whereArgs: [id]);
     return res;
+  }
+
+  insertBooksImport(List<BookToExport> books) async {
+    final db = await database;
+    final batch = db.batch();
+    for (var i = 0; i < books.length; i++) {
+      batch.insert('book', books[i].toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+    await batch.commit();
   }
 }
