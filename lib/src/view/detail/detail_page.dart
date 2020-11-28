@@ -13,11 +13,24 @@ class DetailBookPage extends StatefulWidget {
 
 class _DetailBookPageState extends State<DetailBookPage> {
   Book book;
+  int rating;
+  int callOnce = 0;
+  Size size;
+  @override
+  void initState() {
+    super.initState();
+    rating = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    book = ModalRoute.of(context).settings.arguments;
-    final size = getMediaSize(context);
+    if (callOnce < 1) {
+      book = ModalRoute.of(context).settings.arguments;
+
+      rating = book.valoracion;
+      size = getMediaSize(context);
+      callOnce++;
+    }
     return Scaffold(
       backgroundColor: white,
       appBar: AppBar(
@@ -63,7 +76,11 @@ class _DetailBookPageState extends State<DetailBookPage> {
               ),
               getPubView(size),
               SizedBox(
-                height: size.height * 0.05,
+                height: size.height * 0.02,
+              ),
+              getRatingView(size),
+              SizedBox(
+                height: size.height * 0.02,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,37 +103,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Row(
-                        children: [
-                          (book.estado != null)
-                              ? Container(
-                                  width: size.width * 0.05,
-                                  alignment: Alignment.centerRight,
-                                  child: Center(
-                                      child: getIconByEstado(book.estado)))
-                              : Container(),
-                          Container(
-                            width: size.width * 0.35,
-                            alignment: Alignment.centerRight,
-                            child: AutoSizeText(
-                              "Estado: " +
-                                  (book.estado != null
-                                      ? getEstadoByNumber(book.estado)
-                                      : "Estado no indicado"),
-                              minFontSize: 12,
-                              maxFontSize: 22,
-                              textAlign: TextAlign.end,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                color: black,
-                                fontSize: size.width * 0.035,
-                                fontFamily: Fonts.muliRegular,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      getStateView(size),
                       SizedBox(
                         height: size.height * 0.02,
                       ),
@@ -137,6 +124,39 @@ class _DetailBookPageState extends State<DetailBookPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Row getStateView(size) {
+    return Row(
+      children: [
+        (book.estado != null)
+            ? Container(
+                width: size.width * 0.05,
+                alignment: Alignment.centerRight,
+                child: Center(child: getIconByEstado(book.estado)))
+            : Container(),
+        Container(
+          width: size.width * 0.35,
+          alignment: Alignment.centerRight,
+          child: AutoSizeText(
+            "Estado: " +
+                (book.estado != null
+                    ? getEstadoByNumber(book.estado)
+                    : "Estado no indicado"),
+            minFontSize: 12,
+            maxFontSize: 22,
+            textAlign: TextAlign.end,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: TextStyle(
+              color: black,
+              fontSize: size.width * 0.035,
+              fontFamily: Fonts.muliRegular,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -205,6 +225,49 @@ class _DetailBookPageState extends State<DetailBookPage> {
           color: black,
           fontSize: size.width * 0.035,
           fontFamily: Fonts.muliBold,
+        ),
+      ),
+    );
+  }
+
+  Widget getRatingView(Size size) {
+    return Container(
+      width: size.width,
+      height: size.height * 0.05,
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+      child: Material(
+        borderRadius: BorderRadius.circular(20),
+        color: white,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () {
+            getRatingAlert(size, context);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Icon(
+                Icons.star,
+                color: orangeLight,
+              ),
+              Icon(
+                rating >= 2 ? Icons.star : Icons.star_border,
+                color: orangeLight,
+              ),
+              Icon(
+                rating >= 3 ? Icons.star : Icons.star_border,
+                color: orangeLight,
+              ),
+              Icon(
+                rating >= 4 ? Icons.star : Icons.star_border,
+                color: orangeLight,
+              ),
+              Icon(
+                rating >= 5 ? Icons.star : Icons.star_border,
+                color: orangeLight,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -415,5 +478,216 @@ class _DetailBookPageState extends State<DetailBookPage> {
     } else {
       return fillerGrey;
     }
+  }
+
+  void getRatingAlert(Size size, BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        int rated = 0;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: white,
+                ),
+                height: size.height * 0.75,
+                width: size.width * 0.9,
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.1, vertical: size.height * 0.03),
+                child: Stack(
+                  children: [
+                    NotificationListener<OverscrollIndicatorNotification>(
+                      onNotification:
+                          (OverscrollIndicatorNotification overscroll) {
+                        overscroll.disallowGlow();
+                        return true;
+                      },
+                      child: ListView(
+                        children: [
+                          Material(
+                            child: Container(
+                              width: size.width * 0.9,
+                              height: size.height * 0.1,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.02),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  IconButton(
+                                      icon: Icon(
+                                        Icons.star,
+                                        color: orangeLight,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          rated = 1;
+                                        });
+                                      }),
+                                  IconButton(
+                                      icon: Icon(
+                                        rated >= 2
+                                            ? Icons.star
+                                            : Icons.star_border,
+                                        color: orangeLight,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          rated = 2;
+                                        });
+                                      }),
+                                  IconButton(
+                                      icon: Icon(
+                                        rated >= 3
+                                            ? Icons.star
+                                            : Icons.star_border,
+                                        color: orangeLight,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          rated = 3;
+                                        });
+                                      }),
+                                  IconButton(
+                                      icon: Icon(
+                                        rated >= 4
+                                            ? Icons.star
+                                            : Icons.star_border,
+                                        color: orangeLight,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          rated = 4;
+                                        });
+                                      }),
+                                  IconButton(
+                                      icon: Icon(
+                                        rated >= 5
+                                            ? Icons.star
+                                            : Icons.star_border,
+                                        color: orangeLight,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          rated = 5;
+                                        });
+                                      }),
+                                ],
+                              ),
+                            ),
+                          ),
+                          AutoSizeText(
+                            '¿Nos conocías? Somos la mayor red de gasolineras automáticas de España.',
+                            maxLines: 4,
+                            minFontSize: 12,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: size.width * 0.05,
+                              color: black,
+                              fontFamily: Fonts.muliLight,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      bottom: size.height * 0.05,
+                      width: size.width * 0.7,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          getButtonCancelAlert(size, context),
+                          getButtonBackAlert(size, context),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  getButtonBackAlert(Size size, BuildContext context) {
+    return Center(
+      child: Container(
+        height: size.height * 0.065,
+        width: size.width * 0.27,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: red,
+        ),
+        margin: EdgeInsets.only(top: size.height * 0.03),
+        child: Material(
+          borderRadius: BorderRadius.circular(30),
+          color: red,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: () {},
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.height * 0.01,
+              ),
+              child: Center(
+                child: Text(
+                  "Aceptar",
+                  style: TextStyle(
+                    color: white,
+                    fontSize: size.width * 0.045,
+                    fontFamily: Fonts.muliBold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  getButtonCancelAlert(Size size, BuildContext context) {
+    return Center(
+      child: Container(
+        height: size.height * 0.065,
+        width: size.width * 0.27,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: red,
+        ),
+        margin: EdgeInsets.only(top: size.height * 0.03),
+        child: Material(
+          borderRadius: BorderRadius.circular(30),
+          color: red,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.height * 0.01,
+              ),
+              child: Center(
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(
+                      color: white,
+                      fontSize: size.width * 0.045,
+                      fontFamily: Fonts.muliBold),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
