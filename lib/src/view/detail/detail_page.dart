@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:libroteca/src/data/db_provider.dart';
+import 'package:libroteca/src/helpers/app_bar.dart';
 import 'package:libroteca/src/helpers/estado_by_number_method.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
@@ -14,6 +16,7 @@ class DetailBookPage extends StatefulWidget {
 class _DetailBookPageState extends State<DetailBookPage> {
   Book book;
   int rating;
+  String opinion = "";
   int callOnce = 0;
   Size size;
   @override
@@ -26,28 +29,14 @@ class _DetailBookPageState extends State<DetailBookPage> {
   Widget build(BuildContext context) {
     if (callOnce < 1) {
       book = ModalRoute.of(context).settings.arguments;
-
+      opinion = book.opinion ?? "";
       rating = book.valoracion;
       size = getMediaSize(context);
       callOnce++;
     }
     return Scaffold(
       backgroundColor: white,
-      appBar: AppBar(
-        title: Container(
-          width: size.width * 0.8,
-          child: AutoSizeText(
-            book?.titulo ?? "Detalle",
-            maxLines: 1,
-            minFontSize: 16,
-            maxFontSize: 22,
-            style: TextStyle(
-              fontFamily: Fonts.muliBold,
-            ),
-          ),
-        ),
-        automaticallyImplyLeading: true,
-      ),
+      appBar: getAppBar(book?.titulo ?? "Detalle", true, size, context),
       body: getView(size),
     );
   }
@@ -120,6 +109,10 @@ class _DetailBookPageState extends State<DetailBookPage> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: size.height * 0.02,
+              ),
+              getOpinionView(size)
             ],
           ),
         ],
@@ -241,7 +234,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            getRatingAlert(size, context);
+            getRatingAlert(size, context, book);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -480,12 +473,15 @@ class _DetailBookPageState extends State<DetailBookPage> {
     }
   }
 
-  void getRatingAlert(Size size, BuildContext context) {
+  void getRatingAlert(Size size, BuildContext context, Book book) {
+    TextEditingController _opinionController = new TextEditingController();
     showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        int rated = 0;
+        int rated = rating;
+        String description = book.opinion;
+        _opinionController.text = description;
         return StatefulBuilder(
           builder: (context, setState) {
             return Center(
@@ -494,7 +490,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                   borderRadius: BorderRadius.circular(40),
                   color: white,
                 ),
-                height: size.height * 0.75,
+                height: size.height * 0.65,
                 width: size.width * 0.9,
                 padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.1, vertical: size.height * 0.03),
@@ -506,10 +502,10 @@ class _DetailBookPageState extends State<DetailBookPage> {
                         overscroll.disallowGlow();
                         return true;
                       },
-                      child: ListView(
-                        children: [
-                          Material(
-                            child: Container(
+                      child: Material(
+                        child: ListView(
+                          children: [
+                            Container(
                               width: size.width * 0.9,
                               height: size.height * 0.1,
                               padding: EdgeInsets.symmetric(
@@ -579,20 +575,68 @@ class _DetailBookPageState extends State<DetailBookPage> {
                                 ],
                               ),
                             ),
-                          ),
-                          AutoSizeText(
-                            '¿Nos conocías? Somos la mayor red de gasolineras automáticas de España.',
-                            maxLines: 4,
-                            minFontSize: 12,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: size.width * 0.05,
-                              color: black,
-                              fontFamily: Fonts.muliLight,
-                              decoration: TextDecoration.none,
+                            SizedBox(
+                              height: size.height * 0.02,
                             ),
-                          ),
-                        ],
+                            Container(
+                              margin: EdgeInsets.only(
+                                top: size.height * 0.02,
+                              ),
+                              width: size.width,
+                              height: size.height * 0.2,
+                              child: TextFormField(
+                                style: TextStyle(
+                                  color: black,
+                                  fontSize: size.width * 0.04,
+                                  fontFamily: Fonts.muliBold,
+                                ),
+                                cursorColor: orangeDark,
+                                controller: _opinionController,
+                                maxLines: 15,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                        color: orangeDark,
+                                        width: size.width * 0.005),
+                                  ),
+                                  suffixIcon: Icon(
+                                    Icons.title,
+                                    color: fillerGrey,
+                                  ),
+                                  hintStyle: TextStyle(
+                                    color: black,
+                                    fontSize: size.width * 0.04,
+                                    fontFamily: Fonts.muliBold,
+                                  ),
+                                  labelText: "Opinión  ",
+                                  labelStyle: TextStyle(
+                                    color: black,
+                                    fontSize: size.width * 0.04,
+                                    fontFamily: Fonts.muliBold,
+                                  ),
+                                  fillColor: white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                        color: orangeDark,
+                                        width: size.width * 0.005),
+                                  ),
+                                ),
+                                onChanged: (v) {
+                                  description = v;
+                                },
+                                validator: (v) {
+                                  if (v.isEmpty) {
+                                    return "Rellena el campo de título";
+                                  } else
+                                    return null;
+                                },
+                                keyboardType: TextInputType.text,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     Positioned(
@@ -602,7 +646,8 @@ class _DetailBookPageState extends State<DetailBookPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           getButtonCancelAlert(size, context),
-                          getButtonBackAlert(size, context),
+                          getButtonAcceptAlert(
+                              size, context, description, rated),
                         ],
                       ),
                     ),
@@ -616,7 +661,8 @@ class _DetailBookPageState extends State<DetailBookPage> {
     );
   }
 
-  getButtonBackAlert(Size size, BuildContext context) {
+  getButtonAcceptAlert(
+      Size size, BuildContext context, String description, int rated) {
     return Center(
       child: Container(
         height: size.height * 0.065,
@@ -631,7 +677,17 @@ class _DetailBookPageState extends State<DetailBookPage> {
           color: red,
           child: InkWell(
             borderRadius: BorderRadius.circular(30),
-            onTap: () {},
+            onTap: () async {
+              setState(() {
+                rating = rated;
+                opinion = description;
+              });
+              book.opinion = description;
+              book.valoracion = rated;
+              await DBProvider.db
+                  .updateBook(book)
+                  .then((value) => Navigator.pop(context));
+            },
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: size.height * 0.01,
@@ -686,6 +742,25 @@ class _DetailBookPageState extends State<DetailBookPage> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget getOpinionView(size) {
+    return Container(
+      width: size.width,
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.02),
+      child: AutoSizeText(
+        book.opinion,
+        maxLines: null,
+        minFontSize: 12,
+        textAlign: TextAlign.start,
+        style: TextStyle(
+          fontSize: size.width * 0.05,
+          color: black,
+          fontFamily: Fonts.muliLight,
+          decoration: TextDecoration.none,
         ),
       ),
     );

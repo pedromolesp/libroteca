@@ -1,9 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:libroteca/src/helpers/navigation_refresh.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
+import 'package:libroteca/src/view/detail/detail_page.dart';
 
 class ItemListBook extends StatefulWidget {
   Book book;
@@ -52,7 +54,8 @@ class _ItemListBookState extends State<ItemListBook>
           ),
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(context, "detail", arguments: widget.book);
+              navigateAndRefresh(context, DetailBookPage(),
+                  arguments: widget.book);
             },
             child: Container(
               width: size.width * 0.95,
