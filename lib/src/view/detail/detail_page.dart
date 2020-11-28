@@ -16,13 +16,15 @@ class DetailBookPage extends StatefulWidget {
 class _DetailBookPageState extends State<DetailBookPage> {
   Book book;
   int rating;
-  String opinion = "";
+  String opinion;
   int callOnce = 0;
   Size size;
+  String title = "";
   @override
   void initState() {
     super.initState();
     rating = 0;
+    opinion = "";
   }
 
   @override
@@ -34,9 +36,21 @@ class _DetailBookPageState extends State<DetailBookPage> {
       size = getMediaSize(context);
       callOnce++;
     }
+
+    if (book != null) {
+      if (book.titulo.isNotEmpty) {
+        title = book.titulo.substring(0, 1).toUpperCase() +
+            book.titulo.substring(1, book.titulo.length);
+      }
+    }
     return Scaffold(
       backgroundColor: white,
-      appBar: getAppBar(book?.titulo ?? "Detalle", true, size, context),
+      appBar: getAppBar(
+        title,
+        true,
+        size,
+        context,
+      ),
       body: getView(size),
     );
   }
@@ -480,7 +494,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
       context: context,
       builder: (BuildContext context) {
         int rated = rating;
-        String description = book.opinion;
+        String description = opinion;
         _opinionController.text = description;
         return StatefulBuilder(
           builder: (context, setState) {
@@ -624,13 +638,9 @@ class _DetailBookPageState extends State<DetailBookPage> {
                                   ),
                                 ),
                                 onChanged: (v) {
-                                  description = v;
-                                },
-                                validator: (v) {
-                                  if (v.isEmpty) {
-                                    return "Rellena el campo de título";
-                                  } else
-                                    return null;
+                                  setState(() {
+                                    description = v;
+                                  });
                                 },
                                 keyboardType: TextInputType.text,
                               ),
@@ -752,7 +762,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
       width: size.width,
       padding: EdgeInsets.symmetric(horizontal: size.width * 0.02),
       child: AutoSizeText(
-        book.opinion,
+        "Opinión: " + book.opinion,
         maxLines: null,
         minFontSize: 12,
         textAlign: TextAlign.start,
