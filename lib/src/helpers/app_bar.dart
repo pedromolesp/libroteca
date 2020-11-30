@@ -4,9 +4,11 @@ import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 
 getAppBar(String title, bool automaticallyImplyLeading, Size size,
-    BuildContext context) {
+    BuildContext context,
+    {List<Widget> actions}) {
   return AppBar(
     automaticallyImplyLeading: automaticallyImplyLeading,
+    actions: actions,
     leading: IconButton(
         icon:
             Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
