@@ -117,34 +117,63 @@ class PreferencesPage extends StatelessWidget {
         .requestPermissions([PermissionGroup.storage]).then((result) async {
       switch (result[PermissionGroup.storage]) {
         case PermissionStatus.granted:
-          try {
-            if (Platform.isAndroid) {
-              final String path = ('$pathAndroid/LIBROTECA-$date.json')
-                  .replaceAll(RegExp(r"\s\b|\b\s"), "-");
-              final File file = File(path);
-              await DBProvider.db.getAllBooks().then((books) async {
-                if (books.length > 0) {
-                  json = jsonEncode(books);
-                  file.writeAsString(json);
-                } else {
-                  Fluttertoast.showToast(
-                    msg: "Aún no hay datos",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 2,
-                  );
-                }
-              });
+          {
+            print("permisiongranted");
+            try {
+              if (Platform.isAndroid) {
+                final String path = ('$pathAndroid/LIBROTECA-$date.json')
+                    .replaceAll(RegExp(r"\s\b|\b\s"), "-");
+                final File file = File(path);
+                print(file.path);
+                await DBProvider.db.getAllBooks().then((books) async {
+                  print("dentro");
+
+                  if (books.length > 0) {
+                    json = jsonEncode(books);
+                    file.writeAsString(json);
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: "Aún no hay datos",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIos: 2,
+                    );
+                  }
+                });
+              } else {
+                await getDownloadsDirectory().then((value) async {
+                  final String path = ('${value.path}/LIBROTECA-$date.json')
+                      .replaceAll(RegExp(r"\s\b|\b\s"), "-");
+                  final File file = File(path);
+                  await DBProvider.db.getAllBooks().then((books) async {
+                    if (books.length > 0) {
+                      json = jsonEncode(books);
+                      file.writeAsString(json);
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: "Aún no hay datos",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIos: 2,
+                      );
+                    }
+                  });
+                });
+              }
+            } catch (e) {
+              print("Error al descargar el pdf $e");
             }
-          } catch (e) {
-            print("Error al descargar el pdf $e");
           }
 
           break;
         case PermissionStatus.denied:
+          print("permisionmishuevos");
+
           break;
 
         case PermissionStatus.restricted:
+          print("permisioncasi");
+
           break;
       }
     });

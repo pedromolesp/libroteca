@@ -127,7 +127,10 @@ class _DetailBookPageState extends State<DetailBookPage> {
             ? Container(
                 width: size.width * 0.05,
                 alignment: Alignment.centerRight,
-                child: Center(child: getIconByEstado(book.estado)))
+                child: Center(
+                  child: getIconByEstado(book.estado),
+                ),
+              )
             : Container(),
         Container(
           width: size.width * 0.35,
