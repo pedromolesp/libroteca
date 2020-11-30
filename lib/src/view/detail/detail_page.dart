@@ -762,20 +762,43 @@ class _DetailBookPageState extends State<DetailBookPage> {
 
   Widget getOpinionView(size) {
     return Container(
-      width: size.width,
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.02),
-      child: AutoSizeText(
-        "Opinión: " + book.opinion,
-        maxLines: null,
-        minFontSize: 12,
-        textAlign: TextAlign.start,
-        style: TextStyle(
-          fontSize: size.width * 0.05,
-          color: black,
-          fontFamily: Fonts.muliLight,
-          decoration: TextDecoration.none,
-        ),
-      ),
-    );
+        width: size.width,
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.02),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AutoSizeText(
+              "Opinión: \n\n" + book.opinion,
+              maxLines: null,
+              minFontSize: 12,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontSize: size.width * 0.05,
+                color: black,
+                fontFamily: Fonts.muliLight,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            book.opinion.isEmpty
+                ? Container(
+                    width: size.width,
+                    height: size.height * 0.1,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                    child: Center(
+                      child: Text(
+                        "Aún no has escrito una opinión",
+                        style: TextStyle(
+                          fontSize: size.width * 0.045,
+                          color: greyText,
+                          fontFamily: Fonts.muliLight,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
+          ],
+        ));
   }
 }
