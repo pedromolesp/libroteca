@@ -674,6 +674,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
     );
   }
 
+  //button to accept changes of a book
   getButtonAcceptAlert(
       Size size, BuildContext context, String description, int rated) {
     return Center(
@@ -800,5 +801,16 @@ class _DetailBookPageState extends State<DetailBookPage> {
                 : Container(),
           ],
         ));
+  }
+
+  getButtonRead() {
+    return Material(
+      child: InkWell(
+        child: Container(
+            width: size.width * 0.1,
+            height: size.width * 0.1,
+            child: Icon(Icons.check)),
+      ),
+    );
   }
 }
