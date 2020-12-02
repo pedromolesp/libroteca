@@ -783,7 +783,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
             book.opinion.isEmpty
                 ? Container(
                     width: size.width,
-                    height: size.height * 0.1,
+                    height: size.height * 0.05,
                     padding:
                         EdgeInsets.symmetric(horizontal: size.width * 0.05),
                     child: Center(
@@ -803,13 +803,18 @@ class _DetailBookPageState extends State<DetailBookPage> {
         ));
   }
 
-  getButtonRead() {
+  getButtonRead(String read) {
     return Material(
       child: InkWell(
+        onTap: () {},
         child: Container(
-            width: size.width * 0.1,
-            height: size.width * 0.1,
-            child: Icon(Icons.check)),
+          width: size.width * 0.1,
+          height: size.width * 0.1,
+          decoration: BoxDecoration(shape: BoxShape.circle),
+          child: Icon(
+            Icons.check,
+          ),
+        ),
       ),
     );
   }
