@@ -215,7 +215,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                                 child: Center(
                                     child: Icon(
                                   Icons.check_circle,
-                                  color: Colors.green,
+                                  color: green,
                                 )),
                                 decoration: BoxDecoration(
                                   color: orangeLight,
@@ -348,7 +348,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                                 child: Center(
                                     child: Icon(
                                   Icons.mood,
-                                  color: Colors.green,
+                                  color: green,
                                 )),
                                 decoration: BoxDecoration(
                                   color: orangeLight,

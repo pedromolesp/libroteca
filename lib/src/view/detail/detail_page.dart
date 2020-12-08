@@ -59,77 +59,94 @@ class _DetailBookPageState extends State<DetailBookPage> {
     return Container(
       width: size.width,
       height: size.height,
-      padding: EdgeInsets.only(
-          top: size.height * 0.03,
-          right: size.width * 0.05,
-          left: size.width * 0.05),
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          Column(
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (OverscrollIndicatorNotification overscroll) {
+          overscroll.disallowGlow();
+          return true;
+        },
+        child: Scrollbar(
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(
+                top: size.height * 0.03,
+                right: size.width * 0.05,
+                left: size.width * 0.05),
             children: [
-              getTitleView(size),
-              getAuthorView(size),
-              SizedBox(
-                height: size.height * 0.05,
-              ),
-              getImageView(size),
-              SizedBox(
-                height: size.height * 0.05,
-              ),
-              getPubView(size),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              getRatingView(size),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
-                  Column(
+                  getTitleView(size),
+                  getAuthorView(size),
+                  SizedBox(
+                    height: size.height * 0.05,
+                  ),
+                  getImageView(size),
+                  SizedBox(
+                    height: size.height * 0.05,
+                  ),
+                  getPubView(size),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  getRatingView(size),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  book.leido.isNotEmpty
+                      ? getButtonRead(book.leido)
+                      : SizedBox(),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      getNumPagsView(size),
-                      SizedBox(
-                        height: size.height * 0.03,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getNumPagsView(size),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+                          getEditorView(size),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+                          getLanguajeView(size),
+                        ],
                       ),
-                      getEditorView(size),
-                      SizedBox(
-                        height: size.height * 0.03,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          getStateView(size),
+                          SizedBox(
+                            height: size.height * 0.02,
+                          ),
+                          getEditionView(size),
+                          SizedBox(
+                            height: size.height * 0.02,
+                          ),
+                          getGenView(size),
+                          SizedBox(
+                            height: size.height * 0.02,
+                          ),
+                          getPaperTypeView(size)
+                        ],
                       ),
-                      getLanguajeView(size),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      getStateView(size),
-                      SizedBox(
-                        height: size.height * 0.02,
-                      ),
-                      getEditionView(size),
-                      SizedBox(
-                        height: size.height * 0.02,
-                      ),
-                      getGenView(size),
-                      SizedBox(
-                        height: size.height * 0.02,
-                      ),
-                      getPaperTypeView(size)
-                    ],
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  getOpinionView(size),
+                  SizedBox(
+                    height: size.height * 0.05,
                   ),
                 ],
               ),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              getOpinionView(size)
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -461,7 +478,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
       case 1:
         icon = new Icon(
           Icons.check,
-          color: Colors.green,
+          color: green,
         );
         break;
       case 2:
@@ -478,7 +495,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
     if (number < 100) {
       return Colors.lightGreen;
     } else if (number >= 100 && number < 200) {
-      return Colors.green;
+      return green;
     } else if (number >= 200 && number < 400) {
       return yellow;
     } else if (number >= 400 && number < 500) {
@@ -804,18 +821,38 @@ class _DetailBookPageState extends State<DetailBookPage> {
   }
 
   getButtonRead(String read) {
-    return Material(
-      child: InkWell(
-        onTap: () {},
-        child: Container(
-          width: size.width * 0.1,
-          height: size.width * 0.1,
-          decoration: BoxDecoration(shape: BoxShape.circle),
-          child: Icon(
-            Icons.check,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          "Leído",
+          style: TextStyle(fontFamily: Fonts.muliBold),
+        ),
+        Material(
+          color: read == "Si" ? green.withOpacity(0.4) : red.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(30),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: () async {
+              read == "Si" ? book.leido = "No" : book.leido = "Si";
+              await DBProvider.db
+                  .updateBook(book)
+                  .then((value) => setState(() {}));
+            },
+            child: Container(
+              width: size.width * 0.1,
+              height: size.width * 0.1,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Icon(
+                read == "Si" ? Icons.check : Icons.close,
+                color: read == "Si" ? green : red,
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

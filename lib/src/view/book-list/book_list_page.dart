@@ -101,7 +101,9 @@ class _BookListPageState extends State<BookListPage> {
           ),
         ),
       ),
-      body: tabLibraryRead == 0 ? LibraryList() : LibraryReadList(),
+      body: tabLibraryRead == 0
+          ? BookList(DBProvider.db.getAllBooks())
+          : BookList(DBProvider.db.getReadBooks()),
     );
   }
 
@@ -114,15 +116,18 @@ class _BookListPageState extends State<BookListPage> {
   }
 }
 
-class LibraryList extends StatelessWidget {
-  const LibraryList({
+class BookList extends StatelessWidget {
+  Future<List<Book>> booksRequest;
+  List<Book> books = [];
+  BookList(
+    this.booksRequest, {
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DBProvider.db.getAllBooks(),
+      future: booksRequest,
       builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
         if (snapshot.connectionState != ConnectionState.done ||
             snapshot.hasData == null) {
@@ -130,7 +135,6 @@ class LibraryList extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          List<Book> books = [];
           // Book book = new Book(
           //     autor: "Joan Manuel Gisbert",
           //     edicion: "1",
@@ -146,37 +150,6 @@ class LibraryList extends StatelessWidget {
           //     tapa: 0,
           //     titulo: "Los armarios negros");
           // books.add(book);
-          if (snapshot.data != null && snapshot.data.length > 0)
-            books = snapshot.data;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return ItemListBook(books[index]);
-            },
-            itemCount: books.length,
-          );
-        }
-      },
-    );
-  }
-}
-
-class LibraryReadList extends StatelessWidget {
-  const LibraryReadList({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: DBProvider.db.getAllReadBooks(),
-      builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
-        if (snapshot.connectionState != ConnectionState.done ||
-            snapshot.hasData == null) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          List<Book> books = [];
           if (snapshot.data != null && snapshot.data.length > 0)
             books = snapshot.data;
           return ListView.builder(

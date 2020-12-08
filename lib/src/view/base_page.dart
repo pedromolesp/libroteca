@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
+import 'package:libroteca/src/view/book-list-rated/book-list-rated.dart';
 import 'package:libroteca/src/view/book-list/book_list_page.dart';
 import 'package:libroteca/src/view/preferences/preferences_page.dart';
 
@@ -16,7 +17,7 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   TabController _tabController;
   final List<Widget> _children = [
     BookListPage(),
-    Container(),
+    BookRatedList(),
     Container(),
     PreferencesPage(),
   ];

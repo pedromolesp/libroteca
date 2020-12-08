@@ -75,9 +75,19 @@ class DBProvider {
     return sales;
   }
 
-  Future<List<Book>> getAllReadBooks() async {
+  Future<List<Book>> getReadBooks() async {
     final db = await database;
     final res = await db.query('book', where: "leido = ?", whereArgs: ["Si"]);
+    List<Book> sales =
+        res.isNotEmpty ? res.map((e) => Book.fromJson(e)).toList() : [];
+
+    return sales;
+  }
+
+  Future<List<Book>> getRatedBooks() async {
+    final db = await database;
+    final res =
+        await db.query('book', where: "valoracion != ?", whereArgs: [0]);
     List<Book> sales =
         res.isNotEmpty ? res.map((e) => Book.fromJson(e)).toList() : [];
 

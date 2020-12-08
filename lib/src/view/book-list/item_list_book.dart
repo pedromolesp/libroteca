@@ -19,10 +19,12 @@ class _ItemListBookState extends State<ItemListBook>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation animation;
+  Book book;
 
   @override
   void initState() {
     super.initState();
+    book = widget.book;
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 700));
     animation = Tween(begin: 0.0, end: 1.0).animate(controller);
@@ -39,8 +41,12 @@ class _ItemListBookState extends State<ItemListBook>
   @override
   Widget build(BuildContext context) {
     Size size = getMediaSize(context);
+    return getBodyView(size, context);
+  }
+
+  Container getBodyView(Size size, BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: size.height * 0.02),
+      margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
       width: size.width,
       height: size.height * 0.1,
       alignment: Alignment.centerRight,
@@ -54,12 +60,11 @@ class _ItemListBookState extends State<ItemListBook>
           ),
           child: InkWell(
             onTap: () {
-              navigateAndRefresh(context, DetailBookPage(),
-                  arguments: widget.book);
+              navigateAndRefresh(context, DetailBookPage(), arguments: book);
             },
             child: Container(
               width: size.width * 0.95,
-              height: size.height * 0.1,
+              height: size.height * 0.12,
               decoration: BoxDecoration(
                 color: white24,
                 borderRadius: BorderRadius.only(
@@ -119,6 +124,32 @@ class _ItemListBookState extends State<ItemListBook>
                             fontSize: size.width * 0.04,
                           ),
                         ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+                        Divider(
+                          height: 1,
+                          color: orangeDark,
+                        ),
+                        Container(
+                          width: size.width * 0.6,
+                          child: Row(
+                            children: [
+                              Icon(
+                                book.leido == "Si" ? Icons.check : Icons.close,
+                                color: book.leido == "Si" ? green : red,
+                                size: size.height * 0.02,
+                              ),
+                              Icon(
+                                book.valoracion > 0
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: black,
+                                size: size.height * 0.02,
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
