@@ -13,3 +13,7 @@ Color white24 = Colors.white24;
 Color fillerGrey = Color(0xff898a8f);
 Color greyText = Color(0xff707070);
 Color green = Colors.green;
+Color primaryColor = orangeLight;
+Color secondaryColor = orangeDark;
+Color textActiveColor = black;
+Color textInactiveColor = white;
