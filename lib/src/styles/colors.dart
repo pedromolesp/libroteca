@@ -17,3 +17,4 @@ Color primaryColor = orangeLight;
 Color secondaryColor = orangeDark;
 Color textActiveColor = black;
 Color textInactiveColor = white;
+Color textSecondaryColor = greyText;

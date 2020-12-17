@@ -5,6 +5,7 @@ import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
+import 'package:libroteca/src/view/book-list/item_grid_book.dart';
 import 'package:libroteca/src/view/book-list/item_list_book.dart';
 import 'package:libroteca/src/view/create/create_book.dart';
 
@@ -119,13 +120,16 @@ class _BookListPageState extends State<BookListPage> {
 class BookList extends StatelessWidget {
   Future<List<Book>> booksRequest;
   List<Book> books = [];
+  String listKind;
   BookList(
     this.booksRequest, {
+    this.listKind,
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final size = getMediaSize(context);
     return FutureBuilder(
       future: booksRequest,
       builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
@@ -150,14 +154,31 @@ class BookList extends StatelessWidget {
           //     tapa: 0,
           //     titulo: "Los armarios negros");
           // books.add(book);
+
           if (snapshot.data != null && snapshot.data.length > 0)
             books = snapshot.data;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return ItemListBook(books[index]);
-            },
-            itemCount: books.length,
-          );
+          if (listKind == null || listKind == "list") {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return ItemListBook(books[index]);
+              },
+              itemCount: books.length,
+            );
+          } else if (listKind == "grid") {
+            return GridView.builder(
+              itemCount: books.length,
+              padding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.01, vertical: size.height * 0.04),
+              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return ItemGridBook(books[index]);
+              },
+            );
+          } else {
+            return Container();
+          }
         }
       },
     );
