@@ -14,7 +14,10 @@ Color fillerGrey = Color(0xff898a8f);
 Color greyText = Color(0xff707070);
 Color green = Colors.green;
 Color primaryColor = orangeLight;
+Color primaryColorDark = orangeDark;
+
 Color secondaryColor = orangeDark;
 Color textActiveColor = black;
 Color textInactiveColor = white;
 Color textSecondaryColor = greyText;
+Color primaryBackgroundColor = white;

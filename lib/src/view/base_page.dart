@@ -18,7 +18,6 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   final List<Widget> _children = [
     BookListPage(),
     BookRatedList(),
-    Container(),
     PreferencesPage(),
   ];
   TextStyle ts;
@@ -26,7 +25,7 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: 4);
+    _tabController = new TabController(vsync: this, length: 3);
     _tabController.addListener(_handleTabSelection);
   }
 
@@ -97,12 +96,6 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
                 Icons.star,
               ),
               text: 'Valorados',
-            ),
-            Tab(
-              icon: Icon(
-                Icons.favorite,
-              ),
-              text: 'Deseos',
             ),
             Tab(
               icon: Icon(

@@ -28,6 +28,8 @@ class _BookListPageState extends State<BookListPage> {
     Size size = getMediaSize(context);
     return Scaffold(
       backgroundColor: orangeLight,
+      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -117,9 +119,8 @@ class _BookListPageState extends State<BookListPage> {
   }
 }
 
-class BookList extends StatelessWidget {
+class BookList extends StatefulWidget {
   Future<List<Book>> booksRequest;
-  List<Book> books = [];
   String listKind;
   BookList(
     this.booksRequest, {
@@ -128,10 +129,26 @@ class BookList extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _BookListState createState() => _BookListState();
+}
+
+class _BookListState extends State<BookList> {
+  List<Book> books = [];
+  TextEditingController _controller;
+  String search;
+  @override
+  void initState() {
+    super.initState();
+    _controller = new TextEditingController(text: search);
+    search = "";
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = getMediaSize(context);
+
     return FutureBuilder(
-      future: booksRequest,
+      future: widget.booksRequest,
       builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
         if (snapshot.connectionState != ConnectionState.done ||
             snapshot.hasData == null) {
@@ -156,25 +173,23 @@ class BookList extends StatelessWidget {
           // books.add(book);
 
           if (snapshot.data != null && snapshot.data.length > 0)
-            books = snapshot.data;
-          if (listKind == null || listKind == "list") {
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return ItemListBook(books[index]);
-              },
-              itemCount: books.length,
+            books = filterBySearch(snapshot.data);
+          if (widget.listKind == null || widget.listKind == "list") {
+            return Stack(
+              children: [
+                getListView(size),
+                getSearchView(size),
+              ],
             );
-          } else if (listKind == "grid") {
-            return GridView.builder(
-              itemCount: books.length,
-              padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.01, vertical: size.height * 0.04),
-              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return ItemGridBook(books[index]);
-              },
+          } else if (widget.listKind == "grid") {
+            return Stack(
+              children: [
+                getGridView(size),
+                Container(
+                  margin: EdgeInsets.only(top: size.height * 0.03),
+                  child: getSearchView(size),
+                ),
+              ],
             );
           } else {
             return Container();
@@ -182,5 +197,120 @@ class BookList extends StatelessWidget {
         }
       },
     );
+  }
+
+  Widget getGridView(size) {
+    return GridView.builder(
+      itemCount: books.length,
+      shrinkWrap: true,
+      padding: EdgeInsets.only(
+          left: size.width * 0.01,
+          right: size.width * 0.01,
+          top: size.height * 0.15,
+          bottom: size.height * 0.05),
+      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        return ItemGridBook(books[index]);
+      },
+    );
+  }
+
+  Widget getListView(Size size) {
+    return ListView.builder(
+      padding:
+          EdgeInsets.only(top: size.height * 0.13, bottom: size.height * 0.05),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return ItemListBook(books[index]);
+      },
+      itemCount: books.length,
+    );
+  }
+
+  getSearchView(Size size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: size.height * 0.1,
+          width: size.width * 0.7,
+          margin: EdgeInsets.only(top: size.height * 0.02),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: primaryBackgroundColor,
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 7,
+                    color: black20,
+                    offset: Offset(0.0, 2.0),
+                    spreadRadius: 1),
+              ]),
+          padding: EdgeInsets.all(size.height * 0.01),
+          child: Material(
+            child: TextFormField(
+              style: TextStyle(
+                fontFamily: Fonts.muliBold,
+                color: textActiveColor,
+              ),
+              controller: _controller,
+              cursorColor: secondaryColor,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(
+                      color: secondaryColor, width: size.width * 0.005),
+                ),
+                hintStyle: TextStyle(
+                  fontFamily: Fonts.muliBold,
+                  color: textActiveColor,
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    setState(() {
+                      search = "";
+                    });
+                  },
+                ),
+                labelText: "Busca un libro  ",
+                labelStyle: TextStyle(
+                  fontFamily: Fonts.muliBold,
+                  color: textActiveColor,
+                ),
+                fillColor: white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(
+                      color: secondaryColor, width: size.width * 0.005),
+                ),
+              ),
+              onChanged: (v) {
+                setState(() {
+                  search = v;
+                });
+              },
+              keyboardType: TextInputType.emailAddress,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Book> filterBySearch(List<Book> books) {
+    List<Book> booksFilter = [];
+    if (search.isEmpty) {
+      return books;
+    } else {
+      books.forEach((book) {
+        if (book.autor.toLowerCase().contains(search) ||
+            book.titulo.toLowerCase().contains(search)) {
+          booksFilter.add(book);
+        }
+      });
+      return booksFilter;
+    }
   }
 }
