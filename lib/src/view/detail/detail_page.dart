@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/helpers/app_bar.dart';
 import 'package:libroteca/src/helpers/estado_by_number_method.dart';
+import 'package:libroteca/src/helpers/navigation_refresh.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
+import 'package:libroteca/src/view/create/create_book.dart';
 
 class DetailBookPage extends StatefulWidget {
   @override
@@ -14,6 +16,8 @@ class DetailBookPage extends StatefulWidget {
 }
 
 class _DetailBookPageState extends State<DetailBookPage> {
+  ScrollController _scrollController;
+
   Book book;
   int rating;
   String opinion;
@@ -23,6 +27,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
   @override
   void initState() {
     super.initState();
+    _scrollController = new ScrollController();
     rating = 0;
     opinion = "";
   }
@@ -31,8 +36,8 @@ class _DetailBookPageState extends State<DetailBookPage> {
   Widget build(BuildContext context) {
     if (callOnce < 1) {
       book = ModalRoute.of(context).settings.arguments;
-      opinion = book.opinion ?? "";
-      rating = book.valoracion;
+      opinion = book.opinion != null ? book.opinion : "";
+      rating = book.valoracion != null ? book.valoracion : 0;
       size = getMediaSize(context);
       callOnce++;
     }
@@ -45,12 +50,21 @@ class _DetailBookPageState extends State<DetailBookPage> {
     }
     return Scaffold(
       backgroundColor: white,
-      appBar: getAppBar(
-        title,
-        true,
-        size,
-        context,
-      ),
+      appBar: getAppBar(title, true, size, context, actions: [
+        IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: textActiveColor,
+            ),
+            onPressed: () {
+              navigateAndRefresh(context, CreateEditBook(), arguments: book)
+                  .then((value) {
+                if (value) {
+                  setState(() {});
+                }
+              });
+            })
+      ]),
       body: getView(size),
     );
   }
@@ -65,7 +79,10 @@ class _DetailBookPageState extends State<DetailBookPage> {
           return true;
         },
         child: Scrollbar(
+          isAlwaysShown: true,
+          controller: _scrollController,
           child: ListView(
+            controller: _scrollController,
             shrinkWrap: true,
             padding: EdgeInsets.only(
                 top: size.height * 0.03,
@@ -268,7 +285,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            getRatingAlert(size, context, book);
+            getRatingAlert(size, context);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -507,7 +524,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
     }
   }
 
-  void getRatingAlert(Size size, BuildContext context, Book book) {
+  void getRatingAlert(Size size, BuildContext context) {
     TextEditingController _opinionController = new TextEditingController();
     showDialog(
       barrierDismissible: false,
@@ -537,6 +554,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                         return true;
                       },
                       child: Material(
+                        color: white,
                         child: ListView(
                           children: [
                             Container(
@@ -700,12 +718,12 @@ class _DetailBookPageState extends State<DetailBookPage> {
         width: size.width * 0.27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          color: red,
+          color: primaryColor,
         ),
         margin: EdgeInsets.only(top: size.height * 0.03),
         child: Material(
           borderRadius: BorderRadius.circular(30),
-          color: red,
+          color: primaryColor,
           child: InkWell(
             borderRadius: BorderRadius.circular(30),
             onTap: () async {
@@ -747,12 +765,12 @@ class _DetailBookPageState extends State<DetailBookPage> {
         width: size.width * 0.27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          color: red,
+          color: primaryColor,
         ),
         margin: EdgeInsets.only(top: size.height * 0.03),
         child: Material(
           borderRadius: BorderRadius.circular(30),
-          color: red,
+          color: primaryColor,
           child: InkWell(
             borderRadius: BorderRadius.circular(30),
             onTap: () {
@@ -786,7 +804,9 @@ class _DetailBookPageState extends State<DetailBookPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AutoSizeText(
-              "Opinión: \n\n" + book.opinion,
+              book.opinion != null
+                  ? "Opinión: \n\n" + book.opinion
+                  : "Opinión: \n\n" + "",
               maxLines: null,
               minFontSize: 12,
               textAlign: TextAlign.start,
@@ -797,7 +817,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                 decoration: TextDecoration.none,
               ),
             ),
-            book.opinion.isEmpty
+            book.opinion == null || book.opinion.isEmpty
                 ? Container(
                     width: size.width,
                     height: size.height * 0.05,
