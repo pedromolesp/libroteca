@@ -139,63 +139,68 @@ class _BookListState extends State<BookList> {
   @override
   void initState() {
     super.initState();
-    _controller = new TextEditingController(text: search);
     search = "";
   }
 
   @override
   Widget build(BuildContext context) {
     final size = getMediaSize(context);
+    _controller = new TextEditingController(text: search);
 
-    return FutureBuilder(
-      future: widget.booksRequest,
-      builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
-        if (snapshot.connectionState != ConnectionState.done ||
-            snapshot.hasData == null) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          // Book book = new Book(
-          //     autor: "Joan Manuel Gisbert",
-          //     edicion: "1",
-          //     editorial: "Alfaguara",
-          //     estado: 1,
-          //     fechaPublicacion: "2005-02-02",
-          //     genero: "Terror",
-          //     id: 0,
-          //     idioma: "Español",
-          //     leido: "Si",
-          //     nombrePrestamo: "",
-          //     paginas: 240,
-          //     tapa: 0,
-          //     titulo: "Los armarios negros");
-          // books.add(book);
-
-          if (snapshot.data != null && snapshot.data.length > 0)
-            books = filterBySearch(snapshot.data);
-          if (widget.listKind == null || widget.listKind == "list") {
-            return Stack(
-              children: [
-                getListView(size),
-                getSearchView(size),
-              ],
-            );
-          } else if (widget.listKind == "grid") {
-            return Stack(
-              children: [
-                getGridView(size),
-                Container(
-                  margin: EdgeInsets.only(top: size.height * 0.03),
-                  child: getSearchView(size),
-                ),
-              ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: FutureBuilder(
+        future: widget.booksRequest,
+        builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
+          if (snapshot.connectionState != ConnectionState.done ||
+              snapshot.hasData == null) {
+            return Center(
+              child: CircularProgressIndicator(),
             );
           } else {
-            return Container();
+            // Book book = new Book(
+            //     autor: "Joan Manuel Gisbert",
+            //     edicion: "1",
+            //     editorial: "Alfaguara",
+            //     estado: 1,
+            //     fechaPublicacion: "2005-02-02",
+            //     genero: "Terror",
+            //     id: 0,
+            //     idioma: "Español",
+            //     leido: "Si",
+            //     nombrePrestamo: "",
+            //     paginas: 240,
+            //     tapa: 0,
+            //     titulo: "Los armarios negros");
+            // books.add(book);
+
+            if (snapshot.data != null && snapshot.data.length > 0)
+              books = filterBySearch(snapshot.data);
+            if (widget.listKind == null || widget.listKind == "list") {
+              return Stack(
+                children: [
+                  getListView(size),
+                  getSearchView(size),
+                ],
+              );
+            } else if (widget.listKind == "grid") {
+              return Stack(
+                children: [
+                  getGridView(size),
+                  Container(
+                    margin: EdgeInsets.only(top: size.height * 0.03),
+                    child: getSearchView(size),
+                  ),
+                ],
+              );
+            } else {
+              return Container();
+            }
           }
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -272,6 +277,7 @@ class _BookListState extends State<BookList> {
                     setState(() {
                       search = "";
                     });
+                    FocusScope.of(context).requestFocus(new FocusNode());
                   },
                 ),
                 labelText: "Busca un libro  ",
