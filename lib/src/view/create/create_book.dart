@@ -685,7 +685,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
       margin: EdgeInsets.only(right: size.width * 0.1, left: size.width * 0.1),
       child: Material(
         borderRadius: BorderRadius.circular(30),
-        color: red,
+        color: primaryColor,
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
           onTap: () async {
