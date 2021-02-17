@@ -138,7 +138,7 @@ class _ItemGridBookState extends State<ItemGridBook>
     return Container(
       height: size.height * 0.05,
       child: AutoSizeText(
-        book.opinion + " sdf sf sfsdfsd fsd sdf s fsfsdff afadf",
+        book.opinion,
         maxLines: 2,
         maxFontSize: 22,
         minFontSize: 12,
