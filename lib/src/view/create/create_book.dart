@@ -25,7 +25,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
   TextEditingController _edicionController;
 
   final _formKey = GlobalKey<FormState>();
-
+  ScrollController _scrollController;
   String titulo = "";
   String autor = "";
   String editorial = "";
@@ -39,30 +39,20 @@ class _CreateEditBookState extends State<CreateEditBook> {
   String year = DateTime.now().year.toString();
   int executeOnce = 0;
   Book book;
+  Book bookUpdate;
+
   int newOrUpdate = 0;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = new ScrollController();
   }
 
   @override
   Widget build(BuildContext context) {
-    _yearController = new TextEditingController(text: year.toString());
-    _tituloController = new TextEditingController(text: titulo);
-    _autorController = new TextEditingController(text: autor);
-    _editorialController = new TextEditingController(text: editorial);
-    _generoController = new TextEditingController(text: genero);
-    _paginasController = new TextEditingController(text: paginas.toString());
-    _edicionController = new TextEditingController(text: edicion);
-    Size size = getMediaSize(context);
-    ts = TextStyle(
-      color: black,
-      fontSize: size.width * 0.04,
-      fontFamily: Fonts.muliBold,
-    );
-
     final argument = ModalRoute.of(context).settings.arguments;
+    Size size = getMediaSize(context);
     if ((argument is Book) && executeOnce == 0) {
       newOrUpdate = 1;
       book = argument;
@@ -79,38 +69,57 @@ class _CreateEditBookState extends State<CreateEditBook> {
       tapa = book.tapa;
       executeOnce++;
     }
+    _yearController = new TextEditingController(text: year.toString());
+    _tituloController = new TextEditingController(text: titulo);
+    _autorController = new TextEditingController(text: autor);
+    _editorialController = new TextEditingController(text: editorial);
+    _generoController = new TextEditingController(text: genero);
+    _paginasController = new TextEditingController(text: paginas.toString());
+    _edicionController = new TextEditingController(text: edicion);
+    ts = TextStyle(
+      color: black,
+      fontSize: size.width * 0.04,
+      fontFamily: Fonts.muliBold,
+    );
+
     return Scaffold(
       backgroundColor: white,
-      appBar: getAppBar("Añadir libro", true, size, context),
-      body: ListView(
-        children: [
-          Container(
-            width: size.width,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  getTitleForm(size),
-                  getAutorForm(size),
-                  getPaginasForm(size),
-                  getRadioLeido(size),
-                  getRadioTapa(size),
-                  getYearForm(size),
-                  getEdicionForm(size),
-                  getEditorialForm(size),
-                  getGeneroForm(size),
-                  SizedBox(
-                    height: size.height * 0.1,
-                  ),
-                  getButton(size, context),
-                  SizedBox(
-                    height: size.height * 0.1,
-                  ),
-                ],
+      appBar: getAppBar(newOrUpdate == 0 ? "Añadir libro" : "Editar libro",
+          true, size, context),
+      body: Scrollbar(
+        controller: _scrollController,
+        isAlwaysShown: true,
+        child: ListView(
+          controller: _scrollController,
+          children: [
+            Container(
+              width: size.width,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    getTitleForm(size),
+                    getAutorForm(size),
+                    getPaginasForm(size),
+                    getRadioLeido(size),
+                    getRadioTapa(size),
+                    getYearForm(size),
+                    getEdicionForm(size),
+                    getEditorialForm(size),
+                    getGeneroForm(size),
+                    SizedBox(
+                      height: size.height * 0.1,
+                    ),
+                    getButton(size, context),
+                    SizedBox(
+                      height: size.height * 0.1,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -691,9 +700,60 @@ class _CreateEditBookState extends State<CreateEditBook> {
           onTap: () async {
             int pags = int.parse(paginas);
             int yearNumber = int.parse(year);
+            if (newOrUpdate == 0) {
+              //rellenar datos minimos * definir campos obligatorios
+              if (this._formKey.currentState.validate() && pags > 0) {
+                book = new Book(
+                    autor: autor.trim(),
+                    edicion: edicion,
+                    editorial: editorial.trim(),
+                    estado: estado,
+                    fechaPublicacion: yearNumber.toString(),
+                    genero: genero.trim(),
+                    idioma: idioma.trim(),
+                    leido: leido,
+                    paginas: pags,
+                    tapa: tapa,
+                    titulo: titulo.trim(),
+                    nombrePrestamo: "",
+                    opinion: "",
+                    valoracion: 0);
 
-            if (this._formKey.currentState.validate() && pags > 0) {
-              book = new Book(
+                await DBProvider.db.insertBook(book).then((value) {
+                  if (value > 0) {
+                    setState(() {
+                      titulo = "";
+                      autor = "";
+                      editorial = "";
+                      genero = "";
+                      year = DateTime.now().year.toString();
+                      edicion = "";
+                      leido = "";
+                      idioma = "";
+                      paginas = "0";
+                      estado = 1;
+                      tapa = 0;
+                    });
+                    Fluttertoast.showToast(
+                      msg: "Libro añadido",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIos: 2,
+                    );
+                  }
+                });
+              } else {
+                Fluttertoast.showToast(
+                  msg: "Los datos deben rellenarse correctamente",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 2,
+                );
+              }
+            } else {
+              if (this._formKey.currentState.validate() && pags > 0) {
+                bookUpdate = new Book(
+                  id: book.id,
                   autor: autor.trim(),
                   edicion: edicion,
                   editorial: editorial.trim(),
@@ -705,33 +765,60 @@ class _CreateEditBookState extends State<CreateEditBook> {
                   paginas: pags,
                   tapa: tapa,
                   titulo: titulo.trim(),
-                  nombrePrestamo: "",
-                  opinion: "",
-                  valoracion: 0);
+                  nombrePrestamo: book.nombrePrestamo,
+                  opinion: book.opinion,
+                  valoracion: book.valoracion,
+                );
 
-              await DBProvider.db.insertBook(book).then((value) {
-                if (value > 0) {
-                  setState(() {
-                    titulo = "";
-                    autor = "";
-                    editorial = "";
-                    genero = "";
-                    year = DateTime.now().year.toString();
-                    edicion = "";
-                    leido = "No";
-                    idioma = "";
-                    paginas = "0";
-                    estado = 1;
-                    tapa = 0;
-                  });
-                  Fluttertoast.showToast(
-                    msg: "Libro añadido",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 2,
-                  );
-                }
-              });
+<<<<<<< HEAD
+                await DBProvider.db.insertBook(book).then((value) {
+=======
+                await DBProvider.db.updateBook(bookUpdate).then((value) {
+>>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
+                  if (value > 0) {
+                    setState(() {
+                      titulo = "";
+                      autor = "";
+                      editorial = "";
+                      genero = "";
+                      year = DateTime.now().year.toString();
+                      edicion = "";
+<<<<<<< HEAD
+                      leido = "No";
+=======
+                      leido = "";
+>>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
+                      idioma = "";
+                      paginas = "0";
+                      estado = 1;
+                      tapa = 0;
+                    });
+                    Fluttertoast.showToast(
+<<<<<<< HEAD
+                      msg: "Libro añadido",
+=======
+                      msg: "Libro editado",
+>>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIos: 2,
+                    );
+<<<<<<< HEAD
+                  }
+                });
+=======
+                    Navigator.pop(context, true);
+                  }
+                });
+              } else {
+                Fluttertoast.showToast(
+                  msg: "Los datos deben rellenarse correctamente",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 2,
+                );
+>>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
+              }
             }
           },
           child: Center(

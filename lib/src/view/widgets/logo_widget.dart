@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:libroteca/src/helpers/screen_size.dart';
 import 'dart:math' as math;
 
 import 'package:libroteca/src/styles/colors.dart';
