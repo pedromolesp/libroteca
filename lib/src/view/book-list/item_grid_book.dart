@@ -136,10 +136,10 @@ class _ItemGridBookState extends State<ItemGridBook>
 
   getRate(Size size) {
     return Container(
-      height: size.height * 0.1,
+      height: size.height * 0.05,
       child: AutoSizeText(
-        book.opinion,
-        maxLines: 5,
+        book.opinion + " sdf sf sfsdfsd fsd sdf s fsfsdff afadf",
+        maxLines: 2,
         maxFontSize: 22,
         minFontSize: 12,
         overflow: TextOverflow.ellipsis,

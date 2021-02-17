@@ -7,10 +7,11 @@ class BookRatedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: orangeLight,
-        child: BookList(
-          DBProvider.db.getRatedBooks(),
-          listKind: "grid",
-        ));
+      color: orangeLight,
+      child: BookList(
+        DBProvider.db.getRatedBooks(),
+        listKind: "grid",
+      ),
+    );
   }
 }
