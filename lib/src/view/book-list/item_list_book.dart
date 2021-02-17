@@ -60,7 +60,12 @@ class _ItemListBookState extends State<ItemListBook>
           ),
           child: InkWell(
             onTap: () {
-              navigateAndRefresh(context, DetailBookPage(), arguments: book);
+              navigateAndRefresh(context, DetailBookPage(), arguments: book)
+                  .then((value) {
+                if (value) {
+                  setState(() {});
+                }
+              });
             },
             child: Container(
               width: size.width * 0.95,
@@ -141,7 +146,7 @@ class _ItemListBookState extends State<ItemListBook>
                                 size: size.height * 0.02,
                               ),
                               Icon(
-                                book.valoracion > 0
+                                book.valoracion != null && book.valoracion > 0
                                     ? Icons.star
                                     : Icons.star_border,
                                 color: black,
