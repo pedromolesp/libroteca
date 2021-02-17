@@ -718,7 +718,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                     genero = "";
                     year = DateTime.now().year.toString();
                     edicion = "";
-                    leido = "";
+                    leido = "No";
                     idioma = "";
                     paginas = "0";
                     estado = 1;
