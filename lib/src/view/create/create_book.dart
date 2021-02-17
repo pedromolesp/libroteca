@@ -770,11 +770,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                   valoracion: book.valoracion,
                 );
 
-<<<<<<< HEAD
                 await DBProvider.db.insertBook(book).then((value) {
-=======
-                await DBProvider.db.updateBook(bookUpdate).then((value) {
->>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
                   if (value > 0) {
                     setState(() {
                       titulo = "";
@@ -783,41 +779,20 @@ class _CreateEditBookState extends State<CreateEditBook> {
                       genero = "";
                       year = DateTime.now().year.toString();
                       edicion = "";
-<<<<<<< HEAD
                       leido = "No";
-=======
-                      leido = "";
->>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
                       idioma = "";
                       paginas = "0";
                       estado = 1;
                       tapa = 0;
                     });
                     Fluttertoast.showToast(
-<<<<<<< HEAD
                       msg: "Libro añadido",
-=======
-                      msg: "Libro editado",
->>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIos: 2,
                     );
-<<<<<<< HEAD
                   }
                 });
-=======
-                    Navigator.pop(context, true);
-                  }
-                });
-              } else {
-                Fluttertoast.showToast(
-                  msg: "Los datos deben rellenarse correctamente",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIos: 2,
-                );
->>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
               }
             }
           },
