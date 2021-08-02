@@ -28,7 +28,6 @@ class _BookListPageState extends State<BookListPage> {
     Size size = getMediaSize(context);
     return Scaffold(
       backgroundColor: orangeLight,
-      resizeToAvoidBottomPadding: true,
       resizeToAvoidBottomInset: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(

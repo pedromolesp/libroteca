@@ -47,7 +47,6 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
       fontSize: size.width * 0.035,
     );
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
       resizeToAvoidBottomInset: true,
       backgroundColor: orangeDark,
       body: Stack(
