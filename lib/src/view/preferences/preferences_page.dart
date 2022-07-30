@@ -167,12 +167,9 @@ class PreferencesPage extends StatelessWidget {
           break;
         case PermissionStatus.denied:
           print("permision denied exportando");
-
           break;
-
         case PermissionStatus.restricted:
           print("permision restricted exportando");
-
           break;
         case PermissionStatus.limited:
           print("permision limitado exportando");
@@ -185,6 +182,7 @@ class PreferencesPage extends StatelessWidget {
   }
 
   importDatabase() async {
+    //TODO: comprobar si el isbn es único
     FilePickerResult result = await FilePicker.platform.pickFiles();
     List<BookToExport> books;
     if (result != null) {

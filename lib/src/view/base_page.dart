@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
-import 'package:libroteca/src/view/book-list-rated/book-list-rated.dart';
+import 'package:libroteca/src/view/book-list-rated/book_list_rated.dart';
 import 'package:libroteca/src/view/book-list/book_list_page.dart';
 import 'package:libroteca/src/view/preferences/preferences_page.dart';
 
@@ -49,22 +49,22 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: orangeDark,
-      body: Stack(
-        children: [
-          Container(
-            width: size.width,
-            height: size.height,
-          ),
-          Container(
-              width: size.width,
-              height: size.height * 0.91,
-              child:
-                  TabBarView(controller: _tabController, children: _children)),
-          Positioned(
-            bottom: 0,
-            child: getTabsRow(size),
-          ),
-        ],
+      body: Container(
+        width: size.width,
+        height: size.height,
+        child: Stack(
+          children: [
+            Container(
+                width: size.width,
+                height: size.height * 0.91,
+                child: TabBarView(
+                    controller: _tabController, children: _children)),
+            Positioned(
+              bottom: 0,
+              child: getTabsRow(size),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -72,9 +72,12 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   getTabsRow(Size size) {
     return Container(
         width: size.width,
-        decoration: BoxDecoration(color: orangeDark, boxShadow: [
-          BoxShadow(blurRadius: 7, color: black20, offset: Offset(0.0, 2.0))
-        ]),
+        decoration: BoxDecoration(
+          color: orangeDark,
+          boxShadow: [
+            BoxShadow(blurRadius: 7, color: black20, offset: Offset(0.0, 2.0))
+          ],
+        ),
         child: TabBar(
           controller: _tabController,
           labelColor: black,

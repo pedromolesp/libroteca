@@ -208,9 +208,9 @@ class _BookListState extends State<BookList> {
       itemCount: books.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(
-          left: size.width * 0.01,
-          right: size.width * 0.01,
-          top: size.height * 0.15,
+          left: size.width * 0.05,
+          right: size.width * 0.05,
+          top: size.height * 0.16,
           bottom: size.height * 0.05),
       gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

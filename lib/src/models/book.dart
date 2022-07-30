@@ -1,5 +1,6 @@
 class Book {
   int id;
+  String isbn;
   String titulo;
   String autor;
   String editorial;
@@ -22,6 +23,7 @@ class Book {
     this.editorial,
     this.paginas,
     this.edicion,
+    this.isbn,
     this.leido,
     this.fechaPublicacion,
     this.genero,
@@ -46,6 +48,7 @@ class Book {
     estado = json['estado'];
     nombrePrestamo = json['nombre_prestamo'];
     tapa = json['tapa'];
+    isbn = json['isbn'];
     idioma = json['idioma'];
     valoracion = json['valoracion'];
     opinion = json['opinion'];
@@ -55,6 +58,7 @@ class Book {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['titulo'] = this.titulo;
+    data['isbn'] = this.isbn;
     data['autor'] = this.autor;
     data['editorial'] = this.editorial;
     data['paginas'] = this.paginas;
@@ -88,6 +92,8 @@ class Books {
 }
 
 class BookToExport {
+  String isbn;
+
   String titulo;
   String autor;
   String editorial;
@@ -108,6 +114,7 @@ class BookToExport {
     this.autor,
     this.editorial,
     this.paginas,
+    this.isbn,
     this.edicion,
     this.leido,
     this.fechaPublicacion,
@@ -126,6 +133,7 @@ class BookToExport {
     editorial = json['editorial'];
     paginas = json['paginas'];
     edicion = json['edicion'];
+    isbn = json['isbn'];
     leido = json['leido'];
     genero = json['genero'];
     fechaPublicacion = json['fecha_publicacion'];
@@ -140,6 +148,7 @@ class BookToExport {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['titulo'] = this.titulo;
+    data['isbn'] = this.isbn;
     data['autor'] = this.autor;
     data['editorial'] = this.editorial;
     data['paginas'] = this.paginas;
