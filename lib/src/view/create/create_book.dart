@@ -738,7 +738,6 @@ class _CreateEditBookState extends State<CreateEditBook> {
                       msg: "Libro añadido",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 2,
                     );
                   }
                 });
@@ -747,7 +746,6 @@ class _CreateEditBookState extends State<CreateEditBook> {
                   msg: "Los datos deben rellenarse correctamente",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
-                  timeInSecForIos: 2,
                 );
               }
             } else {
@@ -789,7 +787,6 @@ class _CreateEditBookState extends State<CreateEditBook> {
                       msg: "Libro añadido",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 2,
                     );
                     Navigator.pop(context, true);
                   }
@@ -799,7 +796,6 @@ class _CreateEditBookState extends State<CreateEditBook> {
                   msg: "Los datos deben rellenarse correctamente",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
-                  timeInSecForIos: 2,
                 );
               }
             }

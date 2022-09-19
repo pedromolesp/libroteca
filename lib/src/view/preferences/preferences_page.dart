@@ -21,14 +21,14 @@ class PreferencesPage extends StatelessWidget {
       backgroundColor: orangeLight,
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: primaryColorDark,
+        backgroundColor: orangeDark,
         centerTitle: true,
         title: Container(
           width: size.width,
           child: Text(
             "Preferencias",
             style: TextStyle(
-                color: white,
+                color: black,
                 fontFamily: Fonts.muliBold,
                 fontSize: size.width * 0.05),
           ),
@@ -57,7 +57,7 @@ class PreferencesPage extends StatelessWidget {
         width: size.width * 0.7,
         height: size.height * 0.07,
         child: Material(
-          color: primaryColorDark,
+          color: orangeDark,
           borderRadius: BorderRadius.circular(30),
           child: InkWell(
             onTap: () {
@@ -83,7 +83,7 @@ class PreferencesPage extends StatelessWidget {
         width: size.width * 0.7,
         height: size.height * 0.07,
         child: Material(
-          color: primaryColorDark,
+          color: orangeDark,
           borderRadius: BorderRadius.circular(30),
           child: InkWell(
             onTap: () {
@@ -105,7 +105,7 @@ class PreferencesPage extends StatelessWidget {
   }
 
   exportDatabase() async {
-    final PermissionHandler _permissionHandler = PermissionHandler();
+    Permission _permissionHandler = Permission.storage;
 
     File file;
     DateTime date = DateTime.now();
@@ -113,9 +113,8 @@ class PreferencesPage extends StatelessWidget {
 
     String json = "";
     String pathAndroid = "/storage/emulated/0/Download";
-    await _permissionHandler
-        .requestPermissions([PermissionGroup.storage]).then((result) async {
-      switch (result[PermissionGroup.storage]) {
+    await _permissionHandler.request().then((result) async {
+      switch (result) {
         case PermissionStatus.granted:
           {
             print("permisiongranted");
@@ -136,7 +135,7 @@ class PreferencesPage extends StatelessWidget {
                       msg: "Aún no hay datos",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 2,
+                      timeInSecForIosWeb: 2,
                     );
                   }
                 });
@@ -154,7 +153,7 @@ class PreferencesPage extends StatelessWidget {
                         msg: "Aún no hay datos",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
-                        timeInSecForIos: 2,
+                        timeInSecForIosWeb: 2,
                       );
                     }
                   });
@@ -167,19 +166,23 @@ class PreferencesPage extends StatelessWidget {
 
           break;
         case PermissionStatus.denied:
-          print("permisionmishuevos");
-
+          print("permision denied exportando");
           break;
-
         case PermissionStatus.restricted:
-          print("permisioncasi");
-
+          print("permision restricted exportando");
+          break;
+        case PermissionStatus.limited:
+          print("permision limitado exportando");
+          break;
+        case PermissionStatus.permanentlyDenied:
+          print("permision permantly denied exportando");
           break;
       }
     });
   }
 
   importDatabase() async {
+    //TODO: comprobar si el isbn es único
     FilePickerResult result = await FilePicker.platform.pickFiles();
     List<BookToExport> books;
     if (result != null) {
