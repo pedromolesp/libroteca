@@ -16,7 +16,7 @@ class LoadingPage extends StatelessWidget {
     return Container(
       width: size.width,
       height: size.height,
-      color: orangeDark,
+      color: primaryColor,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

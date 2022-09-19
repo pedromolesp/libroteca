@@ -501,7 +501,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
       case 2:
         icon = new Icon(
           Icons.face,
-          color: orangeDark,
+          color: primaryColor,
         );
         break;
     }
@@ -516,7 +516,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
     } else if (number >= 200 && number < 400) {
       return yellow;
     } else if (number >= 400 && number < 500) {
-      return orangeDark;
+      return primaryColor;
     } else if (number >= 500) {
       return red;
     } else {
@@ -642,14 +642,14 @@ class _DetailBookPageState extends State<DetailBookPage> {
                                   fontSize: size.width * 0.04,
                                   fontFamily: Fonts.muliBold,
                                 ),
-                                cursorColor: orangeDark,
+                                cursorColor: primaryColor,
                                 controller: _opinionController,
                                 maxLines: 15,
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: BorderSide(
-                                        color: orangeDark,
+                                        color: primaryColor,
                                         width: size.width * 0.005),
                                   ),
                                   suffixIcon: Icon(
@@ -671,7 +671,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: BorderSide(
-                                        color: orangeDark,
+                                        color: primaryColor,
                                         width: size.width * 0.005),
                                   ),
                                 ),

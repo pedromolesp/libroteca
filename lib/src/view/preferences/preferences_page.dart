@@ -21,14 +21,14 @@ class PreferencesPage extends StatelessWidget {
       backgroundColor: orangeLight,
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: orangeDark,
+        backgroundColor: primaryColorDark,
         centerTitle: true,
         title: Container(
           width: size.width,
           child: Text(
             "Preferencias",
             style: TextStyle(
-                color: black,
+                color: white,
                 fontFamily: Fonts.muliBold,
                 fontSize: size.width * 0.05),
           ),
@@ -57,7 +57,7 @@ class PreferencesPage extends StatelessWidget {
         width: size.width * 0.7,
         height: size.height * 0.07,
         child: Material(
-          color: orangeDark,
+          color: primaryColorDark,
           borderRadius: BorderRadius.circular(30),
           child: InkWell(
             onTap: () {
@@ -83,7 +83,7 @@ class PreferencesPage extends StatelessWidget {
         width: size.width * 0.7,
         height: size.height * 0.07,
         child: Material(
-          color: orangeDark,
+          color: primaryColorDark,
           borderRadius: BorderRadius.circular(30),
           child: InkWell(
             onTap: () {

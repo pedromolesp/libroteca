@@ -47,9 +47,8 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
       fontSize: size.width * 0.035,
     );
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
       resizeToAvoidBottomInset: true,
-      backgroundColor: orangeDark,
+      backgroundColor: primaryColor,
       body: Stack(
         children: [
           Container(
@@ -73,7 +72,7 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   getTabsRow(Size size) {
     return Container(
         width: size.width,
-        decoration: BoxDecoration(color: orangeDark, boxShadow: [
+        decoration: BoxDecoration(color: primaryColorDark, boxShadow: [
           BoxShadow(blurRadius: 7, color: black20, offset: Offset(0.0, 2.0))
         ]),
         child: TabBar(

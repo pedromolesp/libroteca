@@ -90,7 +90,7 @@ class _LogoWidgetState extends State<LogoWidget>
                 child: Image.asset(
                   "assets/images/libro-logo.png",
                   colorBlendMode: BlendMode.color,
-                  color: orangeDark,
+                  color: primaryColor,
                   fit: BoxFit.fill,
                 ),
               ),

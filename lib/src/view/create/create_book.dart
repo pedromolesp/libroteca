@@ -411,13 +411,13 @@ class _CreateEditBookState extends State<CreateEditBook> {
       width: size.width,
       child: TextFormField(
         style: ts,
-        cursorColor: orangeDark,
+        cursorColor: primaryColor,
         controller: _tituloController,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
           suffixIcon: Icon(
             Icons.title,
@@ -430,7 +430,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
         ),
         onChanged: (v) {
@@ -456,13 +456,13 @@ class _CreateEditBookState extends State<CreateEditBook> {
       width: size.width,
       child: TextFormField(
         style: ts,
-        cursorColor: orangeDark,
+        cursorColor: primaryColor,
         controller: _yearController,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
           suffixIcon: Icon(
             Icons.date_range,
@@ -475,7 +475,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
         ),
         onChanged: (v) {
@@ -495,13 +495,13 @@ class _CreateEditBookState extends State<CreateEditBook> {
       width: size.width,
       child: TextFormField(
         style: ts,
-        cursorColor: orangeDark,
+        cursorColor: primaryColor,
         controller: _autorController,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
           suffixIcon: Icon(
             Icons.edit,
@@ -514,7 +514,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
         ),
         onChanged: (v) {
@@ -540,13 +540,13 @@ class _CreateEditBookState extends State<CreateEditBook> {
       width: size.width,
       child: TextFormField(
         style: ts,
-        cursorColor: orangeDark,
+        cursorColor: primaryColor,
         controller: _editorialController,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
           suffixIcon: Icon(
             Icons.book,
@@ -559,7 +559,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
         ),
         onChanged: (v) {
@@ -579,13 +579,13 @@ class _CreateEditBookState extends State<CreateEditBook> {
       width: size.width,
       child: TextFormField(
         style: ts,
-        cursorColor: orangeDark,
+        cursorColor: primaryColor,
         controller: _generoController,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
           suffixIcon: Icon(
             Icons.texture,
@@ -598,7 +598,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
         ),
         onChanged: (v) {
@@ -618,14 +618,14 @@ class _CreateEditBookState extends State<CreateEditBook> {
       width: size.width,
       child: TextFormField(
         style: ts,
-        cursorColor: orangeDark,
+        cursorColor: primaryColor,
         controller: _paginasController,
         maxLength: 5,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
           suffixIcon: Icon(
             Icons.find_in_page,
@@ -638,7 +638,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
         ),
         onChanged: (v) {
@@ -658,13 +658,13 @@ class _CreateEditBookState extends State<CreateEditBook> {
       width: size.width,
       child: TextFormField(
         style: ts,
-        cursorColor: orangeDark,
+        cursorColor: primaryColor,
         controller: _edicionController,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
           suffixIcon: Icon(
             Icons.explicit,
@@ -677,7 +677,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide:
-                BorderSide(color: orangeDark, width: size.width * 0.005),
+                BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
         ),
         onChanged: (v) {
@@ -770,11 +770,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                   valoracion: book.valoracion,
                 );
 
-<<<<<<< HEAD
                 await DBProvider.db.insertBook(book).then((value) {
-=======
-                await DBProvider.db.updateBook(bookUpdate).then((value) {
->>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
                   if (value > 0) {
                     setState(() {
                       titulo = "";
@@ -783,30 +779,18 @@ class _CreateEditBookState extends State<CreateEditBook> {
                       genero = "";
                       year = DateTime.now().year.toString();
                       edicion = "";
-<<<<<<< HEAD
                       leido = "No";
-=======
-                      leido = "";
->>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
                       idioma = "";
                       paginas = "0";
                       estado = 1;
                       tapa = 0;
                     });
                     Fluttertoast.showToast(
-<<<<<<< HEAD
                       msg: "Libro añadido",
-=======
-                      msg: "Libro editado",
->>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIos: 2,
                     );
-<<<<<<< HEAD
-                  }
-                });
-=======
                     Navigator.pop(context, true);
                   }
                 });
@@ -817,7 +801,6 @@ class _CreateEditBookState extends State<CreateEditBook> {
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIos: 2,
                 );
->>>>>>> 4c140a94ec1cf669284c9206a6f0807e3d5ff70a
               }
             }
           },
