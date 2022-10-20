@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
@@ -10,7 +11,8 @@ class LoadingPage extends StatelessWidget {
     Size size = getMediaSize(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(seconds: 4)).then((e) {
-        Navigator.pushReplacementNamed(context, 'base');
+        Get.toNamed("base");
+        // Navigator.pushReplacementNamed(context, 'base');
       });
     });
     return Container(

@@ -42,6 +42,7 @@ class _BookListPageState extends State<BookListPage> {
       ),
       appBar: AppBar(
         elevation: 1,
+        titleSpacing: 0,
         backgroundColor: primaryColorDark,
         centerTitle: true,
         title: Container(
