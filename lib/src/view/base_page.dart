@@ -48,23 +48,23 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
     );
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: orangeDark,
-      body: Container(
-        width: size.width,
-        height: size.height,
-        child: Stack(
-          children: [
-            Container(
-                width: size.width,
-                height: size.height * 0.91,
-                child: TabBarView(
-                    controller: _tabController, children: _children)),
-            Positioned(
-              bottom: 0,
-              child: getTabsRow(size),
-            ),
-          ],
-        ),
+      backgroundColor: primaryColor,
+      body: Stack(
+        children: [
+          Container(
+            width: size.width,
+            height: size.height,
+          ),
+          Container(
+              width: size.width,
+              height: size.height * 0.91,
+              child:
+                  TabBarView(controller: _tabController, children: _children)),
+          Positioned(
+            bottom: 0,
+            child: getTabsRow(size),
+          ),
+        ],
       ),
     );
   }
@@ -72,12 +72,9 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   getTabsRow(Size size) {
     return Container(
         width: size.width,
-        decoration: BoxDecoration(
-          color: orangeDark,
-          boxShadow: [
-            BoxShadow(blurRadius: 7, color: black20, offset: Offset(0.0, 2.0))
-          ],
-        ),
+        decoration: BoxDecoration(color: primaryColorDark, boxShadow: [
+          BoxShadow(blurRadius: 7, color: black20, offset: Offset(0.0, 2.0))
+        ]),
         child: TabBar(
           controller: _tabController,
           labelColor: black,

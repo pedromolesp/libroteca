@@ -9,6 +9,7 @@ getAppBar(String title, bool automaticallyImplyLeading, Size size,
   return AppBar(
     automaticallyImplyLeading: automaticallyImplyLeading,
     actions: actions,
+    backgroundColor: primaryColorDark,
     leading: IconButton(
         icon:
             Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),

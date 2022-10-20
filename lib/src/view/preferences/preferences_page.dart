@@ -105,15 +105,14 @@ class PreferencesPage extends StatelessWidget {
   }
 
   exportDatabase() async {
-    Permission _permissionHandler = Permission.storage;
-
+    Permission _permission = Permission.storage;
     File file;
     DateTime date = DateTime.now();
     Uint8List bytes;
-
     String json = "";
     String pathAndroid = "/storage/emulated/0/Download";
-    await _permissionHandler.request().then((result) async {
+
+    await _permission.request().then((result) async {
       switch (result) {
         case PermissionStatus.granted:
           {
@@ -135,7 +134,6 @@ class PreferencesPage extends StatelessWidget {
                       msg: "Aún no hay datos",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 2,
                     );
                   }
                 });
@@ -153,7 +151,6 @@ class PreferencesPage extends StatelessWidget {
                         msg: "Aún no hay datos",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 2,
                       );
                     }
                   });

@@ -27,7 +27,7 @@ class _BookListPageState extends State<BookListPage> {
     _searchController = new TextEditingController(text: search);
     Size size = getMediaSize(context);
     return Scaffold(
-      backgroundColor: orangeLight,
+      backgroundColor: primaryColorLight,
       resizeToAvoidBottomInset: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -35,14 +35,14 @@ class _BookListPageState extends State<BookListPage> {
           Icons.add,
           color: whiteRed,
         ),
-        backgroundColor: orangeDark,
+        backgroundColor: primaryColorDark,
         onPressed: () {
           _addBook(context);
         },
       ),
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: orangeDark,
+        backgroundColor: primaryColorDark,
         centerTitle: true,
         title: Container(
           width: size.width,
@@ -53,7 +53,7 @@ class _BookListPageState extends State<BookListPage> {
                 width: size.width * 0.4,
                 height: size.height * 0.1,
                 child: Material(
-                  color: tabLibraryRead == 0 ? orangeLight : orangeDark,
+                  color: tabLibraryRead == 0 ? orangeLight : primaryColor,
                   child: InkWell(
                     onTap: () {
                       tabLibraryRead != 0
@@ -78,7 +78,7 @@ class _BookListPageState extends State<BookListPage> {
                 width: size.width * 0.4,
                 height: size.height * 0.1,
                 child: Material(
-                  color: tabLibraryRead == 1 ? orangeLight : orangeDark,
+                  color: tabLibraryRead == 1 ? orangeLight : primaryColor,
                   child: InkWell(
                     onTap: () {
                       tabLibraryRead != 1

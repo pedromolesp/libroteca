@@ -134,7 +134,7 @@ class _ItemListBookState extends State<ItemListBook>
                         ),
                         Divider(
                           height: 1,
-                          color: orangeDark,
+                          color: primaryColor,
                         ),
                         Container(
                           width: size.width * 0.6,
