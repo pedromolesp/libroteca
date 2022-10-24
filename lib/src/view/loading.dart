@@ -9,11 +9,10 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = getMediaSize(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 4)).then((e) {
-        Get.toNamed("base");
-        // Navigator.pushReplacementNamed(context, 'base');
-      });
+
+    Future.delayed(Duration(seconds: 4)).then((e) {
+      // Get.toNamed("base");
+      Navigator.pushReplacementNamed(context, 'base');
     });
     return Container(
       width: size.width,

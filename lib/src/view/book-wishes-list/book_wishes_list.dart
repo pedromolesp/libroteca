@@ -9,7 +9,7 @@ class BookWishesList extends StatelessWidget {
     return Container(
         color: orangeLight,
         child: BookList(
-          DBProvider.db.getRatedBooks(),
+          // DBProvider.db.getRatedBooks(),
           listKind: "grid",
         ));
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:libroteca/src/data/controllers/book_controller.dart';
 import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/helpers/app_bar.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
@@ -16,6 +18,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
   TextStyle ts;
 
   TextEditingController _tituloController;
+  TextEditingController _isbnController;
   TextEditingController _yearController;
 
   TextEditingController _autorController;
@@ -27,13 +30,14 @@ class _CreateEditBookState extends State<CreateEditBook> {
   final _formKey = GlobalKey<FormState>();
   ScrollController _scrollController;
   String titulo = "";
+  String isbn = "";
   String autor = "";
   String editorial = "";
   String genero = "";
   String edicion = "";
   String leido = "No";
   String idioma = "";
-  String paginas = "0";
+  String paginas = "";
   int estado = 1;
   int tapa = 0;
   String year = DateTime.now().year.toString();
@@ -42,6 +46,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
   Book bookUpdate;
 
   int newOrUpdate = 0;
+  BookController bookController = Get.put(BookController());
 
   @override
   void initState() {
@@ -58,6 +63,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
       book = argument;
       titulo = book.titulo;
       autor = book.autor;
+      isbn = book.isbn;
       editorial = book.editorial;
       genero = book.genero;
       year = int.parse(book.fechaPublicacion).toString();
@@ -76,6 +82,8 @@ class _CreateEditBookState extends State<CreateEditBook> {
     _generoController = new TextEditingController(text: genero);
     _paginasController = new TextEditingController(text: paginas.toString());
     _edicionController = new TextEditingController(text: edicion);
+    _isbnController = new TextEditingController(text: isbn);
+
     ts = TextStyle(
       color: black,
       fontSize: size.width * 0.04,
@@ -88,7 +96,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           true, size, context),
       body: Scrollbar(
         controller: _scrollController,
-        isAlwaysShown: true,
+        thumbVisibility: true,
         child: ListView(
           controller: _scrollController,
           children: [
@@ -106,6 +114,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                     getYearForm(size),
                     getEdicionForm(size),
                     getEditorialForm(size),
+                    getIsbnForm(size),
                     getGeneroForm(size),
                     SizedBox(
                       height: size.height * 0.1,
@@ -447,6 +456,51 @@ class _CreateEditBookState extends State<CreateEditBook> {
     );
   }
 
+  getIsbnForm(Size size) {
+    return Container(
+      margin: EdgeInsets.only(
+          top: size.height * 0.02,
+          right: size.width * 0.1,
+          left: size.width * 0.1),
+      width: size.width,
+      child: TextFormField(
+        style: ts,
+        cursorColor: primaryColor,
+        controller: _isbnController,
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide:
+                BorderSide(color: primaryColor, width: size.width * 0.005),
+          ),
+          suffixIcon: Icon(
+            Icons.emoji_symbols,
+            color: fillerGrey,
+          ),
+          hintStyle: ts,
+          labelText: "ISBN  ",
+          labelStyle: ts,
+          fillColor: white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide:
+                BorderSide(color: primaryColor, width: size.width * 0.005),
+          ),
+        ),
+        onChanged: (v) {
+          isbn = v;
+        },
+        validator: (v) {
+          if (v.length > 0) {
+            if (v.length < 9) return "Rellena el campo de título";
+          } else
+            return null;
+        },
+        keyboardType: TextInputType.text,
+      ),
+    );
+  }
+
   getYearForm(Size size) {
     return Container(
       margin: EdgeInsets.only(
@@ -705,12 +759,13 @@ class _CreateEditBookState extends State<CreateEditBook> {
               if (this._formKey.currentState.validate() && pags > 0) {
                 book = new Book(
                     autor: autor.trim(),
-                    edicion: edicion,
-                    editorial: editorial.trim(),
+                    edicion: edicion ?? "",
+                    editorial: editorial.trim() ?? "",
                     estado: estado,
+                    isbn: isbn ?? "",
                     fechaPublicacion: yearNumber.toString(),
-                    genero: genero.trim(),
-                    idioma: idioma.trim(),
+                    genero: genero.trim() ?? "",
+                    idioma: idioma.trim() ?? "",
                     leido: leido,
                     paginas: pags,
                     tapa: tapa,
@@ -719,13 +774,14 @@ class _CreateEditBookState extends State<CreateEditBook> {
                     opinion: "",
                     valoracion: 0);
 
-                await DBProvider.db.insertBook(book).then((value) {
+                await DBProvider.db.insertBook(book).then((value) async {
                   if (value > 0) {
                     setState(() {
                       titulo = "";
                       autor = "";
                       editorial = "";
                       genero = "";
+                      isbn = "";
                       year = DateTime.now().year.toString();
                       edicion = "";
                       leido = "";
@@ -734,6 +790,9 @@ class _CreateEditBookState extends State<CreateEditBook> {
                       estado = 1;
                       tapa = 0;
                     });
+                    Book bookCreatedFromBD =
+                        await DBProvider.db.getBookById(value);
+                    bookController.addBook(bookCreatedFromBD);
                     Fluttertoast.showToast(
                       msg: "Libro añadido",
                       toastLength: Toast.LENGTH_SHORT,

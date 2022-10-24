@@ -35,6 +35,7 @@ class DBProvider {
          paginas INTEGER,
          estado INTEGER,
          titulo TEXT,
+         isbn TEXT,
          autor TEXT,
          editorial TEXT,
          genero TEXT,
