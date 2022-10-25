@@ -194,12 +194,12 @@ class _ItemGridBookState extends State<ItemGridBook>
                   child: NotificationListener<OverscrollIndicatorNotification>(
                     onNotification:
                         (OverscrollIndicatorNotification overscroll) {
-                      overscroll.disallowGlow();
+                      overscroll.disallowIndicator();
                       return true;
                     },
                     child: Scrollbar(
                       controller: _scrollController,
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       child: ListView(
                         padding: EdgeInsets.only(right: size.width * 0.03),
                         controller: _scrollController,
