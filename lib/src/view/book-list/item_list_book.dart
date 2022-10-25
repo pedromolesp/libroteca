@@ -69,7 +69,7 @@ class _ItemListBookState extends State<ItemListBook>
             },
             child: Container(
               width: size.width * 0.95,
-              height: size.height * 0.12,
+              height: size.height * 0.13,
               decoration: BoxDecoration(
                 color: white24,
                 borderRadius: BorderRadius.only(
@@ -114,7 +114,7 @@ class _ItemListBookState extends State<ItemListBook>
                             style: TextStyle(
                               color: black,
                               fontFamily: Fonts.muliBold,
-                              fontSize: size.width * 0.05,
+                              fontSize: 18,
                             ),
                           ),
                         ),

@@ -151,8 +151,11 @@ class BookList extends StatelessWidget {
       init: bookController,
       builder: (ctrl) {
         if (tabSelected == 0) {
+          bookController.initBookListFromDB();
           books = bookController.bookList.value;
         } else {
+          bookController.initReadBookListFromDB();
+
           books = bookController.bookListRead.value;
         }
         return GestureDetector(
