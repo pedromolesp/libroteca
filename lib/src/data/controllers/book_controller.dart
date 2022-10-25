@@ -18,8 +18,3 @@ class BookController extends GetxController {
   addRead(item) => bookListRead.add(item);
   removeRead(index) => bookListRead.removeAt(index);
 }
-
-class BookViewController extends GetxController {
-  var tabSelected = 0.obs;
-  change(int index) => tabSelected.value = index;
-}

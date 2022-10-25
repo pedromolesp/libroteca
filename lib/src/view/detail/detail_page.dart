@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:libroteca/src/data/db_provider.dart';
@@ -10,27 +12,15 @@ import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 import 'package:libroteca/src/view/create/create_book.dart';
 
-class DetailBookPage extends StatefulWidget {
-  @override
-  _DetailBookPageState createState() => _DetailBookPageState();
-}
-
-class _DetailBookPageState extends State<DetailBookPage> {
-  ScrollController _scrollController;
+class DetailBookPage extends StatelessWidget {
+  ScrollController _scrollController = new ScrollController();
 
   Book book;
-  int rating;
-  String opinion;
+  int rating = 0;
+  String opinion = "";
   int callOnce = 0;
   Size size;
   String title = "";
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = new ScrollController();
-    rating = 0;
-    opinion = "";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,29 +47,24 @@ class _DetailBookPageState extends State<DetailBookPage> {
               color: textActiveColor,
             ),
             onPressed: () {
-              navigateAndRefresh(context, CreateEditBook(), arguments: book)
-                  .then((value) {
-                if (value) {
-                  setState(() {});
-                }
-              });
+              //TODO: Navigate
             })
       ]),
-      body: getView(size),
+      body: getView(size, context),
     );
   }
 
-  Container getView(size) {
+  Container getView(size, BuildContext context) {
     return Container(
       width: size.width,
       height: size.height,
       child: NotificationListener<OverscrollIndicatorNotification>(
         onNotification: (OverscrollIndicatorNotification overscroll) {
-          overscroll.disallowGlow();
+          overscroll.disallowIndicator();
           return true;
         },
         child: Scrollbar(
-          isAlwaysShown: true,
+          thumbVisibility: true,
           controller: _scrollController,
           child: ListView(
             controller: _scrollController,
@@ -104,7 +89,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                   SizedBox(
                     height: size.height * 0.02,
                   ),
-                  getRatingView(size),
+                  getRatingView(size, context),
                   SizedBox(
                     height: size.height * 0.02,
                   ),
@@ -274,7 +259,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
     );
   }
 
-  Widget getRatingView(Size size) {
+  Widget getRatingView(Size size, BuildContext context) {
     return Container(
       width: size.width,
       height: size.height * 0.05,
@@ -292,23 +277,23 @@ class _DetailBookPageState extends State<DetailBookPage> {
             children: [
               Icon(
                 Icons.star,
-                color: orangeLight,
+                color: primaryColorDark,
               ),
               Icon(
                 rating >= 2 ? Icons.star : Icons.star_border,
-                color: orangeLight,
+                color: primaryColorDark,
               ),
               Icon(
                 rating >= 3 ? Icons.star : Icons.star_border,
-                color: orangeLight,
+                color: primaryColorDark,
               ),
               Icon(
                 rating >= 4 ? Icons.star : Icons.star_border,
-                color: orangeLight,
+                color: primaryColorDark,
               ),
               Icon(
                 rating >= 5 ? Icons.star : Icons.star_border,
-                color: orangeLight,
+                color: primaryColorDark,
               ),
             ],
           ),
@@ -550,7 +535,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                     NotificationListener<OverscrollIndicatorNotification>(
                       onNotification:
                           (OverscrollIndicatorNotification overscroll) {
-                        overscroll.disallowGlow();
+                        overscroll.disallowIndicator();
                         return true;
                       },
                       child: Material(
@@ -727,10 +712,10 @@ class _DetailBookPageState extends State<DetailBookPage> {
           child: InkWell(
             borderRadius: BorderRadius.circular(30),
             onTap: () async {
-              setState(() {
-                rating = rated;
-                opinion = description;
-              });
+              // setState(() {
+              //   rating = rated;
+              //   opinion = description;
+              // });
               book.opinion = description;
               book.valoracion = rated;
               await DBProvider.db
@@ -855,9 +840,9 @@ class _DetailBookPageState extends State<DetailBookPage> {
             borderRadius: BorderRadius.circular(30),
             onTap: () async {
               read == "Si" ? book.leido = "No" : book.leido = "Si";
-              await DBProvider.db
-                  .updateBook(book)
-                  .then((value) => setState(() {}));
+              await DBProvider.db.updateBook(book).then((value) {
+                // setState(() {});
+              });
             },
             child: Container(
               width: size.width * 0.1,
