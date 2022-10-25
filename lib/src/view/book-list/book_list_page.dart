@@ -1,205 +1,194 @@
 import 'package:flutter/material.dart';
-import 'package:libroteca/src/data/db_provider.dart';
-import 'package:libroteca/src/helpers/navigation_refresh.dart';
+import 'package:get/get.dart';
+import 'package:libroteca/src/data/controllers/book_controller.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 import 'package:libroteca/src/view/book-list/item_grid_book.dart';
 import 'package:libroteca/src/view/book-list/item_list_book.dart';
-import 'package:libroteca/src/view/create/create_book.dart';
 
-class BookListPage extends StatefulWidget {
-  @override
-  _BookListPageState createState() => _BookListPageState();
-}
-
-class _BookListPageState extends State<BookListPage> {
+class BookListPage extends StatelessWidget {
   TextEditingController _searchController;
-
-  int tabLibraryRead = 0;
 
   String search = "";
   bool dragging = false;
+  final BookViewController bookViewController = Get.put(BookViewController());
 
   @override
   Widget build(BuildContext context) {
     _searchController = new TextEditingController(text: search);
     Size size = getMediaSize(context);
-    return Scaffold(
-      backgroundColor: primaryColorLight,
-      resizeToAvoidBottomInset: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: whiteRed,
-        ),
-        backgroundColor: primaryColorDark,
-        onPressed: () {
-          _addBook(context);
-        },
-      ),
-      appBar: AppBar(
-        elevation: 1,
-        backgroundColor: primaryColorDark,
-        centerTitle: true,
-        title: Container(
-          width: size.width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: size.width * 0.4,
-                height: size.height * 0.1,
-                child: Material(
-                  color: tabLibraryRead == 0 ? orangeLight : primaryColor,
-                  child: InkWell(
-                    onTap: () {
-                      tabLibraryRead != 0
-                          ? setState(() {
-                              tabLibraryRead = 0;
-                            })
-                          : {};
-                    },
-                    child: Center(
-                      child: Text(
-                        "Biblioteca",
-                        style: TextStyle(
-                            color: tabLibraryRead == 0 ? black : white,
-                            fontFamily: Fonts.muliBold,
-                            fontSize: size.width * 0.05),
-                      ),
+    return GetX<BookViewController>(
+      init: bookViewController,
+      builder: (BookViewController bookViewController) {
+        return Scaffold(
+          backgroundColor: primaryColorLight,
+          resizeToAvoidBottomInset: true,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButton: FloatingActionButton(
+            child: Icon(
+              Icons.add,
+              color: whiteRed,
+            ),
+            backgroundColor: primaryColorDark,
+            onPressed: () {
+              // Get.to(
+              //   () => CreateEditBook(),
+              // );
+              Navigator.pushNamed(context, "create");
+            },
+          ),
+          appBar: buildAppBar(
+            size,
+            bookViewController,
+          ),
+          body: BookList(
+            tabSelected: bookViewController.tabSelected.value,
+          ),
+        );
+
+        // BookList(DBProvider.db.getReadBooks()),
+      },
+    );
+  }
+
+  AppBar buildAppBar(Size size, BookViewController bookViewController) {
+    return AppBar(
+      elevation: 1,
+      titleSpacing: 0,
+      backgroundColor: primaryColorDark,
+      centerTitle: true,
+      title: Container(
+        width: size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: size.width * 0.4,
+              height: size.height * 0.1,
+              child: Material(
+                color: bookViewController.tabSelected.value == 0
+                    ? orangeLight
+                    : primaryColor,
+                child: InkWell(
+                  onTap: () {
+                    if (bookViewController.tabSelected.value != 0) {
+                      bookViewController.change(0);
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      "Biblioteca",
+                      style: TextStyle(
+                          color: bookViewController.tabSelected.value == 0
+                              ? black
+                              : white,
+                          fontFamily: Fonts.muliBold,
+                          fontSize: size.width * 0.05),
                     ),
                   ),
                 ),
               ),
-              Container(
-                width: size.width * 0.4,
-                height: size.height * 0.1,
-                child: Material(
-                  color: tabLibraryRead == 1 ? orangeLight : primaryColor,
-                  child: InkWell(
-                    onTap: () {
-                      tabLibraryRead != 1
-                          ? setState(() {
-                              tabLibraryRead = 1;
-                            })
-                          : {};
-                    },
-                    child: Center(
-                      child: Text(
-                        "Leídos",
-                        style: TextStyle(
-                            color: tabLibraryRead == 1 ? black : white,
-                            fontFamily: Fonts.muliBold,
-                            fontSize: size.width * 0.05),
-                      ),
+            ),
+            Container(
+              width: size.width * 0.4,
+              height: size.height * 0.1,
+              child: Material(
+                color: bookViewController.tabSelected.value == 1
+                    ? orangeLight
+                    : primaryColor,
+                child: InkWell(
+                  onTap: () {
+                    if (bookViewController.tabSelected.value != 1) {
+                      bookViewController.change(1);
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      "Leídos",
+                      style: TextStyle(
+                          color: bookViewController.tabSelected.value == 1
+                              ? black
+                              : white,
+                          fontFamily: Fonts.muliBold,
+                          fontSize: size.width * 0.05),
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
-      body: tabLibraryRead == 0
-          ? BookList(DBProvider.db.getAllBooks())
-          : BookList(DBProvider.db.getReadBooks()),
     );
   }
-
-  _addBook(BuildContext context) {
-    navigateAndRefresh(context, CreateEditBook()).then((value) {
-      if (value) {
-        setState(() {});
-      }
-    });
-  }
 }
 
-class BookList extends StatefulWidget {
+class BookList extends StatelessWidget {
   Future<List<Book>> booksRequest;
   String listKind;
-  BookList(
-    this.booksRequest, {
-    this.listKind,
-    Key key,
-  }) : super(key: key);
 
-  @override
-  _BookListState createState() => _BookListState();
-}
-
-class _BookListState extends State<BookList> {
+  //0 -> Library, 1 -> Read
+  int tabSelected;
   List<Book> books = [];
   TextEditingController _controller;
-  String search;
-  @override
-  void initState() {
-    super.initState();
-    search = "";
-  }
+  String search = "";
+  final BookController bookController = Get.put(BookController());
+
+  BookList({
+    this.listKind = "list",
+    this.tabSelected,
+    Key key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final size = getMediaSize(context);
     _controller = new TextEditingController(text: search);
 
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
+    return GetX<BookController>(
+      init: bookController,
+      builder: (ctrl) {
+        if (tabSelected == 0) {
+          bookController.initBookListFromDB();
+          books = bookController.bookList.value;
+        } else {
+          bookController.initReadBookListFromDB();
+          books = bookController.bookListRead.value;
+        }
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: Builder(
+            builder: (BuildContext context) {
+              if (books != null && books.length > 0)
+                books = filterBySearch(books);
+              if (listKind == null || listKind == "list") {
+                return Stack(
+                  children: [
+                    getListView(size),
+                    getSearchView(size),
+                  ],
+                );
+              } else if (listKind == "grid") {
+                return Stack(
+                  children: [
+                    getGridView(size),
+                    Container(
+                      margin: EdgeInsets.only(top: size.height * 0.03),
+                      child: getSearchView(size),
+                    ),
+                  ],
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
+        );
       },
-      child: FutureBuilder(
-        future: widget.booksRequest,
-        builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
-          if (snapshot.connectionState != ConnectionState.done ||
-              snapshot.hasData == null) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            // Book book = new Book(
-            //     autor: "Joan Manuel Gisbert",
-            //     edicion: "1",
-            //     editorial: "Alfaguara",
-            //     estado: 1,
-            //     fechaPublicacion: "2005-02-02",
-            //     genero: "Terror",
-            //     id: 0,
-            //     idioma: "Español",
-            //     leido: "Si",
-            //     nombrePrestamo: "",
-            //     paginas: 240,
-            //     tapa: 0,
-            //     titulo: "Los armarios negros");
-            // books.add(book);
-
-            if (snapshot.data != null && snapshot.data.length > 0)
-              books = filterBySearch(snapshot.data);
-            if (widget.listKind == null || widget.listKind == "list") {
-              return Stack(
-                children: [
-                  getListView(size),
-                  getSearchView(size),
-                ],
-              );
-            } else if (widget.listKind == "grid") {
-              return Stack(
-                children: [
-                  getGridView(size),
-                  Container(
-                    margin: EdgeInsets.only(top: size.height * 0.03),
-                    child: getSearchView(size),
-                  ),
-                ],
-              );
-            } else {
-              return Container();
-            }
-          }
-        },
-      ),
     );
   }
 
@@ -273,10 +262,11 @@ class _BookListState extends State<BookList> {
                 suffixIcon: IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () {
-                    setState(() {
-                      search = "";
-                    });
-                    FocusScope.of(context).requestFocus(new FocusNode());
+                    //TODO: cambio de la búsqueda con getx
+                    // setState(() {
+                    //   search = "";
+                    // });
+                    // FocusScope.of(context).requestFocus(new FocusNode());
                   },
                 ),
                 labelText: "Busca un libro  ",
@@ -292,9 +282,9 @@ class _BookListState extends State<BookList> {
                 ),
               ),
               onChanged: (v) {
-                setState(() {
-                  search = v;
-                });
+                // setState(() {
+                //   search = v;
+                // });
               },
               keyboardType: TextInputType.emailAddress,
             ),
