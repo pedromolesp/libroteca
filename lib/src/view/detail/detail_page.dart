@@ -1,16 +1,14 @@
-import 'dart:js';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:libroteca/src/data/controllers/providers/detail_page_model.dart';
 import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/helpers/app_bar.dart';
 import 'package:libroteca/src/helpers/estado_by_number_method.dart';
-import 'package:libroteca/src/helpers/navigation_refresh.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
-import 'package:libroteca/src/view/create/create_book.dart';
+import 'package:provider/provider.dart';
 
 class DetailBookPage extends StatelessWidget {
   ScrollController _scrollController = new ScrollController();
@@ -21,9 +19,11 @@ class DetailBookPage extends StatelessWidget {
   int callOnce = 0;
   Size size;
   String title = "";
-
+  DetailPageModel provider;
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<DetailPageModel>(context, listen: false);
+
     if (callOnce < 1) {
       book = ModalRoute.of(context).settings.arguments;
       opinion = book.opinion != null ? book.opinion : "";
@@ -54,103 +54,107 @@ class DetailBookPage extends StatelessWidget {
     );
   }
 
-  Container getView(size, BuildContext context) {
-    return Container(
-      width: size.width,
-      height: size.height,
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (OverscrollIndicatorNotification overscroll) {
-          overscroll.disallowIndicator();
-          return true;
-        },
-        child: Scrollbar(
-          thumbVisibility: true,
-          controller: _scrollController,
-          child: ListView(
+  getView(size, BuildContext context) {
+    return Builder(builder: (context) {
+      final provider = Provider.of<DetailPageModel>(context, listen: true);
+      book = provider.book;
+      return Container(
+        width: size.width,
+        height: size.height,
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (OverscrollIndicatorNotification overscroll) {
+            overscroll.disallowIndicator();
+            return true;
+          },
+          child: Scrollbar(
+            thumbVisibility: true,
             controller: _scrollController,
-            shrinkWrap: true,
-            padding: EdgeInsets.only(
-                top: size.height * 0.03,
-                right: size.width * 0.05,
-                left: size.width * 0.05),
-            children: [
-              Column(
-                children: [
-                  getTitleView(size),
-                  getAuthorView(size),
-                  SizedBox(
-                    height: size.height * 0.05,
-                  ),
-                  getImageView(size),
-                  SizedBox(
-                    height: size.height * 0.05,
-                  ),
-                  getPubView(size),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                  getRatingView(size, context),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                  book.leido.isNotEmpty
-                      ? getButtonRead(book.leido)
-                      : SizedBox(),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          getNumPagsView(size),
-                          SizedBox(
-                            height: size.height * 0.03,
-                          ),
-                          getEditorView(size),
-                          SizedBox(
-                            height: size.height * 0.03,
-                          ),
-                          getLanguajeView(size),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          getStateView(size),
-                          SizedBox(
-                            height: size.height * 0.02,
-                          ),
-                          getEditionView(size),
-                          SizedBox(
-                            height: size.height * 0.02,
-                          ),
-                          getGenView(size),
-                          SizedBox(
-                            height: size.height * 0.02,
-                          ),
-                          getPaperTypeView(size)
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                  getOpinionView(size),
-                  SizedBox(
-                    height: size.height * 0.05,
-                  ),
-                ],
-              ),
-            ],
+            child: ListView(
+              controller: _scrollController,
+              shrinkWrap: true,
+              padding: EdgeInsets.only(
+                  top: size.height * 0.03,
+                  right: size.width * 0.05,
+                  left: size.width * 0.05),
+              children: [
+                Column(
+                  children: [
+                    getTitleView(size),
+                    getAuthorView(size),
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+                    getImageView(size),
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+                    getPubView(size),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    getRatingView(size, context),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    book.leido.isNotEmpty
+                        ? getButtonRead(book.leido)
+                        : SizedBox(),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            getNumPagsView(size),
+                            SizedBox(
+                              height: size.height * 0.03,
+                            ),
+                            getEditorView(size),
+                            SizedBox(
+                              height: size.height * 0.03,
+                            ),
+                            getLanguajeView(size),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            getStateView(size),
+                            SizedBox(
+                              height: size.height * 0.02,
+                            ),
+                            getEditionView(size),
+                            SizedBox(
+                              height: size.height * 0.02,
+                            ),
+                            getGenView(size),
+                            SizedBox(
+                              height: size.height * 0.02,
+                            ),
+                            getPaperTypeView(size)
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    getOpinionView(size),
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Row getStateView(size) {
