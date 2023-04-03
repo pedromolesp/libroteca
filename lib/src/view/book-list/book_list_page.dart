@@ -56,7 +56,7 @@ class BookListPage extends StatelessWidget {
 
   AppBar buildAppBar(Size size, BookViewController bookViewController) {
     return AppBar(
-      elevation: 1,
+      elevation: 0,
       titleSpacing: 0,
       backgroundColor: primaryColorDark,
       centerTitle: true,
