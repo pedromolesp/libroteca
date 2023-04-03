@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:libroteca/src/data/controllers/book_controller.dart';
-import 'package:libroteca/src/data/controllers/book_list_view_controller.dart';
+import 'package:libroteca/src/data/controllers/getx/book_controller.dart';
+import 'package:libroteca/src/data/controllers/getx/book_list_view_controller.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
 import 'package:libroteca/src/styles/colors.dart';
@@ -56,7 +56,7 @@ class BookListPage extends StatelessWidget {
 
   AppBar buildAppBar(Size size, BookViewController bookViewController) {
     return AppBar(
-      elevation: 1,
+      elevation: 0,
       titleSpacing: 0,
       backgroundColor: primaryColorDark,
       centerTitle: true,

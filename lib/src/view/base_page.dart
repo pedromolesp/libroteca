@@ -13,7 +13,6 @@ class BasePage extends StatefulWidget {
 
 class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   String search = "";
-  int _currentIndex = 0;
   TabController _tabController;
   final List<Widget> _children = [
     BookListPage(),
@@ -104,11 +103,5 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
             ),
           ],
         ));
-  }
-
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
   }
 }

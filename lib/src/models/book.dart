@@ -77,7 +77,7 @@ class Book {
 }
 
 class Books {
-  List<Book> items = new List();
+  List<Book> items = [];
 
   Books();
 
@@ -167,7 +167,7 @@ class BookToExport {
 }
 
 class BookToExports {
-  List<BookToExport> items = new List();
+  List<BookToExport> items = [];
 
   BookToExports();
 

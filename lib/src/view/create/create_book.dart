@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:libroteca/src/data/controllers/book_controller.dart';
+import 'package:libroteca/src/data/controllers/getx/book_controller.dart';
 import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/helpers/app_bar.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
