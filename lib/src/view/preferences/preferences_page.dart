@@ -21,14 +21,15 @@ class PreferencesPage extends StatelessWidget {
       backgroundColor: orangeLight,
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: primaryColor,
+        backgroundColor: primaryColorDark,
         centerTitle: true,
         title: Container(
           width: size.width,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
           child: Text(
             "Preferencias",
             style: TextStyle(
-                color: black,
+                color: white,
                 fontFamily: Fonts.muliBold,
                 fontSize: size.width * 0.05),
           ),

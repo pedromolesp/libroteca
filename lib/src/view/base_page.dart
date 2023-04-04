@@ -76,10 +76,10 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
         ]),
         child: TabBar(
           controller: _tabController,
-          labelColor: black,
-          indicatorColor: black,
+          labelColor: whiteRed,
+          indicatorColor: whiteRed,
           labelPadding: EdgeInsets.symmetric(horizontal: 2),
-          unselectedLabelColor: whiteRed,
+          unselectedLabelColor: primaryColor,
           labelStyle: TextStyle(
               fontFamily: Fonts.muliBold, fontSize: size.width * 0.035),
           tabs: [
