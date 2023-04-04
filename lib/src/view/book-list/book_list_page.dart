@@ -62,16 +62,24 @@ class BookListPage extends StatelessWidget {
       centerTitle: true,
       title: Container(
         width: size.width,
+        height: size.height * 0.08,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Container(
               width: size.width * 0.4,
-              height: size.height * 0.1,
+              height: size.height * 0.07,
               child: Material(
                 color: bookViewController.tabSelected.value == 0
                     ? orangeLight
                     : primaryColor,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
                 child: InkWell(
                   onTap: () {
                     if (bookViewController.tabSelected.value != 0) {
@@ -91,14 +99,21 @@ class BookListPage extends StatelessWidget {
                   ),
                 ),
               ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10))),
             ),
             Container(
               width: size.width * 0.4,
-              height: size.height * 0.1,
+              height: size.height * 0.07,
               child: Material(
                 color: bookViewController.tabSelected.value == 1
                     ? orangeLight
                     : primaryColor,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
                 child: InkWell(
                   onTap: () {
                     if (bookViewController.tabSelected.value != 1) {
@@ -118,6 +133,10 @@ class BookListPage extends StatelessWidget {
                   ),
                 ),
               ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10))),
             )
           ],
         ),
@@ -242,52 +261,54 @@ class BookList extends StatelessWidget {
                     spreadRadius: 1),
               ]),
           padding: EdgeInsets.all(size.height * 0.01),
-          child: Material(
-            child: TextFormField(
-              style: TextStyle(
-                fontFamily: Fonts.muliBold,
-                color: textActiveColor,
-              ),
-              controller: _controller,
-              cursorColor: secondaryColor,
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                      color: secondaryColor, width: size.width * 0.005),
-                ),
-                hintStyle: TextStyle(
+          child: Center(
+            child: Material(
+              child: TextFormField(
+                style: TextStyle(
                   fontFamily: Fonts.muliBold,
                   color: textActiveColor,
                 ),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    //TODO: cambio de la búsqueda con getx
-                    // setState(() {
-                    //   search = "";
-                    // });
-                    // FocusScope.of(context).requestFocus(new FocusNode());
-                  },
+                controller: _controller,
+                cursorColor: secondaryColor,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                        color: secondaryColor, width: size.width * 0.005),
+                  ),
+                  hintStyle: TextStyle(
+                    fontFamily: Fonts.muliBold,
+                    color: textActiveColor,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      //TODO: cambio de la búsqueda con getx
+                      // setState(() {
+                      //   search = "";
+                      // });
+                      // FocusScope.of(context).requestFocus(new FocusNode());
+                    },
+                  ),
+                  labelText: "Busca un libro  ",
+                  labelStyle: TextStyle(
+                    fontFamily: Fonts.muliBold,
+                    color: textActiveColor,
+                  ),
+                  fillColor: white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                        color: secondaryColor, width: size.width * 0.005),
+                  ),
                 ),
-                labelText: "Busca un libro  ",
-                labelStyle: TextStyle(
-                  fontFamily: Fonts.muliBold,
-                  color: textActiveColor,
-                ),
-                fillColor: white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                      color: secondaryColor, width: size.width * 0.005),
-                ),
+                onChanged: (v) {
+                  // setState(() {
+                  //   search = v;
+                  // });
+                },
+                keyboardType: TextInputType.emailAddress,
               ),
-              onChanged: (v) {
-                // setState(() {
-                //   search = v;
-                // });
-              },
-              keyboardType: TextInputType.emailAddress,
             ),
           ),
         ),
