@@ -3,11 +3,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DBProvider {
-  static Database _database;
+  static Database? _database;
   static final DBProvider db = DBProvider._();
   DBProvider._();
 
-  Future<Database> get database async {
+  Future<Database?> get database async {
     if (_database != null) return _database;
     _database = await initDb();
     return _database;
@@ -53,13 +53,13 @@ class DBProvider {
   static Future _onUpgrade(Database db, int version, int newVersion) async {}
 
   Future<int> insertBook(Book book) async {
-    final db = await database;
+    final db = (await database)!;
     final res = await db.insert('book', book.toJson());
     return res;
   }
 
   Future<List<Book>> getAllBooks() async {
-    final db = await database;
+    final db = (await database)!;
     final res = await db.query('book');
     List<Book> sales =
         res.isNotEmpty ? res.map((e) => Book.fromJson(e)).toList() : [];
@@ -68,16 +68,16 @@ class DBProvider {
   }
 
   Future<List<Book>> getAllBooksToExport() async {
-    final db = await database;
+    final db = (await database)!;
     final res = await db.query('book');
     List<Book> sales =
-        res.isNotEmpty ? res.map((e) => BookToExport.fromJson(e)).toList() : [];
+        res.isNotEmpty ? res.map((e) => BookToExport.fromJson(e)).toList() as List<Book> : [];
 
     return sales;
   }
 
   Future<List<Book>> getReadBooks() async {
-    final db = await database;
+    final db = (await database)!;
     final res = await db.query('book', where: "leido = ?", whereArgs: ["Si"]);
     List<Book> sales =
         res.isNotEmpty ? res.map((e) => Book.fromJson(e)).toList() : [];
@@ -86,7 +86,7 @@ class DBProvider {
   }
 
   Future<List<Book>> getRatedBooks() async {
-    final db = await database;
+    final db = (await database)!;
     final res =
         await db.query('book', where: "valoracion != ?", whereArgs: [0]);
     List<Book> sales =
@@ -95,14 +95,14 @@ class DBProvider {
     return sales;
   }
 
-  Future<Book> getBookById(int id) async {
-    final db = await database;
+  Future<Book?> getBookById(int id) async {
+    final db = (await database)!;
     final res = await db.query('book', where: 'id = ?', whereArgs: [id]);
     return res.isNotEmpty ? Book.fromJson(res.first) : null;
   }
 
   Future updateBook(Book book) async {
-    final db = await database;
+    final db = (await database)!;
     final res = await db.update(
       'book',
       book.toJson(),
@@ -113,13 +113,13 @@ class DBProvider {
   }
 
   Future<int> deleteBook(int id) async {
-    final db = await database;
+    final db = (await database)!;
     final res = await db.delete('book', where: 'id = ?', whereArgs: [id]);
     return res;
   }
 
   insertBooksImport(List<BookToExport> books) async {
-    final db = await database;
+    final db = (await database)!;
     final batch = db.batch();
     for (var i = 0; i < books.length; i++) {
       batch.insert('book', books[i].toJson(),

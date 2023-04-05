@@ -10,7 +10,7 @@ import 'package:libroteca/src/view/book-list/item_grid_book.dart';
 import 'package:libroteca/src/view/book-list/item_list_book.dart';
 
 class BookListPage extends StatelessWidget {
-  TextEditingController _searchController;
+  TextEditingController? _searchController;
 
   String search = "";
   bool dragging = false;
@@ -155,20 +155,20 @@ class BookListPage extends StatelessWidget {
 }
 
 class BookList extends StatelessWidget {
-  Future<List<Book>> booksRequest;
+  Future<List<Book>>? booksRequest;
   String listKind;
 
   //0 -> Library, 1 -> Read
-  int tabSelected;
-  List<Book> books = [];
-  TextEditingController _controller;
+  int? tabSelected;
+  List<Book?> books = [];
+  TextEditingController? _controller;
   String search = "";
   final BookController bookController = Get.put(BookController());
 
   BookList({
     this.listKind = "list",
     this.tabSelected,
-    Key key,
+    Key? key,
   });
 
   @override
@@ -320,14 +320,14 @@ class BookList extends StatelessWidget {
     );
   }
 
-  List<Book> filterBySearch(List<Book> books) {
-    List<Book> booksFilter = [];
+  List<Book?> filterBySearch(List<Book?> books) {
+    List<Book?> booksFilter = [];
     if (search.isEmpty) {
       return books;
     } else {
       books.forEach((book) {
-        if (book.autor.toLowerCase().contains(search) ||
-            book.titulo.toLowerCase().contains(search)) {
+        if (book!.autor!.toLowerCase().contains(search) ||
+            book.titulo!.toLowerCase().contains(search)) {
           booksFilter.add(book);
         }
       });

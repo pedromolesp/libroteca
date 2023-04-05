@@ -140,7 +140,7 @@ class PreferencesPage extends StatelessWidget {
                 });
               } else {
                 await getDownloadsDirectory().then((value) async {
-                  final String path = ('${value.path}/LIBROTECA-$date.json')
+                  final String path = ('${value!.path}/LIBROTECA-$date.json')
                       .replaceAll(RegExp(r"\s\b|\b\s"), "-");
                   final File file = File(path);
                   await DBProvider.db.getAllBooks().then((books) async {
@@ -181,10 +181,10 @@ class PreferencesPage extends StatelessWidget {
 
   importDatabase() async {
     //TODO: comprobar si el isbn es único
-    FilePickerResult result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
     List<BookToExport> books;
     if (result != null) {
-      File file = File(result.files.single.path);
+      File file = File(result.files.single.path!);
       dynamic database = await file.readAsString();
       final jsonDecoded = json.decode(database);
       books = BookToExports.fromJsonList(jsonDecoded).items;

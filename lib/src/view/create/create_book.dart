@@ -15,35 +15,35 @@ class CreateEditBook extends StatefulWidget {
 }
 
 class _CreateEditBookState extends State<CreateEditBook> {
-  TextStyle ts;
+  TextStyle? ts;
 
-  TextEditingController _tituloController;
-  TextEditingController _isbnController;
-  TextEditingController _yearController;
+  TextEditingController? _tituloController;
+  TextEditingController? _isbnController;
+  TextEditingController? _yearController;
 
-  TextEditingController _autorController;
-  TextEditingController _editorialController;
-  TextEditingController _generoController;
-  TextEditingController _paginasController;
-  TextEditingController _edicionController;
+  TextEditingController? _autorController;
+  TextEditingController? _editorialController;
+  TextEditingController? _generoController;
+  TextEditingController? _paginasController;
+  TextEditingController? _edicionController;
 
   final _formKey = GlobalKey<FormState>();
-  ScrollController _scrollController;
-  String titulo = "";
-  String isbn = "";
-  String autor = "";
-  String editorial = "";
-  String genero = "";
-  String edicion = "";
-  String leido = "No";
-  String idioma = "";
+  ScrollController? _scrollController;
+  String? titulo = "";
+  String? isbn = "";
+  String? autor = "";
+  String? editorial = "";
+  String? genero = "";
+  String? edicion = "";
+  String? leido = "No";
+  String? idioma = "";
   String paginas = "";
-  int estado = 1;
-  int tapa = 0;
+  int? estado = 1;
+  int? tapa = 0;
   String year = DateTime.now().year.toString();
   int executeOnce = 0;
-  Book book;
-  Book bookUpdate;
+  late Book book;
+  Book? bookUpdate;
 
   int newOrUpdate = 0;
   BookController bookController = Get.put(BookController());
@@ -56,7 +56,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
 
   @override
   Widget build(BuildContext context) {
-    final argument = ModalRoute.of(context).settings.arguments;
+    final argument = ModalRoute.of(context)!.settings.arguments;
     Size size = getMediaSize(context);
     if ((argument is Book) && executeOnce == 0) {
       newOrUpdate = 1;
@@ -66,7 +66,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
       isbn = book.isbn;
       editorial = book.editorial;
       genero = book.genero;
-      year = int.parse(book.fechaPublicacion).toString();
+      year = int.parse(book.fechaPublicacion!).toString();
       edicion = book.edicion;
       leido = book.leido;
       idioma = book.idioma;
@@ -160,7 +160,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                           value: "No",
                           groupValue: leido,
                           activeColor: black,
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             setValueLeido(value);
                           },
                         ),
@@ -216,7 +216,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                           value: "Si",
                           groupValue: leido,
                           activeColor: black,
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             setValueLeido(value);
                           },
                         ),
@@ -293,7 +293,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                           value: 0,
                           groupValue: tapa,
                           activeColor: black,
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             setValueTapa(value);
                           },
                         ),
@@ -349,7 +349,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                           value: 1,
                           groupValue: tapa,
                           activeColor: black,
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             setValueTapa(value);
                           },
                         ),
@@ -446,7 +446,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           titulo = v;
         },
         validator: (v) {
-          if (v.isEmpty) {
+          if (v!.isEmpty) {
             return "Rellena el campo de título";
           } else
             return null;
@@ -491,7 +491,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           isbn = v;
         },
         validator: (v) {
-          if (v.length > 0) {
+          if (v!.length > 0) {
             if (v.length < 9) return "Rellena el campo de título";
           } else
             return null;
@@ -575,7 +575,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
           autor = v;
         },
         validator: (v) {
-          if (v.isEmpty) {
+          if (v!.isEmpty) {
             return "Rellena el campo de autor";
           } else
             return null;
@@ -756,20 +756,20 @@ class _CreateEditBookState extends State<CreateEditBook> {
             int yearNumber = int.parse(year);
             if (newOrUpdate == 0) {
               //rellenar datos minimos * definir campos obligatorios
-              if (this._formKey.currentState.validate() && pags > 0) {
+              if (this._formKey.currentState!.validate() && pags > 0) {
                 book = new Book(
-                    autor: autor.trim(),
+                    autor: autor!.trim(),
                     edicion: edicion ?? "",
-                    editorial: editorial.trim() ?? "",
+                    editorial: editorial!.trim() ?? "",
                     estado: estado,
                     isbn: isbn ?? "",
                     fechaPublicacion: yearNumber.toString(),
-                    genero: genero.trim() ?? "",
-                    idioma: idioma.trim() ?? "",
+                    genero: genero!.trim() ?? "",
+                    idioma: idioma!.trim() ?? "",
                     leido: leido,
                     paginas: pags,
                     tapa: tapa,
-                    titulo: titulo.trim(),
+                    titulo: titulo!.trim(),
                     nombrePrestamo: "",
                     opinion: "",
                     valoracion: 0);
@@ -790,7 +790,7 @@ class _CreateEditBookState extends State<CreateEditBook> {
                       estado = 1;
                       tapa = 0;
                     });
-                    Book bookCreatedFromBD =
+                    Book? bookCreatedFromBD =
                         await DBProvider.db.getBookById(value);
                     bookController.addBook(bookCreatedFromBD);
                     Fluttertoast.showToast(
@@ -808,20 +808,20 @@ class _CreateEditBookState extends State<CreateEditBook> {
                 );
               }
             } else {
-              if (this._formKey.currentState.validate() && pags > 0) {
+              if (this._formKey.currentState!.validate() && pags > 0) {
                 bookUpdate = new Book(
                   id: book.id,
-                  autor: autor.trim(),
+                  autor: autor!.trim(),
                   edicion: edicion,
-                  editorial: editorial.trim(),
+                  editorial: editorial!.trim(),
                   estado: estado,
                   fechaPublicacion: yearNumber.toString(),
-                  genero: genero.trim(),
-                  idioma: idioma.trim(),
+                  genero: genero!.trim(),
+                  idioma: idioma!.trim(),
                   leido: leido,
                   paginas: pags,
                   tapa: tapa,
-                  titulo: titulo.trim(),
+                  titulo: titulo!.trim(),
                   nombrePrestamo: book.nombrePrestamo,
                   opinion: book.opinion,
                   valoracion: book.valoracion,

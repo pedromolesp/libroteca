@@ -5,7 +5,7 @@ import 'package:libroteca/src/styles/fonts.dart';
 
 getAppBar(String title, bool automaticallyImplyLeading, Size size,
     BuildContext context,
-    {List<Widget> actions}) {
+    {List<Widget>? actions}) {
   return AppBar(
     automaticallyImplyLeading: automaticallyImplyLeading,
     actions: actions,

@@ -8,7 +8,7 @@ import 'package:libroteca/src/styles/fonts.dart';
 import 'package:libroteca/src/view/detail/detail_page.dart';
 
 class ItemListBook extends StatefulWidget {
-  Book book;
+  Book? book;
   ItemListBook(this.book);
 
   @override
@@ -17,9 +17,9 @@ class ItemListBook extends StatefulWidget {
 
 class _ItemListBookState extends State<ItemListBook>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  Animation animation;
-  Book book;
+  late AnimationController controller;
+  late Animation animation;
+  Book? book;
 
   @override
   void initState() {
@@ -34,8 +34,8 @@ class _ItemListBookState extends State<ItemListBook>
 
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
+    controller.dispose();
   }
 
   @override
@@ -51,7 +51,7 @@ class _ItemListBookState extends State<ItemListBook>
       height: size.height * 0.1,
       alignment: Alignment.centerRight,
       child: FadeTransition(
-        opacity: animation,
+        opacity: animation as Animation<double>,
         child: Material(
           color: white24,
           borderRadius: BorderRadius.only(
@@ -107,7 +107,7 @@ class _ItemListBookState extends State<ItemListBook>
                         Container(
                           width: size.width * 0.6,
                           child: AutoSizeText(
-                            widget.book.titulo,
+                            widget.book!.titulo!,
                             minFontSize: 14,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -119,7 +119,7 @@ class _ItemListBookState extends State<ItemListBook>
                           ),
                         ),
                         AutoSizeText(
-                          widget.book.autor,
+                          widget.book!.autor!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           minFontSize: 14,
@@ -141,12 +141,13 @@ class _ItemListBookState extends State<ItemListBook>
                           child: Row(
                             children: [
                               Icon(
-                                book.leido == "Si" ? Icons.check : Icons.close,
-                                color: book.leido == "Si" ? green : red,
+                                book!.leido == "Si" ? Icons.check : Icons.close,
+                                color: book!.leido == "Si" ? green : red,
                                 size: size.height * 0.02,
                               ),
                               Icon(
-                                book.valoracion != null && book.valoracion > 0
+                                book!.valoracion != null &&
+                                        book!.valoracion! > 0
                                     ? Icons.star
                                     : Icons.star_border,
                                 color: black,
