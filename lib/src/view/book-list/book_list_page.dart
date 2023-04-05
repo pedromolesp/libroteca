@@ -25,7 +25,7 @@ class BookListPage extends StatelessWidget {
       builder: (BookViewController bookViewController) {
         return Scaffold(
           backgroundColor: primaryColorLight,
-          resizeToAvoidBottomInset: true,
+          resizeToAvoidBottomInset: false,
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton(
             child: Icon(
@@ -44,8 +44,17 @@ class BookListPage extends StatelessWidget {
             size,
             bookViewController,
           ),
-          body: BookList(
-            tabSelected: bookViewController.tabSelected.value,
+          body: GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: BookList(
+              tabSelected: bookViewController.tabSelected.value,
+            ),
           ),
         );
 
@@ -247,17 +256,17 @@ class BookList extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          height: size.height * 0.1,
+          height: size.height * 0.07,
           width: size.width * 0.7,
           margin: EdgeInsets.only(top: size.height * 0.02),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
               color: primaryBackgroundColor,
               boxShadow: [
                 BoxShadow(
-                    blurRadius: 7,
+                    blurRadius: 3,
                     color: black20,
-                    offset: Offset(0.0, 2.0),
+                    offset: Offset(0.0, 1.0),
                     spreadRadius: 1),
               ]),
           padding: EdgeInsets.all(size.height * 0.01),
@@ -271,11 +280,6 @@ class BookList extends StatelessWidget {
                 controller: _controller,
                 cursorColor: secondaryColor,
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                        color: secondaryColor, width: size.width * 0.005),
-                  ),
                   hintStyle: TextStyle(
                     fontFamily: Fonts.muliBold,
                     color: textActiveColor,
