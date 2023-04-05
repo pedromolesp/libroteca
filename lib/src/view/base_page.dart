@@ -29,6 +29,11 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   }
 
   void _handleTabSelection() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
     setState(() {});
   }
 
@@ -46,7 +51,7 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
       fontSize: size.width * 0.035,
     );
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       backgroundColor: primaryColor,
       body: Stack(
         children: [

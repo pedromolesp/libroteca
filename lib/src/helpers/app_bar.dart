@@ -19,7 +19,7 @@ getAppBar(String title, bool automaticallyImplyLeading, Size size,
     title: Text(
       title,
       style: TextStyle(
-          color: black,
+          color: white,
           fontSize: size.width * 0.05,
           fontFamily: Fonts.muliBold),
     ),
