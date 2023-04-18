@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:libroteca/src/data/controllers/api_request.dart';
 import 'package:libroteca/src/data/controllers/getx/book_controller.dart';
 import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/helpers/app_bar.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
+import 'package:libroteca/src/models/google_api_book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 
@@ -442,8 +444,13 @@ class _CreateEditBookState extends State<CreateEditBook> {
                 BorderSide(color: primaryColor, width: size.width * 0.005),
           ),
         ),
-        onChanged: (v) {
+        onChanged: (v) async {
           titulo = v;
+          if (titulo!.length > 1) {
+            GoogleApiBook? googleApiBook =
+                await ApiRequest().fetchGoogleApiBook(v);
+            print(googleApiBook?.items?.length ?? '');
+          }
         },
         validator: (v) {
           if (v!.isEmpty) {
@@ -492,9 +499,9 @@ class _CreateEditBookState extends State<CreateEditBook> {
         },
         validator: (v) {
           if (v!.length > 0) {
-            if (v.length < 9) return "Rellena el campo de título";
-          } else
-            return null;
+            if (v.length < 9) return "Rellena el campo de isbn";
+          }
+          return null;
         },
         keyboardType: TextInputType.text,
       ),
@@ -760,12 +767,12 @@ class _CreateEditBookState extends State<CreateEditBook> {
                 book = new Book(
                     autor: autor!.trim(),
                     edicion: edicion ?? "",
-                    editorial: editorial!.trim() ?? "",
+                    editorial: editorial!.trim(),
                     estado: estado,
                     isbn: isbn ?? "",
                     fechaPublicacion: yearNumber.toString(),
-                    genero: genero!.trim() ?? "",
-                    idioma: idioma!.trim() ?? "",
+                    genero: genero!.trim(),
+                    idioma: idioma!.trim(),
                     leido: leido,
                     paginas: pags,
                     tapa: tapa,

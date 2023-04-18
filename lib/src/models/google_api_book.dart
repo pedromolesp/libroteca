@@ -138,7 +138,7 @@ class VolumeInfo {
 
   VolumeInfo.fromJson(Map<String, dynamic> json) {
     title = json['title'];
-    authors = json['authors'].cast<String>();
+    authors = json['authors']?.cast<String>();
     publisher = json['publisher'];
     publishedDate = json['publishedDate'];
     description = json['description'];
@@ -153,8 +153,8 @@ class VolumeInfo {
         : null;
     pageCount = json['pageCount'];
     printType = json['printType'];
-    categories = json['categories'].cast<String>();
-    averageRating = json['averageRating'];
+    categories = json['categories']?.cast<String>();
+    averageRating = (json['averageRating'] ?? 0) * 1.0;
     ratingsCount = json['ratingsCount'];
     maturityRating = json['maturityRating'];
     allowAnonLogging = json['allowAnonLogging'];
@@ -349,7 +349,7 @@ class ListPrice {
   ListPrice({this.amount, this.currencyCode});
 
   ListPrice.fromJson(Map<String, dynamic> json) {
-    amount = json['amount'];
+    amount = (json['amount'] ?? 0) * 1.0;
     amountInMicros = json['amountInMicros'];
     currencyCode = json['currencyCode'];
   }

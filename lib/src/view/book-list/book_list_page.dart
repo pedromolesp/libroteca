@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:libroteca/src/data/controllers/api_request.dart';
 import 'package:libroteca/src/data/controllers/getx/book_controller.dart';
 import 'package:libroteca/src/data/controllers/getx/book_list_view_controller.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
+import 'package:libroteca/src/models/google_api_book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 import 'package:libroteca/src/view/book-list/item_grid_book.dart';
 import 'package:libroteca/src/view/book-list/item_list_book.dart';
 
 class BookListPage extends StatelessWidget {
-  TextEditingController? _searchController;
-
   String search = "";
   bool dragging = false;
   final BookViewController bookViewController = Get.put(BookViewController());
 
   @override
   Widget build(BuildContext context) {
-    _searchController = new TextEditingController(text: search);
     Size size = getMediaSize(context);
     return GetX<BookViewController>(
       init: bookViewController,
@@ -286,13 +285,7 @@ class BookList extends StatelessWidget {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(Icons.close),
-                    onPressed: () {
-                      //TODO: cambio de la búsqueda con getx
-                      // setState(() {
-                      //   search = "";
-                      // });
-                      // FocusScope.of(context).requestFocus(new FocusNode());
-                    },
+                    onPressed: () {},
                   ),
                   labelText: "Busca un libro  ",
                   labelStyle: TextStyle(
@@ -306,7 +299,7 @@ class BookList extends StatelessWidget {
                         color: secondaryColor, width: size.width * 0.005),
                   ),
                 ),
-                onChanged: (v) {
+                onChanged: (v) async {
                   // setState(() {
                   //   search = v;
                   // });
