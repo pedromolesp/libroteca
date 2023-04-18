@@ -13,34 +13,34 @@ import 'package:provider/provider.dart';
 class DetailBookPage extends StatelessWidget {
   ScrollController _scrollController = new ScrollController();
 
-  Book book;
-  int rating = 0;
-  String opinion = "";
+  Book? book;
+  int? rating = 0;
+  String? opinion = "";
   int callOnce = 0;
-  Size size;
+  Size? size;
   String title = "";
-  DetailPageModel provider;
+  DetailPageModel? provider;
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<DetailPageModel>(context, listen: false);
 
     if (callOnce < 1) {
-      book = ModalRoute.of(context).settings.arguments;
-      opinion = book.opinion != null ? book.opinion : "";
-      rating = book.valoracion != null ? book.valoracion : 0;
+      book = ModalRoute.of(context)!.settings.arguments as Book?;
+      opinion = book!.opinion != null ? book!.opinion : "";
+      rating = book!.valoracion != null ? book!.valoracion : 0;
       size = getMediaSize(context);
       callOnce++;
     }
 
     if (book != null) {
-      if (book.titulo.isNotEmpty) {
-        title = book.titulo.substring(0, 1).toUpperCase() +
-            book.titulo.substring(1, book.titulo.length);
+      if (book!.titulo!.isNotEmpty) {
+        title = book!.titulo!.substring(0, 1).toUpperCase() +
+            book!.titulo!.substring(1, book!.titulo!.length);
       }
     }
     return Scaffold(
       backgroundColor: white,
-      appBar: getAppBar(title, true, size, context, actions: [
+      appBar: getAppBar(title, true, size!, context, actions: [
         IconButton(
             icon: Icon(
               Icons.edit,
@@ -96,8 +96,8 @@ class DetailBookPage extends StatelessWidget {
                     SizedBox(
                       height: size.height * 0.02,
                     ),
-                    book.leido.isNotEmpty
-                        ? getButtonRead(book.leido)
+                    book!.leido!.isNotEmpty
+                        ? getButtonRead(book!.leido)
                         : SizedBox(),
                     SizedBox(
                       height: size.height * 0.02,
@@ -160,12 +160,12 @@ class DetailBookPage extends StatelessWidget {
   Row getStateView(size) {
     return Row(
       children: [
-        (book.estado != null)
+        (book!.estado != null)
             ? Container(
                 width: size.width * 0.05,
                 alignment: Alignment.centerRight,
                 child: Center(
-                  child: getIconByEstado(book.estado),
+                  child: getIconByEstado(book!.estado),
                 ),
               )
             : Container(),
@@ -174,8 +174,8 @@ class DetailBookPage extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: AutoSizeText(
             "Estado: " +
-                (book.estado != null
-                    ? getEstadoByNumber(book.estado)
+                (book!.estado != null
+                    ? getEstadoByNumber(book!.estado)
                     : "Estado no indicado"),
             minFontSize: 12,
             maxFontSize: 22,
@@ -208,7 +208,7 @@ class DetailBookPage extends StatelessWidget {
       width: size.width,
       alignment: Alignment.center,
       child: AutoSizeText(
-        book.autor,
+        book!.autor!,
         minFontSize: 12,
         maxFontSize: 22,
         overflow: TextOverflow.ellipsis,
@@ -227,7 +227,7 @@ class DetailBookPage extends StatelessWidget {
       width: size.width,
       alignment: Alignment.center,
       child: AutoSizeText(
-        book.titulo,
+        book!.titulo!,
         minFontSize: 12,
         maxFontSize: 22,
         overflow: TextOverflow.ellipsis,
@@ -246,8 +246,8 @@ class DetailBookPage extends StatelessWidget {
       width: size.width * 0.9,
       child: AutoSizeText(
         "Publicación: " +
-            (book.fechaPublicacion.isNotEmpty
-                ? book.fechaPublicacion
+            (book!.fechaPublicacion!.isNotEmpty
+                ? book!.fechaPublicacion!
                 : "No ha sido indicada una fecha"),
         minFontSize: 12,
         maxFontSize: 22,
@@ -284,19 +284,19 @@ class DetailBookPage extends StatelessWidget {
                 color: primaryColorDark,
               ),
               Icon(
-                rating >= 2 ? Icons.star : Icons.star_border,
+                rating! >= 2 ? Icons.star : Icons.star_border,
                 color: primaryColorDark,
               ),
               Icon(
-                rating >= 3 ? Icons.star : Icons.star_border,
+                rating! >= 3 ? Icons.star : Icons.star_border,
                 color: primaryColorDark,
               ),
               Icon(
-                rating >= 4 ? Icons.star : Icons.star_border,
+                rating! >= 4 ? Icons.star : Icons.star_border,
                 color: primaryColorDark,
               ),
               Icon(
-                rating >= 5 ? Icons.star : Icons.star_border,
+                rating! >= 5 ? Icons.star : Icons.star_border,
                 color: primaryColorDark,
               ),
             ],
@@ -313,8 +313,8 @@ class DetailBookPage extends StatelessWidget {
           width: size.width * 0.35,
           child: AutoSizeText(
             "Nº páginas: " +
-                (book.paginas is int
-                    ? book.paginas.toString()
+                (book!.paginas is int
+                    ? book!.paginas.toString()
                     : "Nº páginas no indicado"),
             minFontSize: 12,
             maxFontSize: 22,
@@ -328,13 +328,13 @@ class DetailBookPage extends StatelessWidget {
             ),
           ),
         ),
-        book.paginas is int
+        book!.paginas is int
             ? Container(
                 width: size.width * 0.05,
                 alignment: Alignment.centerLeft,
                 child: Icon(
                   Icons.lens,
-                  color: getColorByNumOfPages(book.paginas),
+                  color: getColorByNumOfPages(book!.paginas!),
                 ),
               )
             : Container(),
@@ -347,8 +347,8 @@ class DetailBookPage extends StatelessWidget {
       width: size.width * 0.45,
       child: AutoSizeText(
         "Idioma: " +
-            (book.idioma.isNotEmpty
-                ? book.idioma
+            (book!.idioma!.isNotEmpty
+                ? book!.idioma!
                 : "No ha sido indicado un idioma"),
         minFontSize: 12,
         maxFontSize: 22,
@@ -369,8 +369,8 @@ class DetailBookPage extends StatelessWidget {
       width: size.width * 0.45,
       child: AutoSizeText(
         "Editorial: " +
-            (book.editorial.isNotEmpty
-                ? book.editorial
+            (book!.editorial!.isNotEmpty
+                ? book!.editorial!
                 : "No ha sido indicada una editorial"),
         minFontSize: 12,
         maxFontSize: 22,
@@ -395,7 +395,7 @@ class DetailBookPage extends StatelessWidget {
           Container(
             alignment: Alignment.centerRight,
             width: size.width * 0.05,
-            child: Image.asset(book.tapa == 1
+            child: Image.asset(book!.tapa == 1
                 ? "assets/images/diamond.png"
                 : "assets/images/papel.png"),
           ),
@@ -406,8 +406,8 @@ class DetailBookPage extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: AutoSizeText(
               "Tapa: " +
-                  (book.tapa != null
-                      ? (book.tapa == 1 ? "Dura" : "Blanda")
+                  (book!.tapa != null
+                      ? (book!.tapa == 1 ? "Dura" : "Blanda")
                       : "No ha sido indicado un tipo de tapa"),
               minFontSize: 12,
               maxFontSize: 22,
@@ -432,8 +432,8 @@ class DetailBookPage extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: AutoSizeText(
         "Género: " +
-            (book.genero.isNotEmpty
-                ? book.genero
+            (book!.genero!.isNotEmpty
+                ? book!.genero!
                 : "No ha sido indicado un género"),
         minFontSize: 12,
         maxFontSize: 22,
@@ -455,8 +455,8 @@ class DetailBookPage extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: AutoSizeText(
         "Edición: " +
-            (book.edicion.isNotEmpty
-                ? book.edicion
+            (book!.edicion!.isNotEmpty
+                ? book!.edicion!
                 : "No ha sido indicada una edición"),
         minFontSize: 12,
         maxFontSize: 22,
@@ -472,8 +472,8 @@ class DetailBookPage extends StatelessWidget {
     );
   }
 
-  Widget getIconByEstado(int number) {
-    Icon icon;
+  Widget? getIconByEstado(int? number) {
+    Icon? icon;
     switch (number) {
       case 0:
         icon = new Icon(
@@ -519,8 +519,8 @@ class DetailBookPage extends StatelessWidget {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        int rated = rating;
-        String description = opinion;
+        int? rated = rating;
+        String description = opinion!;
         _opinionController.text = description;
         return StatefulBuilder(
           builder: (context, setState) {
@@ -567,7 +567,7 @@ class DetailBookPage extends StatelessWidget {
                                       }),
                                   IconButton(
                                       icon: Icon(
-                                        rated >= 2
+                                        rated! >= 2
                                             ? Icons.star
                                             : Icons.star_border,
                                         color: orangeLight,
@@ -579,7 +579,7 @@ class DetailBookPage extends StatelessWidget {
                                       }),
                                   IconButton(
                                       icon: Icon(
-                                        rated >= 3
+                                        rated! >= 3
                                             ? Icons.star
                                             : Icons.star_border,
                                         color: orangeLight,
@@ -591,7 +591,7 @@ class DetailBookPage extends StatelessWidget {
                                       }),
                                   IconButton(
                                       icon: Icon(
-                                        rated >= 4
+                                        rated! >= 4
                                             ? Icons.star
                                             : Icons.star_border,
                                         color: orangeLight,
@@ -603,7 +603,7 @@ class DetailBookPage extends StatelessWidget {
                                       }),
                                   IconButton(
                                       icon: Icon(
-                                        rated >= 5
+                                        rated! >= 5
                                             ? Icons.star
                                             : Icons.star_border,
                                         color: orangeLight,
@@ -700,7 +700,7 @@ class DetailBookPage extends StatelessWidget {
 
   //button to accept changes of a book
   getButtonAcceptAlert(
-      Size size, BuildContext context, String description, int rated) {
+      Size size, BuildContext context, String description, int? rated) {
     return Center(
       child: Container(
         height: size.height * 0.065,
@@ -720,10 +720,10 @@ class DetailBookPage extends StatelessWidget {
               //   rating = rated;
               //   opinion = description;
               // });
-              book.opinion = description;
-              book.valoracion = rated;
+              book!.opinion = description;
+              book!.valoracion = rated;
               await DBProvider.db
-                  .updateBook(book)
+                  .updateBook(book!)
                   .then((value) => Navigator.pop(context));
             },
             child: Padding(
@@ -793,8 +793,8 @@ class DetailBookPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AutoSizeText(
-              book.opinion != null
-                  ? "Opinión: \n\n" + book.opinion
+              book!.opinion != null
+                  ? "Opinión: \n\n" + book!.opinion!
                   : "Opinión: \n\n" + "",
               maxLines: null,
               minFontSize: 12,
@@ -806,7 +806,7 @@ class DetailBookPage extends StatelessWidget {
                 decoration: TextDecoration.none,
               ),
             ),
-            book.opinion == null || book.opinion.isEmpty
+            book!.opinion == null || book!.opinion!.isEmpty
                 ? Container(
                     width: size.width,
                     height: size.height * 0.05,
@@ -829,7 +829,7 @@ class DetailBookPage extends StatelessWidget {
         ));
   }
 
-  getButtonRead(String read) {
+  getButtonRead(String? read) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -843,14 +843,14 @@ class DetailBookPage extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(30),
             onTap: () async {
-              read == "Si" ? book.leido = "No" : book.leido = "Si";
-              await DBProvider.db.updateBook(book).then((value) {
+              read == "Si" ? book!.leido = "No" : book!.leido = "Si";
+              await DBProvider.db.updateBook(book!).then((value) {
                 // setState(() {});
               });
             },
             child: Container(
-              width: size.width * 0.1,
-              height: size.width * 0.1,
+              width: size!.width * 0.1,
+              height: size!.width * 0.1,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
               ),

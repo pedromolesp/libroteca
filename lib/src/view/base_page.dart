@@ -13,19 +13,19 @@ class BasePage extends StatefulWidget {
 
 class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
   String search = "";
-  TabController _tabController;
+  TabController? _tabController;
   final List<Widget> _children = [
     BookListPage(),
     BookRatedList(),
     PreferencesPage(),
   ];
-  TextStyle ts;
+  TextStyle? ts;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: 3);
-    _tabController.addListener(_handleTabSelection);
+    _tabController!.addListener(_handleTabSelection);
   }
 
   void _handleTabSelection() {
@@ -39,7 +39,7 @@ class _BasePageState extends State<BasePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 

@@ -4,12 +4,12 @@ import 'package:libroteca/src/data/db_provider.dart';
 import 'package:libroteca/src/models/book.dart';
 
 class BookController extends GetxController {
-  var bookList = <Book>[].obs;
-  var bookListRead = <Book>[].obs;
+  RxList<Book?> bookList = <Book>[].obs;
+  RxList<Book> bookListRead = <Book>[].obs;
   // var count = 0.obs;
   initBookListFromDB() async =>
       bookList.value = await DBProvider.db.getAllBooks();
-  addBook(Book item) => bookList.add(item);
+  addBook(Book? item) => bookList.add(item);
   removeBook(index) => bookList.removeAt(index);
 
   // fillBookListFromDB() => bookList=DBProvider.db.getReadBooks();

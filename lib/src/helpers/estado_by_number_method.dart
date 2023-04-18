@@ -1,4 +1,4 @@
-getEstadoByNumber(int number) {
+getEstadoByNumber(int? number) {
   String message = "";
   switch (number) {
     case 0:

@@ -1,20 +1,20 @@
 class Book {
-  int id;
-  String isbn;
-  String titulo;
-  String autor;
-  String editorial;
-  String genero;
-  String fechaPublicacion;
-  int paginas;
-  String edicion;
-  String leido;
-  int estado;
-  String nombrePrestamo;
-  int tapa;
-  String idioma;
-  int valoracion;
-  String opinion;
+  int? id;
+  String? isbn;
+  String? titulo;
+  String? autor;
+  String? editorial;
+  String? genero;
+  String? fechaPublicacion;
+  int? paginas;
+  String? edicion;
+  String? leido;
+  int? estado;
+  String? nombrePrestamo;
+  int? tapa;
+  String? idioma;
+  int? valoracion;
+  String? opinion;
 
   Book({
     this.id,
@@ -82,8 +82,6 @@ class Books {
   Books();
 
   Books.fromJsonList(List<dynamic> jsonList) {
-    if (jsonList == null) return;
-
     for (var item in jsonList) {
       final campain = Book.fromJson(item);
       items.add(campain);
@@ -92,22 +90,22 @@ class Books {
 }
 
 class BookToExport {
-  String isbn;
+  String? isbn;
 
-  String titulo;
-  String autor;
-  String editorial;
-  String genero;
-  String fechaPublicacion;
-  int paginas;
-  String edicion;
-  String leido;
-  int estado;
-  String nombrePrestamo;
-  int tapa;
-  String idioma;
-  int valoracion;
-  String opinion;
+  String? titulo;
+  String? autor;
+  String? editorial;
+  String? genero;
+  String? fechaPublicacion;
+  int? paginas;
+  String? edicion;
+  String? leido;
+  int? estado;
+  String? nombrePrestamo;
+  int? tapa;
+  String? idioma;
+  int? valoracion;
+  String? opinion;
 
   BookToExport({
     this.titulo,
@@ -171,7 +169,7 @@ class BookToExports {
 
   BookToExports();
 
-  BookToExports.fromJsonList(List<dynamic> jsonList) {
+  BookToExports.fromJsonList(List<dynamic>? jsonList) {
     if (jsonList == null) return;
 
     for (var item in jsonList) {
