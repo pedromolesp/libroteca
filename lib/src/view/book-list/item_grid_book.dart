@@ -1,12 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:libroteca/src/helpers/google_api_book_utils.dart';
 import 'package:libroteca/src/helpers/screen_size.dart';
 import 'package:libroteca/src/models/book.dart';
+import 'package:libroteca/src/models/google_api_book.dart';
 import 'package:libroteca/src/styles/colors.dart';
 import 'package:libroteca/src/styles/fonts.dart';
 
 class ItemGridBook extends StatefulWidget {
-  Book? book;
+  GoogleBookItem? book;
   ItemGridBook(this.book);
 
   @override
@@ -17,7 +19,7 @@ class _ItemGridBookState extends State<ItemGridBook>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
   Animation? animation;
-  Book? book;
+  GoogleBookItem? book;
   ScrollController? _scrollController;
   @override
   void initState() {
@@ -63,7 +65,7 @@ class _ItemGridBookState extends State<ItemGridBook>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 AutoSizeText(
-                  book!.titulo!,
+                  book!.volumeInfo?.title ?? 'Sin título',
                   maxLines: 2,
                   maxFontSize: 22,
                   minFontSize: 12,
@@ -76,7 +78,7 @@ class _ItemGridBookState extends State<ItemGridBook>
                   ),
                 ),
                 AutoSizeText(
-                  book!.autor!,
+                  authorListToString(book?.volumeInfo?.authors ?? []),
                   maxLines: 2,
                   maxFontSize: 22,
                   minFontSize: 12,
@@ -114,19 +116,27 @@ class _ItemGridBookState extends State<ItemGridBook>
             color: orangeLight,
           ),
           Icon(
-            book!.valoracion! >= 2 ? Icons.star : Icons.star_border,
+            (book!.volumeInfo?.ratingsCount ?? 0) >= 2
+                ? Icons.star
+                : Icons.star_border,
             color: orangeLight,
           ),
           Icon(
-            book!.valoracion! >= 3 ? Icons.star : Icons.star_border,
+            (book!.volumeInfo?.ratingsCount ?? 0) >= 3
+                ? Icons.star
+                : Icons.star_border,
             color: orangeLight,
           ),
           Icon(
-            book!.valoracion! >= 4 ? Icons.star : Icons.star_border,
+            (book!.volumeInfo?.ratingsCount ?? 0) >= 4
+                ? Icons.star
+                : Icons.star_border,
             color: orangeLight,
           ),
           Icon(
-            book!.valoracion! >= 5 ? Icons.star : Icons.star_border,
+            (book!.volumeInfo?.ratingsCount ?? 0) >= 5
+                ? Icons.star
+                : Icons.star_border,
             color: orangeLight,
           ),
         ],
@@ -138,7 +148,7 @@ class _ItemGridBookState extends State<ItemGridBook>
     return Container(
       height: size.height * 0.05,
       child: AutoSizeText(
-        book!.opinion!,
+        book!.volumeInfo?.ratingsCount.toString() ?? '',
         maxLines: 2,
         maxFontSize: 22,
         minFontSize: 12,
@@ -152,7 +162,8 @@ class _ItemGridBookState extends State<ItemGridBook>
     );
   }
 
-  void openDialogOpinion(Size size, BuildContext context, Book? book) {
+  void openDialogOpinion(
+      Size size, BuildContext context, GoogleBookItem? book) {
     showDialog(
       barrierDismissible: true,
       context: context,
@@ -174,7 +185,7 @@ class _ItemGridBookState extends State<ItemGridBook>
                   height: size.height * 0.01,
                 ),
                 Text(
-                  'Opinión de ${book!.titulo}',
+                  'Opinión de ${book!.volumeInfo?.title}',
                   textAlign: TextAlign.center,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
@@ -205,7 +216,7 @@ class _ItemGridBookState extends State<ItemGridBook>
                         controller: _scrollController,
                         children: [
                           AutoSizeText(
-                            book.opinion!,
+                            book.volumeInfo!.ratingsCount.toString(),
                             maxLines: null,
                             textAlign: TextAlign.justify,
                             minFontSize: 12,
