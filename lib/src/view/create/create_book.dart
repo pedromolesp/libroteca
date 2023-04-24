@@ -446,11 +446,6 @@ class _CreateEditBookState extends State<CreateEditBook> {
         ),
         onChanged: (v) async {
           titulo = v;
-          if (titulo!.length > 1) {
-            GoogleApiBook? googleApiBook =
-                await ApiRequest().fetchGoogleApiBook(v);
-            print(googleApiBook?.items?.length ?? '');
-          }
         },
         validator: (v) {
           if (v!.isEmpty) {

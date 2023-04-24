@@ -1,17 +1,17 @@
-class GoogleApiBook {
+class GoogleApiBookSearch {
   String? kind;
   int? totalItems;
-  List<Items>? items;
+  List<GoogleBookItem>? items;
 
-  GoogleApiBook({this.kind, this.totalItems, this.items});
+  GoogleApiBookSearch({this.kind, this.totalItems, this.items});
 
-  GoogleApiBook.fromJson(Map<String, dynamic> json) {
+  GoogleApiBookSearch.fromJson(Map<String, dynamic> json) {
     kind = json['kind'];
     totalItems = json['totalItems'];
     if (json['items'] != null) {
-      items = <Items>[];
+      items = <GoogleBookItem>[];
       json['items'].forEach((v) {
-        items!.add(new Items.fromJson(v));
+        items!.add(new GoogleBookItem.fromJson(v));
       });
     }
   }
@@ -27,7 +27,7 @@ class GoogleApiBook {
   }
 }
 
-class Items {
+class GoogleBookItem {
   String? kind;
   String? id;
   String? etag;
@@ -37,7 +37,7 @@ class Items {
   AccessInfo? accessInfo;
   SearchInfo? searchInfo;
 
-  Items(
+  GoogleBookItem(
       {this.kind,
       this.id,
       this.etag,
@@ -47,7 +47,7 @@ class Items {
       this.accessInfo,
       this.searchInfo});
 
-  Items.fromJson(Map<String, dynamic> json) {
+  GoogleBookItem.fromJson(Map<String, dynamic> json) {
     kind = json['kind'];
     id = json['id'];
     etag = json['etag'];

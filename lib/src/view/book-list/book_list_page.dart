@@ -153,22 +153,30 @@ class BookListPage extends StatelessWidget {
   }
 }
 
-class BookList extends StatelessWidget {
-  Future<List<Book>>? booksRequest;
+class BookList extends StatefulWidget {
   String listKind;
-
-  //0 -> Library, 1 -> Read
   int? tabSelected;
-  List<Book?> books = [];
-  TextEditingController? _controller;
-  String search = "";
-  final BookController bookController = Get.put(BookController());
 
   BookList({
     this.listKind = "list",
     this.tabSelected,
     Key? key,
   });
+
+  @override
+  State<BookList> createState() => _BookListState();
+}
+
+class _BookListState extends State<BookList> {
+  Future<List<Book>>? booksRequest;
+
+  List<Book?> books = [];
+
+  TextEditingController? _controller;
+
+  String search = "";
+
+  final BookController bookController = Get.put(BookController());
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +186,7 @@ class BookList extends StatelessWidget {
     return GetX<BookController>(
       init: bookController,
       builder: (ctrl) {
-        if (tabSelected == 0) {
+        if (widget.tabSelected == 0) {
           bookController.initBookListFromDB();
           books = bookController.bookList.value;
         } else {
@@ -193,17 +201,17 @@ class BookList extends StatelessWidget {
             builder: (BuildContext context) {
               if (books != null && books.length > 0)
                 books = filterBySearch(books);
-              if (listKind == null || listKind == "list") {
+              if (widget.listKind == null || widget.listKind == "list") {
                 return Stack(
                   children: [
                     getListView(size),
                     getSearchView(size),
                   ],
                 );
-              } else if (listKind == "grid") {
+              } else if (widget.listKind == "grid") {
                 return Stack(
                   children: [
-                    getGridView(size),
+                    // getGridView(size),
                     Container(
                       margin: EdgeInsets.only(top: size.height * 0.03),
                       child: getSearchView(size),
@@ -220,24 +228,7 @@ class BookList extends StatelessWidget {
     );
   }
 
-  Widget getGridView(size) {
-    return GridView.builder(
-      itemCount: books.length,
-      shrinkWrap: true,
-      padding: EdgeInsets.only(
-          left: size.width * 0.05,
-          right: size.width * 0.05,
-          top: size.height * 0.16,
-          bottom: size.height * 0.05),
-      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return ItemGridBook(books[index]);
-      },
-    );
-  }
-
+  // Widget getGridView(size) {
   Widget getListView(Size size) {
     return ListView.builder(
       padding:
@@ -251,64 +242,98 @@ class BookList extends StatelessWidget {
   }
 
   getSearchView(Size size) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        Container(
-          height: size.height * 0.07,
-          width: size.width * 0.7,
-          margin: EdgeInsets.only(top: size.height * 0.02),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: primaryBackgroundColor,
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 3,
-                    color: black20,
-                    offset: Offset(0.0, 1.0),
-                    spreadRadius: 1),
-              ]),
-          padding: EdgeInsets.all(size.height * 0.01),
-          child: Center(
-            child: Material(
-              child: TextFormField(
-                style: TextStyle(
-                  fontFamily: Fonts.muliBold,
-                  color: textActiveColor,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: size.height * 0.07,
+              width: size.width * 0.7,
+              margin: EdgeInsets.only(top: size.height * 0.02),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: primaryBackgroundColor,
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 3,
+                        color: black20,
+                        offset: Offset(0.0, 1.0),
+                        spreadRadius: 1),
+                  ]),
+              padding: EdgeInsets.all(size.height * 0.01),
+              child: Center(
+                child: Material(
+                  child: TextFormField(
+                    style: TextStyle(
+                      fontFamily: Fonts.muliBold,
+                      color: textActiveColor,
+                    ),
+                    controller: _controller,
+                    cursorColor: secondaryColor,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(
+                        fontFamily: Fonts.muliBold,
+                        color: textActiveColor,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {},
+                      ),
+                      labelText: "Busca un libro  ",
+                      labelStyle: TextStyle(
+                        fontFamily: Fonts.muliBold,
+                        color: textActiveColor,
+                      ),
+                      fillColor: white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                            color: secondaryColor, width: size.width * 0.005),
+                      ),
+                    ),
+                    onChanged: (v) async {
+                      if (v.length > 1) {
+                        setState(() {
+                          search = v;
+                        });
+                      }
+                    },
+                    keyboardType: TextInputType.text,
+                  ),
                 ),
-                controller: _controller,
-                cursorColor: secondaryColor,
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(
-                    fontFamily: Fonts.muliBold,
-                    color: textActiveColor,
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {},
-                  ),
-                  labelText: "Busca un libro  ",
-                  labelStyle: TextStyle(
-                    fontFamily: Fonts.muliBold,
-                    color: textActiveColor,
-                  ),
-                  fillColor: white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                        color: secondaryColor, width: size.width * 0.005),
-                  ),
-                ),
-                onChanged: (v) async {
-                  // setState(() {
-                  //   search = v;
-                  // });
-                },
-                keyboardType: TextInputType.emailAddress,
               ),
             ),
-          ),
+          ],
         ),
+        SizedBox(
+          height: size.height * 0.02,
+        ),
+        Container(
+          height: size.height * 0.6,
+          margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+          decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 5,
+                    spreadRadius: 3,
+                    color: black20,
+                    offset: Offset(0.0, 2.0))
+              ]),
+          child: FutureBuilder(
+              future: ApiRequest().fetchGoogleApiBook(search),
+              builder: (context, snapshot) {
+                return ListView.builder(itemBuilder: (context, index) {
+                  if (snapshot.data != null && snapshot.data!.items != null) {
+                    return ItemGridBook(snapshot.data?.items![index]);
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                });
+              }),
+        )
       ],
     );
   }
