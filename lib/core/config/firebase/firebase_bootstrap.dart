@@ -3,6 +3,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:tomora/core/constants/app_constants.dart';
 import 'package:tomora/firebase_options.dart';
 
 /// Arranca Firebase con las opciones del proyecto `tomora-df39a` (ver
@@ -18,15 +19,18 @@ Future<bool> bootstrapFirebase() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    // App Check: atestigua que las peticiones vienen del binario real.
-    await FirebaseAppCheck.instance.activate(
-      providerAndroid: kReleaseMode
-          ? const AndroidPlayIntegrityProvider()
-          : const AndroidDebugProvider(),
-      providerApple: kReleaseMode
-          ? const AppleAppAttestWithDeviceCheckFallbackProvider()
-          : const AppleDebugProvider(),
-    );
+    // App Check: atestigua que las peticiones vienen del binario real. Solo si
+    // está configurado en la consola (ver [AppConstants.enableAppCheck]).
+    if (AppConstants.enableAppCheck) {
+      await FirebaseAppCheck.instance.activate(
+        providerAndroid: kReleaseMode
+            ? const AndroidPlayIntegrityProvider()
+            : const AndroidDebugProvider(),
+        providerApple: kReleaseMode
+            ? const AppleAppAttestWithDeviceCheckFallbackProvider()
+            : const AppleDebugProvider(),
+      );
+    }
 
     // Crashlytics apagado en debug para no ensuciar el panel; Analytics activo
     // en todos los modos (el tráfico de debug se inspecciona en DebugView).

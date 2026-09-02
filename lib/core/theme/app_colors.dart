@@ -15,7 +15,14 @@ const Color fillerGrey = Color(0xFF898A8F);
 const Color greyText = Color(0xFF707070);
 const Color green = Colors.green;
 const Color primaryColorDark = Color.fromARGB(255, 97, 64, 42);
-const Color primaryColorLight = orangeLight;
+
+/// Fondo cálido muy suave para las pantallas principales (antes se usaba el
+/// crema saturado `orangeLight`, que resultaba demasiado intenso).
+const Color primaryColorLight = Color(0xFFFBF5EC);
+
+/// Crema del tono medio, para acentos sobre [primaryColorLight] (p. ej. el
+/// carril del selector segmentado).
+const Color creamAccent = Color(0xFFF3E6CC);
 const Color secondaryColor = primaryColor;
 const Color textActiveColor = black;
 const Color textInactiveColor = white;

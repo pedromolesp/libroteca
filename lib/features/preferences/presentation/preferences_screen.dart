@@ -1,44 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tomora/core/config/di/dependency_injector.dart';
+import 'package:tomora/core/config/l10n/l10n_extension.dart';
+import 'package:tomora/core/config/l10n/locale_cubit.dart';
 import 'package:tomora/core/theme/app_colors.dart';
 import 'package:tomora/core/theme/app_fonts.dart';
 import 'package:tomora/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:tomora/features/auth/presentation/bloc/auth_state.dart';
-import 'package:tomora/features/auth/presentation/referral_card.dart';
 import 'package:tomora/features/library/presentation/bloc/library_cubit.dart';
 import 'package:tomora/features/preferences/data/library_backup_service.dart';
 
-/// Pestaña de preferencias: sesión, tarjeta de referidos ("quita los anuncios
-/// 3 meses") y copia de seguridad de la biblioteca.
+/// Ajustes: cuenta, idioma y copia de seguridad de la biblioteca. Invitar
+/// amigos y canjear códigos vive en la pantalla de Amigos (botón de la barra
+/// superior), junto al resto de la gestión de contactos.
 class PreferencesScreen extends StatelessWidget {
   const PreferencesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
-      color: orangeLight,
+      color: primaryColorLight,
       child: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
         children: [
-          const SizedBox(height: 16),
-          _sectionTitle('Cuenta'),
+          _SectionTitle(l10n.settingsAccount),
           const _AccountTile(),
-          const ReferralCard(),
-          _sectionTitle('Copia de seguridad'),
+          const SizedBox(height: 24),
+          _SectionTitle(l10n.settingsLanguage),
+          const _LanguageDropdown(),
+          const SizedBox(height: 24),
+          _SectionTitle(l10n.settingsBackup),
           _BackupButtons(),
-          const SizedBox(height: 32),
         ],
       ),
     );
   }
+}
 
-  Widget _sectionTitle(String text) => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-        child: Text(
-          text,
-          style: const TextStyle(fontFamily: Fonts.muliBold, color: black),
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
+      child: Text(
+        text.toUpperCase(),
+        style: TextStyle(
+          fontFamily: Fonts.muliBold,
+          fontSize: 12,
+          letterSpacing: 1,
+          color: primaryColorDark.withValues(alpha: 0.7),
         ),
-      );
+      ),
+    );
+  }
+}
+
+/// Contenedor blanco redondeado reutilizado por las tarjetas de ajustes.
+class _Card extends StatelessWidget {
+  const _Card({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: primaryColorDark.withValues(alpha: 0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: child,
+    );
+  }
 }
 
 class _AccountTile extends StatelessWidget {
@@ -46,22 +91,94 @@ class _AccountTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        // Tomora es "login primero": al llegar aquí siempre hay sesión. Cerrar
-        // sesión hace que el router (redirect) devuelva al usuario al login.
-        return ListTile(
-          leading: const Icon(Icons.person),
-          title: Text(state.displayName ?? state.email ?? 'Cuenta'),
-          subtitle: state.email != null && state.displayName != null
-              ? Text(state.email!)
-              : null,
-          trailing: TextButton(
-            onPressed: () => context.read<AuthCubit>().logout(),
-            child: const Text('Cerrar sesión'),
+        final name = (state.displayName?.isNotEmpty ?? false)
+            ? state.displayName!
+            : (state.email ?? l10n.settingsAccount);
+        return _Card(
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: primaryColor,
+                child: Text(
+                  name.isNotEmpty ? name[0].toUpperCase() : '?',
+                  style: const TextStyle(
+                    color: whiteRed,
+                    fontFamily: Fonts.muliBlack,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(name,
+                        style: const TextStyle(fontFamily: Fonts.muliBold)),
+                    if (state.email != null &&
+                        state.email != name &&
+                        state.email!.isNotEmpty)
+                      Text(state.email!,
+                          style: const TextStyle(color: greyText, fontSize: 13)),
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: () => context.read<AuthCubit>().logout(),
+                style: TextButton.styleFrom(foregroundColor: primaryColorDark),
+                child: Text(l10n.logout),
+              ),
+            ],
           ),
         );
       },
+    );
+  }
+}
+
+class _LanguageDropdown extends StatelessWidget {
+  const _LanguageDropdown();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final current = context.watch<LocaleCubit>().state;
+
+    String labelFor(String? code) => switch (code) {
+          'es' => '🇪🇸  ${l10n.languageSpanish}',
+          'en' => '🇬🇧  ${l10n.languageEnglish}',
+          'de' => '🇩🇪  ${l10n.languageGerman}',
+          _ => '🌐  ${l10n.languageSystem}',
+        };
+
+    final codes = <String?>[null, ...LocaleCubit.supported.map((l) => l.languageCode)];
+
+    return _Card(
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String?>(
+          value: current?.languageCode,
+          isExpanded: true,
+          borderRadius: BorderRadius.circular(12),
+          icon: const Icon(Icons.expand_more, color: primaryColorDark),
+          items: [
+            for (final code in codes)
+              DropdownMenuItem<String?>(
+                value: code,
+                child: Text(
+                  labelFor(code),
+                  style: const TextStyle(fontFamily: Fonts.muliRegular),
+                ),
+              ),
+          ],
+          onChanged: (code) => context
+              .read<LocaleCubit>()
+              .setLocale(code == null ? null : Locale(code)),
+        ),
+      ),
     );
   }
 }
@@ -75,46 +192,51 @@ class _BackupButtons extends StatelessWidget {
     BuildContext context,
     Future<BackupResult> Function() action,
   ) async {
+    final l10n = context.l10n;
     final result = await action();
     if (!context.mounted) return;
     if (result == BackupResult.ok) context.read<LibraryCubit>().load();
+    final message = switch (result) {
+      BackupResult.ok => l10n.backupDone,
+      BackupResult.empty => l10n.backupEmpty,
+      BackupResult.cancelled => l10n.backupCancelled,
+      BackupResult.failed => l10n.backupFailed,
+    };
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(_message(result))),
+      SnackBar(content: Text(message)),
     );
   }
 
-  String _message(BackupResult r) => switch (r) {
-        BackupResult.ok => 'Hecho',
-        BackupResult.empty => 'Aún no hay libros',
-        BackupResult.cancelled => 'Cancelado',
-        BackupResult.failed => 'No se pudo completar',
-      };
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: FilledButton.icon(
-              style: FilledButton.styleFrom(backgroundColor: primaryColor),
-              icon: const Icon(Icons.upload_file),
-              label: const Text('Exportar'),
-              onPressed: () => _run(context, _service.export),
-            ),
+    final l10n = context.l10n;
+    ButtonStyle style() => FilledButton.styleFrom(
+          backgroundColor: primaryColorDark,
+          foregroundColor: whiteRed,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        );
+    return Row(
+      children: [
+        Expanded(
+          child: FilledButton.icon(
+            style: style(),
+            icon: const Icon(Icons.upload_file, size: 18),
+            label: Text(l10n.backupExport),
+            onPressed: () => _run(context, _service.export),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: FilledButton.icon(
-              style: FilledButton.styleFrom(backgroundColor: primaryColor),
-              icon: const Icon(Icons.download),
-              label: const Text('Importar'),
-              onPressed: () => _run(context, _service.import),
-            ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: FilledButton.icon(
+            style: style(),
+            icon: const Icon(Icons.download, size: 18),
+            label: Text(l10n.backupImport),
+            onPressed: () => _run(context, _service.import),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

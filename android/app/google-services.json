@@ -12,7 +12,20 @@
           "package_name": "com.pedrogrameitor.tomora"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "12154763970-u9hc1k4e67gisii4el8ul0hg129su1ug.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pedrogrameitor.tomora",
+            "certificate_hash": "873b3b6b3b9e05b201bde5ff91f6223cc4b6526d"
+          }
+        },
+        {
+          "client_id": "12154763970-8u510504egpbq7pk28180obfr5teaol6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDfLl2ayZ4DTkWlNLMeuiazyQagQ2BrxLo"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "12154763970-8u510504egpbq7pk28180obfr5teaol6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "12154763970-f88n7cjjqcse9op3r4igbae47o4lghl8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pedrogrameitor.tomora"
+              }
+            }
+          ]
         }
       }
     }

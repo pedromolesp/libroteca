@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tomora/core/config/l10n/l10n_extension.dart';
 import 'package:tomora/core/routes/routes.dart';
 import 'package:tomora/core/theme/app_colors.dart';
 import 'package:tomora/core/theme/app_fonts.dart';
@@ -27,6 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordFocus = FocusNode();
   final _confirmFocus = FocusNode();
   bool _busy = false;
+  bool _googleBusy = false;
   bool _obscure = true;
 
   @override
@@ -50,34 +52,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
           password: _password.text,
           displayName: _name.text,
         );
+    _handleResult(error);
+  }
+
+  Future<void> _google() async {
+    FocusScope.of(context).unfocus();
+    setState(() => _googleBusy = true);
+    final error = await context.read<AuthCubit>().signInWithGoogle();
+    _handleResult(error);
+  }
+
+  void _handleResult(String? error) {
     if (!mounted) return;
-    setState(() => _busy = false);
+    setState(() {
+      _busy = false;
+      _googleBusy = false;
+    });
     if (error == null) {
       context.goNamed(RouteNames.library);
     } else {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(authErrorMessage(error))),
-        );
+        ..showSnackBar(SnackBar(content: Text(authErrorMessage(error))));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AuthScaffold(
       onBack: () => context.pop(),
-      heading: 'Crea tu cuenta',
-      subtitle: 'Empieza a ordenar tus libros',
+      heading: l10n.authRegisterHeading,
+      subtitle: l10n.authRegisterSubtitle,
       footer: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('¿Ya tienes cuenta? '),
+          Text(l10n.authHaveAccount),
           GestureDetector(
             onTap: () => context.pop(),
-            child: const Text(
-              'Inicia sesión',
-              style: TextStyle(
+            child: Text(
+              l10n.authLoginHeading,
+              style: const TextStyle(
                 color: whiteRed,
                 fontFamily: Fonts.muliBold,
                 decoration: TextDecoration.underline,
@@ -100,9 +115,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 autofillHints: const [AutofillHints.name],
                 onEditingComplete: () => _emailFocus.requestFocus(),
                 decoration:
-                    authInputDecoration('Nombre', Icons.person_outline),
+                    authInputDecoration(l10n.authName, Icons.person_outline),
                 validator: (v) => (v == null || v.trim().isEmpty)
-                    ? 'Escribe tu nombre'
+                    ? l10n.authWriteName
                     : null,
               ),
               const SizedBox(height: 14),
@@ -113,9 +128,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.email],
                 onEditingComplete: () => _passwordFocus.requestFocus(),
-                decoration: authInputDecoration('Email', Icons.mail_outline),
+                decoration: authInputDecoration(l10n.authEmail, Icons.mail_outline),
                 validator: (v) => (v == null || !v.contains('@'))
-                    ? 'Introduce un email válido'
+                    ? l10n.authInvalidEmail
                     : null,
               ),
               const SizedBox(height: 14),
@@ -127,7 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 autofillHints: const [AutofillHints.newPassword],
                 onEditingComplete: () => _confirmFocus.requestFocus(),
                 decoration: authInputDecoration(
-                  'Contraseña',
+                  l10n.authPassword,
                   Icons.lock_outline,
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _obscure = !_obscure),
@@ -139,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 validator: (v) => (v == null || v.length < 6)
-                    ? 'Mínimo 6 caracteres'
+                    ? l10n.authMinChars
                     : null,
               ),
               const SizedBox(height: 14),
@@ -150,17 +165,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _submit(),
                 decoration: authInputDecoration(
-                  'Repite la contraseña',
+                  l10n.authPasswordRepeat,
                   Icons.lock_outline,
                 ),
                 validator: (v) =>
-                    v != _password.text ? 'Las contraseñas no coinciden' : null,
+                    v != _password.text ? l10n.authPasswordsDontMatch : null,
               ),
               const SizedBox(height: 24),
               AuthPrimaryButton(
-                label: 'Crear cuenta',
+                label: l10n.authCreateAccount,
                 busy: _busy,
                 onPressed: _submit,
+              ),
+              const SizedBox(height: 18),
+              AuthOrDivider(label: l10n.authOr),
+              const SizedBox(height: 18),
+              AuthGoogleButton(
+                label: l10n.authGoogle,
+                busy: _googleBusy,
+                onPressed: _google,
               ),
             ],
           ),

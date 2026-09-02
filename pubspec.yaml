@@ -24,6 +24,7 @@ dependencies:
   # Backend Firebase (andamiaje: se activa al ejecutar `flutterfire configure`)
   firebase_core: ^4.14.0
   firebase_auth: ^6.6.1
+  google_sign_in: ^7.1.0
   cloud_firestore: ^6.9.0
   cloud_functions: ^6.4.0
   firebase_analytics: ^12.5.0
@@ -52,10 +53,14 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
 
-flutter_icons:
+flutter_launcher_icons:
   image_path: "assets/images/libro-logo.png"
-  ios: true
   android: true
+  ios: true
+  remove_alpha_ios: true
+  # Icono adaptativo Android: fondo marrón (primaryColorDark) + el logo delante.
+  adaptive_icon_background: "#61402A"
+  adaptive_icon_foreground: "assets/images/libro-logo.png"
 
 flutter:
 

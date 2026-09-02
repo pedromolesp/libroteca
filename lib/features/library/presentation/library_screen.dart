@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tomora/core/ads/banner_ad_view.dart';
 import 'package:tomora/core/config/di/dependency_injector.dart';
+import 'package:tomora/core/config/l10n/l10n_extension.dart';
 import 'package:tomora/core/constants/app_constants.dart';
 import 'package:tomora/core/routes/routes.dart';
 import 'package:tomora/core/theme/app_colors.dart';
@@ -73,7 +74,8 @@ class _LibraryShellState extends State<_LibraryShell> {
 
   @override
   Widget build(BuildContext context) {
-    const titles = ['Mi biblioteca', 'Valorados', 'Ajustes'];
+    final l10n = context.l10n;
+    final titles = [l10n.libraryTitle, l10n.ratedTitle, l10n.settingsTitle];
     return Scaffold(
       backgroundColor: primaryColorLight,
       appBar: AppBar(
@@ -82,6 +84,13 @@ class _LibraryShellState extends State<_LibraryShell> {
           _index == 0 ? AppConstants.appName : titles[_index],
           style: const TextStyle(color: whiteRed, fontFamily: Fonts.muliBold),
         ),
+        actions: [
+          IconButton(
+            tooltip: l10n.friendsTitle,
+            icon: const Icon(Icons.group_outlined, color: whiteRed),
+            onPressed: () => context.pushNamed(RouteNames.friends),
+          ),
+        ],
       ),
       floatingActionButton: _index == 2
           ? null
@@ -107,26 +116,40 @@ class _LibraryShellState extends State<_LibraryShell> {
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: const [
+      bottomNavigationBar: DecoratedBox(
+        // El NavigationBar de M3 no proyecta sombra real (solo tinte de
+        // elevación); se añade una sombra hacia arriba para despegarlo del
+        // fondo claro.
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: primaryColorDark.withValues(alpha: 0.22),
+              blurRadius: 16,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: NavigationBar(
+          selectedIndex: _index,
+          onDestinationSelected: (i) => setState(() => _index = i),
+          destinations: [
           NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
-            selectedIcon: Icon(Icons.menu_book),
-            label: 'Biblioteca',
+            icon: const Icon(Icons.menu_book_outlined),
+            selectedIcon: const Icon(Icons.menu_book),
+            label: l10n.navLibrary,
           ),
           NavigationDestination(
-            icon: Icon(Icons.star_outline),
-            selectedIcon: Icon(Icons.star),
-            label: 'Valorados',
+            icon: const Icon(Icons.star_outline),
+            selectedIcon: const Icon(Icons.star),
+            label: l10n.navRated,
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: 'Ajustes',
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: l10n.navSettings,
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -157,22 +180,36 @@ class _BookListTabState extends State<_BookListTab> {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(12),
-              child: TextField(
-                controller: _searchController,
-                onChanged: cubit.setQuery,
-                decoration: InputDecoration(
-                  hintText: 'Busca un libro',
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: state.query.isEmpty
-                      ? null
-                      : IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            _searchController.clear();
-                            cubit.setQuery('');
-                          },
-                        ),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: primaryColorDark.withValues(alpha: 0.12),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: cubit.setQuery,
+                  decoration: InputDecoration(
+                    hintText: context.l10n.searchBookHint,
+                    filled: true,
+                    fillColor: white,
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: state.query.isEmpty
+                        ? null
+                        : IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              _searchController.clear();
+                              cubit.setQuery('');
+                            },
+                          ),
+                  ),
                 ),
               ),
             ),
@@ -201,20 +238,27 @@ class _SegmentedToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget button(String label, LibraryTab tab) {
+    Widget segment(String label, LibraryTab tab) {
       final active = selected == tab;
       return Expanded(
-        child: InkWell(
+        child: GestureDetector(
           onTap: () => onChanged(tab),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            color: active ? orangeLight : primaryColor,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            margin: const EdgeInsets.all(4),
+            padding: const EdgeInsets.symmetric(vertical: 9),
+            decoration: BoxDecoration(
+              color: active ? primaryColorDark : transparent,
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Center(
               child: Text(
                 label,
                 style: TextStyle(
-                  color: active ? black : white,
+                  color: active ? whiteRed : primaryColorDark,
                   fontFamily: Fonts.muliBold,
+                  fontSize: 13,
                 ),
               ),
             ),
@@ -223,11 +267,19 @@ class _SegmentedToggle extends StatelessWidget {
       );
     }
 
-    return Row(
-      children: [
-        button('Biblioteca', LibraryTab.all),
-        button('Leídos', LibraryTab.read),
-      ],
+    final l10n = context.l10n;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 4),
+      decoration: BoxDecoration(
+        color: creamAccent,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          segment(l10n.segmentAll, LibraryTab.all),
+          segment(l10n.segmentRead, LibraryTab.read),
+        ],
+      ),
     );
   }
 }
@@ -239,7 +291,7 @@ class _RatedTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: orangeLight,
+      color: primaryColorLight,
       child: BlocBuilder<LibraryCubit, LibraryState>(
         builder: (context, state) {
           final rated = state.books.where((b) => b.isRated).toList();
@@ -260,11 +312,10 @@ class _BooksList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (loading) return const Center(child: CircularProgressIndicator());
     if (books.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(24),
-          child: Text('Aún no has añadido ningún libro',
-              textAlign: TextAlign.center),
+          padding: const EdgeInsets.all(24),
+          child: Text(context.l10n.emptyLibrary, textAlign: TextAlign.center),
         ),
       );
     }

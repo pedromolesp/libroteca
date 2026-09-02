@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tomora/core/constants/app_constants.dart';
 import 'package:tomora/core/theme/app_colors.dart';
 import 'package:tomora/core/theme/app_fonts.dart';
+import 'package:tomora/core/widgets/brand_emblem.dart';
 
 /// Marco común de las pantallas de sesión (login y registro): fondo cálido con
 /// degradado, la marca Tomora arriba y una tarjeta blanca redondeada con el
@@ -14,6 +15,7 @@ class AuthScaffold extends StatelessWidget {
     required this.child,
     this.footer,
     this.onBack,
+    this.heroEmblem = false,
   });
 
   /// Título de la tarjeta (p. ej. "Inicia sesión").
@@ -30,6 +32,10 @@ class AuthScaffold extends StatelessWidget {
 
   /// Si se indica, muestra una flecha de retroceso arriba a la izquierda.
   final VoidCallback? onBack;
+
+  /// Envuelve el emblema en un [Hero] (solo en login, para la transición desde
+  /// la pantalla de carga). En registro debe quedar `false`.
+  final bool heroEmblem;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +72,7 @@ class AuthScaffold extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(24, 4, 24, 28),
                   child: Column(
                     children: [
-                      const _BrandMark(),
+                      BrandEmblem(size: 104, hero: heroEmblem),
                       const SizedBox(height: 18),
                       const Text(
                         AppConstants.appName,
@@ -141,30 +147,6 @@ class AuthScaffold extends StatelessWidget {
   }
 }
 
-class _BrandMark extends StatelessWidget {
-  const _BrandMark();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 104,
-      height: 104,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: whiteRed.withValues(alpha: 0.12),
-        shape: BoxShape.circle,
-        border: Border.all(color: whiteRed.withValues(alpha: 0.25)),
-      ),
-      child: Image.asset(
-        AppAssets.logo,
-        color: whiteRed,
-        colorBlendMode: BlendMode.srcIn,
-        fit: BoxFit.contain,
-      ),
-    );
-  }
-}
-
 /// [InputDecoration] uniforme para los campos de las pantallas de sesión:
 /// relleno claro, esquinas redondeadas y sin borde salvo al enfocar/errar.
 InputDecoration authInputDecoration(
@@ -234,6 +216,79 @@ class AuthPrimaryButton extends StatelessWidget {
                 ),
               )
             : Text(label),
+      ),
+    );
+  }
+}
+
+/// Separador "— texto —" entre el formulario y los accesos sociales.
+class AuthOrDivider extends StatelessWidget {
+  const AuthOrDivider({super.key, required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final line = Expanded(
+      child: Divider(color: greyText.withValues(alpha: 0.4), thickness: 1),
+    );
+    return Row(
+      children: [
+        line,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Text(
+            label,
+            style: const TextStyle(color: greyText, fontFamily: Fonts.muliRegular),
+          ),
+        ),
+        line,
+      ],
+    );
+  }
+}
+
+/// Botón blanco "Continuar con Google", con estado de carga.
+class AuthGoogleButton extends StatelessWidget {
+  const AuthGoogleButton({
+    super.key,
+    required this.label,
+    required this.busy,
+    required this.onPressed,
+  });
+
+  final String label;
+  final bool busy;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 52,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          backgroundColor: white,
+          foregroundColor: black,
+          side: BorderSide(color: greyText.withValues(alpha: 0.35)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: const TextStyle(fontFamily: Fonts.muliBold, fontSize: 15),
+        ),
+        onPressed: busy ? null : onPressed,
+        child: busy
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2.2),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.g_mobiledata,
+                      size: 32, color: Color(0xFF4285F4)),
+                  const SizedBox(width: 4),
+                  Text(label),
+                ],
+              ),
       ),
     );
   }

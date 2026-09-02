@@ -12,6 +12,9 @@ String authErrorMessage(String? code) {
       'La contraseña es demasiado débil (mínimo 6 caracteres).',
     'operation-not-allowed' =>
       'El inicio de sesión aún no está disponible (falta configurar Firebase).',
+    'account-exists-with-different-credential' =>
+      'Ya hay una cuenta con ese email usando otro método de acceso.',
+    'google-sign-in-failed' => 'No se pudo iniciar sesión con Google.',
     'network-request-failed' => 'Sin conexión. Inténtalo de nuevo.',
     _ => 'Algo ha ido mal. Inténtalo de nuevo.',
   };

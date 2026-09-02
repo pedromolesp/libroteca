@@ -1,6 +1,11 @@
 part of '../dependency_injector.dart';
 
 void _uiModulesInit({required bool firebaseReady}) {
+  // Idioma elegido (persistido). App-wide, bajo TopBlocProviders.
+  getIt.registerLazySingleton(
+    () => LocaleCubit(getIt<SharedPreferencesService>()),
+  );
+
   // Cubits por pantalla (instancia nueva cada vez).
   getIt.registerFactory(() => LibraryCubit(getIt<BookRepository>()));
   getIt.registerFactory(() => BookSearchCubit(getIt<GoogleBooksApi>()));
@@ -27,9 +32,16 @@ void _uiModulesInit({required bool firebaseReady}) {
         auth: getIt<FirebaseAuth>(),
       ),
     );
+    getIt.registerLazySingleton(
+      () => FriendsCubit(
+        repository: getIt<FriendsRepository>(),
+        auth: getIt<FirebaseAuth>(),
+      ),
+    );
   } else {
     getIt.registerLazySingleton(AuthCubit.disabled);
     getIt.registerLazySingleton(ReferralCubit.disabled);
     getIt.registerLazySingleton(AdsCubit.disabled);
+    getIt.registerLazySingleton(FriendsCubit.disabled);
   }
 }

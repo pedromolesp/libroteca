@@ -56,5 +56,20 @@
 			<string>cstr6suwn9.skadnetwork</string>
 		</dict>
 	</array>
+	<!-- Google Sign-In: esquema de URL de retorno. TODO(tomora): tras activar
+	     Google en la consola y volver a descargar GoogleService-Info.plist,
+	     copia aquí su valor de REVERSED_CLIENT_ID (empieza por
+	     com.googleusercontent.apps...). -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>REEMPLAZAR_CON_REVERSED_CLIENT_ID</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
