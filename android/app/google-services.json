@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "12154763970",
+    "project_id": "tomora-df39a",
+    "storage_bucket": "tomora-df39a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12154763970:android:c9478107150bf683e8595b",
+        "android_client_info": {
+          "package_name": "com.pedrogrameitor.tomora"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfLl2ayZ4DTkWlNLMeuiazyQagQ2BrxLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

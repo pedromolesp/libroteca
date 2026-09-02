@@ -1,0 +1,14 @@
+{
+  "@@locale": "es",
+  "appTitle": "Tomora",
+  "@appTitle": {
+    "description": "Nombre visible de la aplicación"
+  },
+  "tabLibrary": "Mi biblioteca",
+  "tabRated": "Valorados",
+  "tabPreferences": "Preferencias",
+  "searchBookHint": "Busca un libro",
+  "emptyLibrary": "Aún no has añadido ningún libro",
+  "addBook": "Añadir libro",
+  "editBook": "Editar libro"
+}

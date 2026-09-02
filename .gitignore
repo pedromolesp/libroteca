@@ -42,3 +42,11 @@ app.*.map.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+# FVM Version Cache
+.fvm/
+
+# Secretos de compilación para --dart-define-from-file.
+# El fichero real no se versiona; sí el *.example.json de plantilla.
+/dart_defines/*.json
+!/dart_defines/*.example.json
