@@ -5,9 +5,30 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "libroteca",
+            "name": "tomora",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define-from-file=dart_defines/tomora.json"
+            ]
+        },
+        {
+            "name": "tomora (profile)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "toolArgs": [
+                "--dart-define-from-file=dart_defines/tomora.json"
+            ]
+        },
+        {
+            "name": "tomora (release)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "toolArgs": [
+                "--dart-define-from-file=dart_defines/tomora.json"
+            ]
         }
     ]
 }

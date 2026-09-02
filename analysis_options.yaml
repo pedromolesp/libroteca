@@ -1,0 +1,33 @@
+# Configura el analizador estático de Dart. Se ejecuta con `fvm flutter analyze`
+# y alimenta los diagnósticos del IDE.
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+    - "**/*.g.dart" # Archivos generados automáticamente
+
+  language:
+    strict-casts: true # Evita conversiones implícitas de tipos.
+    strict-raw-types: true # Evita tipos genéricos sin parametrizar.
+
+linter:
+  rules:
+    - avoid_print # Usa un logger / debugPrint en su lugar.
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - avoid_unnecessary_containers
+    - prefer_final_fields
+    - avoid_empty_else
+    - prefer_is_not_empty
+    - prefer_single_quotes
+    - unnecessary_null_checks
+    - use_key_in_widget_constructors
+    - avoid_redundant_argument_values

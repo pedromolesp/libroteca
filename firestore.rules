@@ -1,0 +1,48 @@
+rules_version = '2';
+
+// Modelo de acceso (deliberadamente simple, sin roles):
+// - users: un perfil público por cuenta (email, displayName, referralCode),
+//   legible por cualquier usuario autenticado para poder buscarse por email;
+//   solo el dueño escribe su identidad. Los campos de recompensa de referidos
+//   los escribe únicamente la función `redeemReferral` (Admin SDK).
+// - referralCodes/{code} -> { uid }: reserva de un código, creada una vez por
+//   su dueño al registrarse, nunca modificada.
+// - referrals/{referrerId}_{inviteeId}: arista de auditoría, escrita solo por
+//   `redeemReferral`; cada parte puede leer la suya.
+// - books/{id}: la biblioteca de cada usuario (ownerId == uid). Solo el dueño
+//   lee/escribe. (Hoy los libros viven en sqflite; esta regla queda lista para
+//   cuando FirestoreBookRepository entre en juego.)
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow update: if request.auth != null && request.auth.uid == uid
+          && !request.resource.data.diff(resource.data).affectedKeys()
+                 .hasAny(['referredBy', 'referralCount', 'adsFreeUntil']);
+      allow delete: if false;
+    }
+
+    match /referralCodes/{code} {
+      allow get: if request.auth != null;
+      allow create: if request.auth != null
+          && request.resource.data.keys().hasOnly(['uid'])
+          && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    match /referrals/{edgeId} {
+      allow read: if request.auth != null
+          && (request.auth.uid == resource.data.referrerId
+              || request.auth.uid == resource.data.inviteeId);
+      allow write: if false;
+    }
+
+    match /books/{bookId} {
+      allow read, update, delete: if request.auth != null
+          && request.auth.uid == resource.data.ownerId;
+      allow create: if request.auth != null
+          && request.auth.uid == request.resource.data.ownerId;
+    }
+  }
+}

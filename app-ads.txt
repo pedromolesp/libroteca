@@ -1,0 +1,2 @@
+# Sustituye por la línea real de tu cuenta de AdMob:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
