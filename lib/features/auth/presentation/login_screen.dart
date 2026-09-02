@@ -6,10 +6,10 @@ import 'package:tomora/core/theme/app_colors.dart';
 import 'package:tomora/core/theme/app_fonts.dart';
 import 'package:tomora/features/auth/presentation/auth_error_messages.dart';
 import 'package:tomora/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:tomora/features/auth/presentation/widgets/auth_scaffold.dart';
 
-/// Andamiaje de inicio de sesión (email/contraseña), estilo Planogether.
-/// Funciona en cuanto se conecte Firebase; sin backend muestra el aviso
-/// correspondiente.
+/// Inicio de sesión con email y contraseña. Primera pantalla de Tomora cuando
+/// no hay sesión restaurada.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -21,16 +21,20 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
+  final _passwordFocus = FocusNode();
   bool _busy = false;
+  bool _obscure = true;
 
   @override
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _passwordFocus.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
+    FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
     setState(() => _busy = true);
     final error = await context.read<AuthCubit>().login(
@@ -42,54 +46,83 @@ class _LoginScreenState extends State<LoginScreen> {
     if (error == null) {
       context.goNamed(RouteNames.library);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(authErrorMessage(error))),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(authErrorMessage(error))),
+        );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: primaryColorDark,
-        title: const Text('Iniciar sesión',
-            style: TextStyle(color: white, fontFamily: Fonts.muliBold)),
+    return AuthScaffold(
+      heading: 'Inicia sesión',
+      subtitle: 'Tu biblioteca, siempre contigo',
+      footer: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('¿Aún no tienes cuenta? '),
+          GestureDetector(
+            onTap: () => context.pushNamed(RouteNames.register),
+            child: const Text(
+              'Crear cuenta',
+              style: TextStyle(
+                color: whiteRed,
+                fontFamily: Fonts.muliBold,
+                decoration: TextDecoration.underline,
+                decorationColor: whiteRed,
+              ),
+            ),
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
+      child: AutofillGroup(
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (v) =>
-                    (v == null || !v.contains('@')) ? 'Email no válido' : null,
+                textInputAction: TextInputAction.next,
+                autofillHints: const [AutofillHints.username, AutofillHints.email],
+                onEditingComplete: () => _passwordFocus.requestFocus(),
+                decoration: authInputDecoration('Email', Icons.mail_outline),
+                validator: (v) => (v == null || !v.contains('@'))
+                    ? 'Introduce un email válido'
+                    : null,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               TextFormField(
                 controller: _password,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Contraseña'),
-                validator: (v) =>
-                    (v == null || v.length < 6) ? 'Mínimo 6 caracteres' : null,
+                focusNode: _passwordFocus,
+                obscureText: _obscure,
+                textInputAction: TextInputAction.done,
+                autofillHints: const [AutofillHints.password],
+                onFieldSubmitted: (_) => _submit(),
+                decoration: authInputDecoration(
+                  'Contraseña',
+                  Icons.lock_outline,
+                  suffixIcon: IconButton(
+                    onPressed: () => setState(() => _obscure = !_obscure),
+                    icon: Icon(
+                      _obscure ? Icons.visibility_off : Icons.visibility,
+                      size: 20,
+                      color: greyText,
+                    ),
+                  ),
+                ),
+                validator: (v) => (v == null || v.length < 6)
+                    ? 'Mínimo 6 caracteres'
+                    : null,
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _busy ? null : _submit,
-                  child: _busy
-                      ? const CircularProgressIndicator()
-                      : const Text('Entrar'),
-                ),
-              ),
-              TextButton(
-                onPressed: () => context.pushNamed(RouteNames.register),
-                child: const Text('Crear una cuenta'),
+              AuthPrimaryButton(
+                label: 'Entrar',
+                busy: _busy,
+                onPressed: _submit,
               ),
             ],
           ),
