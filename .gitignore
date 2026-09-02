@@ -50,3 +50,5 @@ app.*.map.json
 # El fichero real no se versiona; sí el *.example.json de plantilla.
 /dart_defines/*.json
 !/dart_defines/*.example.json
+# Firebase deploy cache (local)
+.firebase/

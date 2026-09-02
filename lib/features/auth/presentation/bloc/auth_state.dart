@@ -16,4 +16,18 @@ class AuthState {
   final String? uid;
   final String? email;
   final String? displayName;
+
+  AuthState copyWith({
+    bool? isAuthenticated,
+    String? uid,
+    String? email,
+    String? displayName,
+  }) {
+    return AuthState(
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      displayName: displayName ?? this.displayName,
+    );
+  }
 }

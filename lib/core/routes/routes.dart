@@ -7,6 +7,7 @@ import 'package:tomora/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:tomora/features/auth/presentation/bloc/auth_state.dart';
 import 'package:tomora/features/auth/presentation/login_screen.dart';
 import 'package:tomora/features/auth/presentation/register_screen.dart';
+import 'package:tomora/features/friends/presentation/friends_screen.dart';
 import 'package:tomora/features/library/domain/model/book.dart';
 import 'package:tomora/features/library/presentation/book_detail_screen.dart';
 import 'package:tomora/features/library/presentation/book_form_screen.dart';
@@ -38,6 +39,7 @@ abstract final class RouteNames {
   static const bookEdit = 'book-edit';
   static const login = 'login';
   static const register = 'register';
+  static const friends = 'friends';
 }
 
 /// Rutas que se pueden ver sin sesión iniciada. Todo lo demás (la biblioteca y
@@ -94,6 +96,11 @@ final goRouter = GoRouter(
       path: '/book/:id',
       name: RouteNames.bookDetail,
       builder: (_, state) => BookDetailScreen(book: state.extra as Book?),
+    ),
+    GoRoute(
+      path: '/friends',
+      name: RouteNames.friends,
+      builder: (_, __) => const FriendsScreen(),
     ),
     GoRoute(
       path: '/login',

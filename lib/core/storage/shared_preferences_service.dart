@@ -16,10 +16,18 @@ class SharedPreferencesService {
   }
 
   static const _kChosenPrimaryColor = 'chosen-primary-color';
+  static const _kLanguage = 'language-code';
 
   List<String> get chosenPrimaryColor =>
       _prefs.getStringList(_kChosenPrimaryColor) ?? const [];
 
   Future<void> setChosenPrimaryColor(List<String> value) =>
       _prefs.setStringList(_kChosenPrimaryColor, value);
+
+  /// Código de idioma elegido (`es`, `en`), o `null` para seguir al sistema.
+  String? get languageCode => _prefs.getString(_kLanguage);
+
+  Future<void> setLanguageCode(String? code) => code == null
+      ? _prefs.remove(_kLanguage)
+      : _prefs.setString(_kLanguage, code);
 }

@@ -16,5 +16,8 @@ void _repositoryModulesInit({required bool firebaseReady}) {
     getIt.registerLazySingleton(
       () => ReferralRepository(functions: getIt<FirebaseFunctions>()),
     );
+    getIt.registerLazySingleton(
+      () => FriendsRepository(firestore: getIt<FirebaseFirestore>()),
+    );
   }
 }

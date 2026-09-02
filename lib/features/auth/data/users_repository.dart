@@ -29,6 +29,40 @@ class UsersRepository {
     }, SetOptions(merge: true));
   }
 
+  /// Garantiza que existe `users/{uid}` para la cuenta con sesión. Idempotente:
+  ///
+  /// - Si el documento ya existe con código de referido, lo devuelve tal cual.
+  /// - Si falta (cuenta creada en Auth pero no en Firestore por un fallo de red
+  ///   o de reglas al registrarse, o primer inicio de sesión en otro
+  ///   dispositivo), o existe pero sin código, reserva un código y lo crea.
+  ///
+  /// Se llama en cada cambio de sesión, así el perfil y el sistema de referidos
+  /// se autoreparan sin depender de que el registro fuera perfecto.
+  Future<UserProfile> ensureProfile({
+    required String uid,
+    String? email,
+    String? displayName,
+  }) async {
+    final ref = _collection.doc(uid);
+    final snap = await ref.get();
+    final data = snap.data();
+    final hasCode = ((data?['referralCode'] as String?) ?? '').isNotEmpty;
+
+    if (data != null && hasCode) {
+      return UserProfile.fromMap(snap.id, data);
+    }
+
+    final referralCode = await claimReferralCode(uid);
+    final profile = UserProfile(
+      uid: uid,
+      email: email ?? (data?['email'] as String? ?? ''),
+      displayName: displayName ?? (data?['displayName'] as String? ?? ''),
+      referralCode: referralCode,
+    );
+    await upsertProfile(profile);
+    return profile;
+  }
+
   Stream<UserProfile?> watchProfile(String uid) {
     return _collection.doc(uid).snapshots().map((doc) {
       final data = doc.data();

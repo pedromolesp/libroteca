@@ -1,5 +1,6 @@
 // Recompensa por referido = 90 días (~3 meses), solo para quien invita.
 import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {onDocumentDeleted} from "firebase-functions/v2/firestore";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore, FieldValue, Timestamp} from "firebase-admin/firestore";
 
@@ -92,3 +93,46 @@ export const redeemReferral = onCall(async (request) => {
 
   return {ok: true};
 });
+
+/**
+ * Cuando se borra una amistad (`connections/{id}`), elimina la información
+ * compartida entre las dos cuentas. Un cliente no puede tocar los datos del
+ * otro usuario, así que la limpieza va aquí con el Admin SDK.
+ *
+ * Hoy borra los préstamos/compartidos de libros entre ambos
+ * (`sharedBooks` donde `members` contiene a los dos). Cuando se añadan más
+ * tipos de datos compartidos (estanterías conjuntas, listas de deseos
+ * compartidas...), este es el sitio para borrarlos también.
+ */
+export const onConnectionDeleted = onDocumentDeleted(
+  "connections/{connectionId}",
+  async (event) => {
+    const members = (event.data?.get("members") as string[] | undefined) ?? [];
+    if (members.length !== 2) return;
+    const [a, b] = members;
+
+    // Recursos compartidos entre las dos cuentas. Añade aquí nuevas colecciones
+    // a medida que se implementen funciones de compartir.
+    const sharedCollections = ["sharedBooks"];
+
+    const batch = db.batch();
+    let pending = 0;
+
+    for (const collection of sharedCollections) {
+      // Docs que enlazan explícitamente a ambas cuentas.
+      const snap = await db
+        .collection(collection)
+        .where("members", "array-contains", a)
+        .get();
+      for (const doc of snap.docs) {
+        const docMembers = (doc.get("members") as string[] | undefined) ?? [];
+        if (docMembers.includes(b)) {
+          batch.delete(doc.ref);
+          pending++;
+        }
+      }
+    }
+
+    if (pending > 0) await batch.commit();
+  },
+);

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index, follow">
+  <title>Política de Privacidad · Tomora</title>
+  <style>
+    :root {
+      --bg: #fbf5ec;
+      --card: #ffffff;
+      --text: #26201b;
+      --muted: #6b5d51;
+      --accent: #61402a;
+      --border: #e7dccb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1712;
+        --card: #251e18;
+        --text: #ece3d7;
+        --muted: #a7998a;
+        --accent: #c9a882;
+        --border: #3a2f25;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 40px 22px 80px; }
+    header { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+    .mark {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); flex: none;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--bg); font-weight: 800; font-size: 20px;
+    }
+    header h1 { font-size: 20px; margin: 0; }
+    header p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    main {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 26px;
+    }
+    h2 {
+      font-size: 15px; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--accent); margin: 34px 0 10px;
+    }
+    h2:first-of-type { margin-top: 0; }
+    p, li { color: var(--text); }
+    a { color: var(--accent); }
+    ul { padding-left: 20px; }
+    li { margin: 6px 0; }
+    .meta { color: var(--muted); font-size: 14px; }
+    table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 14px; }
+    th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: rgba(97,64,42,.06); }
+    footer { margin-top: 28px; color: var(--muted); font-size: 13px; text-align: center; }
+    code { background: rgba(97,64,42,.08); padding: 1px 5px; border-radius: 4px; font-size: 90%; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="mark">T</div>
+      <div>
+        <h1>Tomora</h1>
+        <p>Política de Privacidad</p>
+      </div>
+    </header>
+
+    <main>
+      <p class="meta">Última actualización: 3 de septiembre de 2026</p>
+
+      <p>
+        Esta política explica qué datos trata la aplicación móvil <strong>Tomora</strong>
+        (“la App”), con qué fin y con quién se comparten. La App es un inventario
+        personal de libros con valoraciones, búsqueda de fichas en Google Books y
+        funciones sociales (invitaciones y amigos).
+      </p>
+
+      <h2>Responsable del tratamiento</h2>
+      <p>
+        La App la desarrolla y mantiene un particular (desarrollador independiente),
+        con domicilio en España (Unión Europea). Para cualquier cuestión sobre
+        privacidad o para ejercer tus derechos, escribe a:
+        <a href="mailto:pedrogrameitor@gmail.com">pedrogrameitor@gmail.com</a>.
+      </p>
+
+      <h2>Datos que tratamos</h2>
+      <table>
+        <tr><th>Categoría</th><th>Datos</th><th>Dónde se guardan</th></tr>
+        <tr>
+          <td>Cuenta</td>
+          <td>Correo electrónico, nombre visible y, si inicias sesión con Google,
+          los datos básicos de tu perfil de Google. Identificador de usuario (UID).</td>
+          <td>Firebase Authentication (Google)</td>
+        </tr>
+        <tr>
+          <td>Perfil</td>
+          <td>Correo, nombre visible, código de invitación propio, número de
+          invitaciones canjeadas y fecha hasta la que no se muestran anuncios.</td>
+          <td>Cloud Firestore (Google)</td>
+        </tr>
+        <tr>
+          <td>Amigos</td>
+          <td>Vínculos entre cuentas (qué usuarios son amigos entre sí).</td>
+          <td>Cloud Firestore (Google)</td>
+        </tr>
+        <tr>
+          <td>Tu biblioteca</td>
+          <td>Los libros que añades (título, autor, valoración, notas, estado de
+          préstamo, etc.).</td>
+          <td>Solo en tu dispositivo (base de datos local). No se sube a
+          servidores. La copia de seguridad que exportas es un fichero que tú
+          controlas.</td>
+        </tr>
+        <tr>
+          <td>Búsquedas de libros</td>
+          <td>El texto que escribes para buscar una ficha.</td>
+          <td>Se envía a la API de Google Books para obtener resultados.</td>
+        </tr>
+        <tr>
+          <td>Uso y diagnóstico</td>
+          <td>Eventos de uso, modelo de dispositivo, sistema operativo, idioma,
+          ubicación aproximada (a partir de la IP), identificadores de la
+          instalación y de publicidad, e informes de fallos con su traza.</td>
+          <td>Firebase Analytics y Firebase Crashlytics (Google)</td>
+        </tr>
+        <tr>
+          <td>Publicidad</td>
+          <td>Identificador de publicidad del dispositivo, información del
+          dispositivo, ubicación aproximada e interacción con los anuncios.</td>
+          <td>Google AdMob y sus socios publicitarios</td>
+        </tr>
+        <tr>
+          <td>Seguridad</td>
+          <td>Tokens de atestación que verifican que las peticiones vienen de la
+          App real (Firebase App Check), cuando está activado.</td>
+          <td>Google</td>
+        </tr>
+      </table>
+
+      <h2>Para qué usamos los datos</h2>
+      <ul>
+        <li>Crear y mantener tu cuenta e iniciar sesión.</li>
+        <li>Guardar tu perfil y hacer funcionar las invitaciones y la lista de amigos.</li>
+        <li>Buscar fichas de libros a través de Google Books.</li>
+        <li>Entender el uso de la App y corregir errores (analítica y diagnóstico).</li>
+        <li>Mostrar publicidad y aplicar el periodo sin anuncios que ganas al invitar.</li>
+        <li>Proteger la App frente a abuso y fraude.</li>
+      </ul>
+
+      <h2>Base jurídica (RGPD)</h2>
+      <ul>
+        <li><strong>Ejecución de un contrato:</strong> autenticación, perfil,
+        amigos y el propio servicio.</li>
+        <li><strong>Interés legítimo:</strong> seguridad, prevención del fraude y
+        diagnóstico de errores.</li>
+        <li><strong>Consentimiento:</strong> publicidad personalizada y analítica.
+        Antes de mostrar anuncios se solicita tu consentimiento mediante el
+        formulario de Google (UMP) y, en iOS, la autorización de seguimiento
+        (ATT). Puedes retirarlo en cualquier momento desde los ajustes del
+        dispositivo o volviendo a abrir ese formulario.</li>
+      </ul>
+
+      <h2>Con quién se comparten</h2>
+      <ul>
+        <li><strong>Google LLC / Google Ireland</strong>: proveedor de Firebase
+        (Authentication, Firestore, Analytics, Crashlytics, App Check, Cloud
+        Functions), Google Sign-In, Google AdMob y la API de Google Books.</li>
+        <li><strong>Socios publicitarios</strong> a través de AdMob, para servir y
+        medir anuncios, según tu consentimiento.</li>
+      </ul>
+      <p>
+        No vendemos tus datos personales. Algunos de estos proveedores pueden
+        tratar datos fuera del Espacio Económico Europeo; en ese caso se apoyan en
+        las cláusulas contractuales tipo de la Comisión Europea u otras garantías
+        adecuadas.
+      </p>
+
+      <h2>Conservación</h2>
+      <p>
+        Conservamos los datos de tu cuenta y perfil mientras la cuenta esté
+        activa. Los datos de tu biblioteca viven en tu dispositivo y se borran al
+        desinstalar la App o borrar sus datos. Los informes de fallos y la
+        analítica se conservan según los plazos de Google (habitualmente hasta
+        14 meses la analítica y unos 90 días los informes de fallos).
+      </p>
+
+      <h2>Tus derechos</h2>
+      <p>
+        Puedes solicitar acceso, rectificación, supresión, limitación,
+        portabilidad y oposición respecto a tus datos, así como retirar tu
+        consentimiento. Escríbenos a
+        <a href="mailto:pedrogrameitor@gmail.com">pedrogrameitor@gmail.com</a>
+        y atenderemos la solicitud. Para <strong>eliminar tu cuenta y los datos
+        asociados</strong> (perfil, código de invitación y vínculos de amistad),
+        envía un correo desde la dirección de tu cuenta indicando “Baja de
+        cuenta”. También tienes derecho a reclamar ante la Agencia Española de
+        Protección de Datos (<a href="https://www.aepd.es" rel="noopener">www.aepd.es</a>).
+      </p>
+
+      <h2>Menores</h2>
+      <p>
+        La App no está dirigida a menores de 14 años y no recopilamos
+        conscientemente sus datos. Si crees que un menor nos ha facilitado datos,
+        contáctanos y los eliminaremos.
+      </p>
+
+      <h2>Cambios en esta política</h2>
+      <p>
+        Si actualizamos esta política, publicaremos la nueva versión en esta misma
+        página con su fecha. Los cambios relevantes se comunicarán además dentro
+        de la App cuando sea posible.
+      </p>
+
+      <h2>Contacto</h2>
+      <p>
+        <a href="mailto:pedrogrameitor@gmail.com">pedrogrameitor@gmail.com</a>
+      </p>
+    </main>
+
+    <footer>© 2026 Tomora · <code>tomora-df39a.web.app</code></footer>
+  </div>
+</body>
+</html>
