@@ -114,11 +114,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.name],
                 onEditingComplete: () => _emailFocus.requestFocus(),
-                decoration:
-                    authInputDecoration(l10n.authName, Icons.person_outline),
-                validator: (v) => (v == null || v.trim().isEmpty)
-                    ? l10n.authWriteName
-                    : null,
+                decoration: authInputDecoration(
+                    context, l10n.authName, Icons.person_outline),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? l10n.authWriteName : null,
               ),
               const SizedBox(height: 14),
               TextFormField(
@@ -128,7 +127,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.email],
                 onEditingComplete: () => _passwordFocus.requestFocus(),
-                decoration: authInputDecoration(l10n.authEmail, Icons.mail_outline),
+                decoration: authInputDecoration(
+                    context, l10n.authEmail, Icons.mail_outline),
                 validator: (v) => (v == null || !v.contains('@'))
                     ? l10n.authInvalidEmail
                     : null,
@@ -142,6 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 autofillHints: const [AutofillHints.newPassword],
                 onEditingComplete: () => _confirmFocus.requestFocus(),
                 decoration: authInputDecoration(
+                  context,
                   l10n.authPassword,
                   Icons.lock_outline,
                   suffixIcon: IconButton(
@@ -149,13 +150,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(
                       _obscure ? Icons.visibility_off : Icons.visibility,
                       size: 20,
-                      color: greyText,
+                      color: context.colors.onSurfaceMuted,
                     ),
                   ),
                 ),
-                validator: (v) => (v == null || v.length < 6)
-                    ? l10n.authMinChars
-                    : null,
+                validator: (v) =>
+                    (v == null || v.length < 6) ? l10n.authMinChars : null,
               ),
               const SizedBox(height: 14),
               TextFormField(
@@ -165,6 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _submit(),
                 decoration: authInputDecoration(
+                  context,
                   l10n.authPasswordRepeat,
                   Icons.lock_outline,
                 ),

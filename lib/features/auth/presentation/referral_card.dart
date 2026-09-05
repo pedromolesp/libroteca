@@ -228,8 +228,7 @@ class _RedeemFieldState extends State<_RedeemField> {
               fillColor: whiteRed.withValues(alpha: 0.1),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    BorderSide(color: whiteRed.withValues(alpha: 0.3)),
+                borderSide: BorderSide(color: whiteRed.withValues(alpha: 0.3)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

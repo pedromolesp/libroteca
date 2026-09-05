@@ -7,9 +7,13 @@ import 'package:tomora/features/friends/domain/model/friend.dart';
 enum AddFriendResult { ok, unknownCode, ownCode, alreadyFriends, failed }
 
 /// Amistades entre cuentas, guardadas en `connections/{id}` con
-/// `{ members: [uidA, uidB], createdAt }` (id = los dos uid ordenados y unidos
-/// por `__`). Solo los dos miembros pueden leer o borrar el documento
-/// (ver `firestore.rules`).
+/// `{ members: [uidA, uidB], status: 'pending'|'accepted', requestedBy,
+/// createdAt }` (id = los dos uid ordenados y unidos por `__`).
+///
+/// Añadir a alguien crea la conexión en `pending`; solo queda en `accepted`
+/// cuando la otra persona la acepta explícitamente — ver `firestore.rules`,
+/// que solo permite esa transición al miembro que **no** la solicitó. Solo los
+/// dos miembros pueden leer o borrar el documento.
 ///
 /// Al borrar una amistad, un disparador de Cloud Functions
 /// (`onConnectionDeleted`) limpia la información compartida entre ambos —
@@ -28,35 +32,44 @@ class FriendsRepository {
     return pair.join('__');
   }
 
-  /// Amigos del usuario [myUid], en vivo. Combina cada `connections` en la que
-  /// participa con el perfil público del otro miembro.
-  Stream<List<Friend>> watchFriends(String myUid) {
+  /// Todas las conexiones de [myUid] (aceptadas y pendientes en ambos
+  /// sentidos), combinadas con el perfil público del otro miembro. La cubit
+  /// separa por [Friend.status] / [Friend.requestedByMe].
+  Stream<List<Friend>> watchConnections(String myUid) {
     return _connections
         .where('members', arrayContains: myUid)
         .snapshots()
         .asyncMap((snap) async {
       final friends = await Future.wait(snap.docs.map((doc) async {
-        final members = List<String>.from(doc.data()['members'] as List);
-        final otherUid = members.firstWhere((u) => u != myUid, orElse: () => '');
+        final data = doc.data();
+        final members = List<String>.from(data['members'] as List);
+        final otherUid =
+            members.firstWhere((u) => u != myUid, orElse: () => '');
         if (otherUid.isEmpty) return null;
 
         final profile =
             await _firestore.collection('users').doc(otherUid).get();
-        final data = profile.data() ?? const {};
+        final profileData = profile.data() ?? const {};
         return Friend(
           uid: otherUid,
-          displayName: (data['displayName'] as String?) ?? '',
-          email: (data['email'] as String?) ?? '',
+          displayName: (profileData['displayName'] as String?) ?? '',
+          email: (profileData['email'] as String?) ?? '',
           connectionId: doc.id,
-          since: (doc.data()['createdAt'] as Timestamp?)?.toDate(),
+          status: data['status'] == 'accepted'
+              ? ConnectionStatus.accepted
+              : ConnectionStatus.pending,
+          requestedByMe: data['requestedBy'] == myUid,
+          since: (data['createdAt'] as Timestamp?)?.toDate(),
         );
       }));
       return friends.whereType<Friend>().toList()
-        ..sort((a, b) => a.label.toLowerCase().compareTo(b.label.toLowerCase()));
+        ..sort(
+            (a, b) => a.label.toLowerCase().compareTo(b.label.toLowerCase()));
     });
   }
 
-  /// Añade como amigo a quien posea el código de invitación [code].
+  /// Envía una solicitud de amistad a quien posea el código de invitación
+  /// [code]. Queda en `pending` hasta que la otra persona la acepte.
   Future<AddFriendResult> addFriendByCode(String myUid, String code) async {
     final trimmed = code.trim().toUpperCase();
     if (!RegExp(r'^[A-Z0-9]{6}$').hasMatch(trimmed)) {
@@ -74,6 +87,8 @@ class FriendsRepository {
 
       await ref.set({
         'members': [myUid, friendUid],
+        'status': 'pending',
+        'requestedBy': myUid,
         'createdAt': FieldValue.serverTimestamp(),
       });
       return AddFriendResult.ok;
@@ -82,8 +97,27 @@ class FriendsRepository {
     }
   }
 
-  /// Deshace la amistad. El borrado del documento dispara la limpieza de datos
-  /// compartidos en `onConnectionDeleted`.
+  /// Acepta o rechaza una solicitud entrante. Rechazar borra la conexión
+  /// (igual que deshacer una amistad ya aceptada).
+  Future<bool> respondToRequest(String connectionId,
+      {required bool accept}) async {
+    try {
+      if (accept) {
+        await _connections.doc(connectionId).update({
+          'status': 'accepted',
+          'respondedAt': FieldValue.serverTimestamp(),
+        });
+      } else {
+        await _connections.doc(connectionId).delete();
+      }
+      return true;
+    } on FirebaseException {
+      return false;
+    }
+  }
+
+  /// Deshace la amistad (o cancela una solicitud propia pendiente). El
+  /// borrado dispara la limpieza de datos compartidos en `onConnectionDeleted`.
   Future<bool> removeFriend(String connectionId) async {
     try {
       await _connections.doc(connectionId).delete();

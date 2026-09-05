@@ -242,5 +242,115 @@ class AppLocalizationsEn extends AppLocalizations {
   String get friendsRemoveFailed => 'Couldn\'t remove. Try again.';
 
   @override
+  String get delete => 'Delete';
+
+  @override
+  String get deleteBookConfirmTitle => 'Delete book';
+
+  @override
+  String deleteBookConfirmBody(String title) {
+    return '\"$title\" will be removed from your library. This can\'t be undone.';
+  }
+
+  @override
+  String get authForgotPassword => 'Forgot your password?';
+
+  @override
+  String get authResetDialogTitle => 'Reset password';
+
+  @override
+  String get authResetDialogBody =>
+      'We\'ll email you a link to choose a new password.';
+
+  @override
+  String get authResetSend => 'Send link';
+
+  @override
+  String get authResetSent => 'We\'ve sent you an email with instructions.';
+
+  @override
+  String get settingsDeleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Delete account';
+
+  @override
+  String get deleteAccountConfirmBody =>
+      'Your account, profile, friendships and invite code will be deleted. This can\'t be undone.';
+
+  @override
+  String get deleteAccountFailed =>
+      'Couldn\'t delete the account. Sign in again and try once more.';
+
+  @override
+  String get friendsPendingTitle => 'Requests';
+
+  @override
+  String get friendsRequestSentHint =>
+      'Request sent. Your friend needs to accept it.';
+
+  @override
+  String get friendsRequestAccept => 'Accept';
+
+  @override
+  String get friendsRequestDecline => 'Decline';
+
+  @override
+  String get friendsRequestFrom => 'invited you to be friends';
+
+  @override
+  String get friendsRequestAccepted => 'You are now friends';
+
+  @override
+  String get friendsRequestDeclined => 'Request declined';
+
+  @override
+  String get genericLoadError => 'Couldn\'t load. Check your connection.';
+
+  @override
+  String get sortLabel => 'Sort';
+
+  @override
+  String get sortRecent => 'Most recent';
+
+  @override
+  String get sortTitle => 'Title (A-Z)';
+
+  @override
+  String get sortAuthor => 'Author (A-Z)';
+
+  @override
+  String get sortRating => 'Top rated';
+
+  @override
+  String get emptyLibraryTitle => 'Your library is empty';
+
+  @override
+  String get emptyLibraryHint =>
+      'Search a book by title, author or ISBN and start building your collection.';
+
+  @override
+  String get emptyLibraryCta => 'Add my first book';
+
+  @override
+  String get emptyRatedHint =>
+      'Rate the books you read and they will show up here.';
+
+  @override
+  String get settingsTheme => 'Theme';
+
+  @override
+  String get themeSystem => 'Same as system';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get noResultsHint => 'No results for this filter.';
+
+  @override
   String get cancel => 'Cancel';
 }

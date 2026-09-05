@@ -38,21 +38,32 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // connections/{id}: una amistad mutua entre dos cuentas. id = los dos uid
-    // ordenados y unidos por "__". Solo los dos miembros leen o borran; nadie
-    // la modifica. Al borrarla, la función `onConnectionDeleted` limpia los
-    // datos compartidos entre ambas cuentas (Admin SDK).
+    // connections/{id}: solicitud/amistad entre dos cuentas. id = los dos uid
+    // ordenados y unidos por "__". Se crea en pending (por quien invita) y
+    // solo pasa a accepted si la actualiza la OTRA persona (no puedes
+    // aceptar tu propia solicitud). Solo los dos miembros leen o borran
+    // (rechazar y deshacer una amistad son el mismo borrado). Al borrarla, la
+    // función `onConnectionDeleted` limpia los datos compartidos (Admin SDK).
     match /connections/{connectionId} {
       allow read: if request.auth != null
           && request.auth.uid in resource.data.members;
       allow create: if request.auth != null
-          && request.resource.data.keys().hasOnly(['members', 'createdAt'])
+          && request.resource.data.keys()
+                 .hasOnly(['members', 'status', 'requestedBy', 'createdAt'])
           && request.resource.data.members is list
           && request.resource.data.members.size() == 2
-          && request.auth.uid in request.resource.data.members;
+          && request.auth.uid in request.resource.data.members
+          && request.resource.data.status == 'pending'
+          && request.resource.data.requestedBy == request.auth.uid;
+      allow update: if request.auth != null
+          && request.auth.uid in resource.data.members
+          && request.auth.uid != resource.data.requestedBy
+          && resource.data.status == 'pending'
+          && request.resource.data.status == 'accepted'
+          && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['status', 'respondedAt']);
       allow delete: if request.auth != null
           && request.auth.uid in resource.data.members;
-      allow update: if false;
     }
 
     match /books/{bookId} {

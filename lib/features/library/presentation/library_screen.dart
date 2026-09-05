@@ -77,7 +77,7 @@ class _LibraryShellState extends State<_LibraryShell> {
     final l10n = context.l10n;
     final titles = [l10n.libraryTitle, l10n.ratedTitle, l10n.settingsTitle];
     return Scaffold(
-      backgroundColor: primaryColorLight,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
         backgroundColor: primaryColorDark,
         title: Text(
@@ -106,10 +106,10 @@ class _LibraryShellState extends State<_LibraryShell> {
             Expanded(
               child: IndexedStack(
                 index: _index,
-                children: const [
-                  _BookListTab(),
-                  _RatedTab(),
-                  PreferencesScreen(),
+                children: [
+                  _BookListTab(onAddBook: () => _addBook(context)),
+                  const _RatedTab(),
+                  const PreferencesScreen(),
                 ],
               ),
             ),
@@ -133,21 +133,21 @@ class _LibraryShellState extends State<_LibraryShell> {
           selectedIndex: _index,
           onDestinationSelected: (i) => setState(() => _index = i),
           destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.menu_book_outlined),
-            selectedIcon: const Icon(Icons.menu_book),
-            label: l10n.navLibrary,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.star_outline),
-            selectedIcon: const Icon(Icons.star),
-            label: l10n.navRated,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.settings_outlined),
-            selectedIcon: const Icon(Icons.settings),
-            label: l10n.navSettings,
-          ),
+            NavigationDestination(
+              icon: const Icon(Icons.menu_book_outlined),
+              selectedIcon: const Icon(Icons.menu_book),
+              label: l10n.navLibrary,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.star_outline),
+              selectedIcon: const Icon(Icons.star),
+              label: l10n.navRated,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.settings_outlined),
+              selectedIcon: const Icon(Icons.settings),
+              label: l10n.navSettings,
+            ),
           ],
         ),
       ),
@@ -155,9 +155,12 @@ class _LibraryShellState extends State<_LibraryShell> {
   }
 }
 
-/// Pestaña "Mi biblioteca": buscador + conmutador Biblioteca / Leídos + lista.
+/// Pestaña "Mi biblioteca": buscador + orden + conmutador Biblioteca / Leídos
+/// + lista.
 class _BookListTab extends StatefulWidget {
-  const _BookListTab();
+  const _BookListTab({required this.onAddBook});
+
+  final VoidCallback onAddBook;
 
   @override
   State<_BookListTab> createState() => _BookListTabState();
@@ -181,36 +184,44 @@ class _BookListTabState extends State<_BookListTab> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: primaryColorDark.withValues(alpha: 0.12),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: cubit.setQuery,
-                  decoration: InputDecoration(
-                    hintText: context.l10n.searchBookHint,
-                    filled: true,
-                    fillColor: white,
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: state.query.isEmpty
-                        ? null
-                        : IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              _searchController.clear();
-                              cubit.setQuery('');
-                            },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: primaryColorDark.withValues(alpha: 0.12),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
                           ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: cubit.setQuery,
+                        decoration: InputDecoration(
+                          hintText: context.l10n.searchBookHint,
+                          filled: true,
+                          fillColor: context.colors.surface,
+                          prefixIcon: const Icon(Icons.search),
+                          suffixIcon: state.query.isEmpty
+                              ? null
+                              : IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    cubit.setQuery('');
+                                  },
+                                ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  _SortButton(selected: state.sort, onChanged: cubit.setSort),
+                ],
               ),
             ),
             _SegmentedToggle(
@@ -218,14 +229,123 @@ class _BookListTabState extends State<_BookListTab> {
               onChanged: cubit.setTab,
             ),
             Expanded(
-              child: _BooksList(
-                books: state.visibleBooks,
-                loading: state.loading,
-              ),
+              child: state.loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : state.visibleBooks.isEmpty
+                      ? (state.query.isEmpty && state.tab == LibraryTab.all
+                          ? _EmptyLibraryOnboarding(onAddBook: widget.onAddBook)
+                          : _BooksList(
+                              books: const [],
+                              loading: false,
+                              emptyMessage: context.l10n.noResultsHint,
+                            ))
+                      : _BooksList(books: state.visibleBooks, loading: false),
             ),
           ],
         );
       },
+    );
+  }
+}
+
+/// Botón de orden: icono + menú desplegable con las opciones de [LibrarySort].
+class _SortButton extends StatelessWidget {
+  const _SortButton({required this.selected, required this.onChanged});
+
+  final LibrarySort selected;
+  final ValueChanged<LibrarySort> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    String labelFor(LibrarySort s) => switch (s) {
+          LibrarySort.recent => l10n.sortRecent,
+          LibrarySort.titleAsc => l10n.sortTitle,
+          LibrarySort.authorAsc => l10n.sortAuthor,
+          LibrarySort.ratingDesc => l10n.sortRating,
+        };
+
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: primaryColorDark.withValues(alpha: 0.12),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: PopupMenuButton<LibrarySort>(
+        tooltip: l10n.sortLabel,
+        initialValue: selected,
+        onSelected: onChanged,
+        icon: const Icon(Icons.sort, color: primaryColorDark),
+        itemBuilder: (context) => [
+          for (final s in LibrarySort.values)
+            PopupMenuItem(
+              value: s,
+              child: Row(
+                children: [
+                  if (s == selected)
+                    const Icon(Icons.check, size: 18, color: primaryColorDark)
+                  else
+                    const SizedBox(width: 18),
+                  const SizedBox(width: 10),
+                  Text(labelFor(s)),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Estado vacío accionable de la biblioteca (onboarding): explica qué hacer y
+/// ofrece un botón directo para añadir el primer libro.
+class _EmptyLibraryOnboarding extends StatelessWidget {
+  const _EmptyLibraryOnboarding({required this.onAddBook});
+
+  final VoidCallback onAddBook;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.menu_book_outlined,
+                size: 56, color: primaryColorDark.withValues(alpha: 0.4)),
+            const SizedBox(height: 16),
+            Text(
+              l10n.emptyLibraryTitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontFamily: Fonts.muliBold, fontSize: 17),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.emptyLibraryHint,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: context.colors.onSurfaceMuted),
+            ),
+            const SizedBox(height: 20),
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: primaryColorDark,
+                foregroundColor: whiteRed,
+              ),
+              onPressed: onAddBook,
+              icon: const Icon(Icons.add),
+              label: Text(l10n.emptyLibraryCta),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -271,7 +391,7 @@ class _SegmentedToggle extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 4),
       decoration: BoxDecoration(
-        color: creamAccent,
+        color: context.colors.trackBackground,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -291,11 +411,15 @@ class _RatedTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: primaryColorLight,
+      color: context.colors.background,
       child: BlocBuilder<LibraryCubit, LibraryState>(
         builder: (context, state) {
           final rated = state.books.where((b) => b.isRated).toList();
-          return _BooksList(books: rated, loading: state.loading);
+          return _BooksList(
+            books: rated,
+            loading: state.loading,
+            emptyMessage: context.l10n.emptyRatedHint,
+          );
         },
       ),
     );
@@ -303,10 +427,17 @@ class _RatedTab extends StatelessWidget {
 }
 
 class _BooksList extends StatelessWidget {
-  const _BooksList({required this.books, required this.loading});
+  const _BooksList({
+    required this.books,
+    required this.loading,
+    this.emptyMessage,
+  });
 
   final List<Book> books;
   final bool loading;
+
+  /// Texto del estado vacío; si se omite usa [emptyLibrary].
+  final String? emptyMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +446,11 @@ class _BooksList extends StatelessWidget {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Text(context.l10n.emptyLibrary, textAlign: TextAlign.center),
+          child: Text(
+            emptyMessage ?? context.l10n.emptyLibrary,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: context.colors.onSurfaceMuted),
+          ),
         ),
       );
     }

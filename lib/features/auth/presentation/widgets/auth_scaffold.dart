@@ -98,7 +98,7 @@ class AuthScaffold extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.fromLTRB(22, 24, 22, 26),
                         decoration: BoxDecoration(
-                          color: white,
+                          color: context.colors.surface,
                           borderRadius: BorderRadius.circular(26),
                           boxShadow: [
                             BoxShadow(
@@ -113,10 +113,10 @@ class AuthScaffold extends StatelessWidget {
                           children: [
                             Text(
                               heading,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontFamily: Fonts.muliExtraBold,
                                 fontSize: 21,
-                                color: black,
+                                color: context.colors.onSurface,
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -150,11 +150,13 @@ class AuthScaffold extends StatelessWidget {
 /// [InputDecoration] uniforme para los campos de las pantallas de sesión:
 /// relleno claro, esquinas redondeadas y sin borde salvo al enfocar/errar.
 InputDecoration authInputDecoration(
+  BuildContext context,
   String label,
   IconData icon, {
   Widget? suffixIcon,
 }) {
-  OutlineInputBorder border(Color color, [double width = 1]) => OutlineInputBorder(
+  OutlineInputBorder border(Color color, [double width = 1]) =>
+      OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: color == transparent
             ? BorderSide.none
@@ -163,12 +165,13 @@ InputDecoration authInputDecoration(
 
   return InputDecoration(
     labelText: label,
-    labelStyle: const TextStyle(color: greyText, fontFamily: Fonts.muliRegular),
+    labelStyle: TextStyle(
+        color: context.colors.onSurfaceMuted, fontFamily: Fonts.muliRegular),
     prefixIcon: Icon(icon, size: 20, color: primaryColorDark),
     prefixIconColor: primaryColorDark,
     suffixIcon: suffixIcon,
     filled: true,
-    fillColor: const Color(0xFFF6F0E8),
+    fillColor: context.colors.fieldFill,
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
     border: border(transparent),
     enabledBorder: border(transparent),
@@ -202,7 +205,8 @@ class AuthPrimaryButton extends StatelessWidget {
           disabledBackgroundColor: primaryColor,
           disabledForegroundColor: whiteRed,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           textStyle: const TextStyle(fontFamily: Fonts.muliBold, fontSize: 16),
         ),
         onPressed: busy ? null : onPressed,
@@ -230,7 +234,9 @@ class AuthOrDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final line = Expanded(
-      child: Divider(color: greyText.withValues(alpha: 0.4), thickness: 1),
+      child: Divider(
+          color: context.colors.onSurfaceMuted.withValues(alpha: 0.4),
+          thickness: 1),
     );
     return Row(
       children: [
@@ -239,7 +245,9 @@ class AuthOrDivider extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             label,
-            style: const TextStyle(color: greyText, fontFamily: Fonts.muliRegular),
+            style: TextStyle(
+                color: context.colors.onSurfaceMuted,
+                fontFamily: Fonts.muliRegular),
           ),
         ),
         line,
@@ -267,10 +275,12 @@ class AuthGoogleButton extends StatelessWidget {
       height: 52,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          backgroundColor: white,
-          foregroundColor: black,
-          side: BorderSide(color: greyText.withValues(alpha: 0.35)),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          backgroundColor: context.colors.surface,
+          foregroundColor: context.colors.onSurface,
+          side: BorderSide(
+              color: context.colors.onSurfaceMuted.withValues(alpha: 0.35)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           textStyle: const TextStyle(fontFamily: Fonts.muliBold, fontSize: 15),
         ),
         onPressed: busy ? null : onPressed,

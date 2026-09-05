@@ -17,6 +17,7 @@ class SharedPreferencesService {
 
   static const _kChosenPrimaryColor = 'chosen-primary-color';
   static const _kLanguage = 'language-code';
+  static const _kThemeMode = 'theme-mode';
 
   List<String> get chosenPrimaryColor =>
       _prefs.getStringList(_kChosenPrimaryColor) ?? const [];
@@ -30,4 +31,11 @@ class SharedPreferencesService {
   Future<void> setLanguageCode(String? code) => code == null
       ? _prefs.remove(_kLanguage)
       : _prefs.setString(_kLanguage, code);
+
+  /// Tema elegido (`light`, `dark`), o `null` para seguir al sistema.
+  String? get themeModeName => _prefs.getString(_kThemeMode);
+
+  Future<void> setThemeModeName(String? name) => name == null
+      ? _prefs.remove(_kThemeMode)
+      : _prefs.setString(_kThemeMode, name);
 }

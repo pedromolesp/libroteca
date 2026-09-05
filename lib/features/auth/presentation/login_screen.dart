@@ -53,6 +53,55 @@ class _LoginScreenState extends State<LoginScreen> {
     _handleResult(error);
   }
 
+  Future<void> _forgotPassword() async {
+    FocusScope.of(context).unfocus();
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final authCubit = context.read<AuthCubit>();
+    final controller = TextEditingController(text: _email.text.trim());
+    final email = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.authResetDialogTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.authResetDialogBody),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(labelText: l10n.authEmail),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(controller.text),
+            child: Text(l10n.authResetSend),
+          ),
+        ],
+      ),
+    );
+    if (email == null || !email.contains('@')) return;
+    final error = await authCubit.sendPasswordReset(email);
+    if (!mounted) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            error == null ? l10n.authResetSent : authErrorMessage(error),
+          ),
+        ),
+      );
+  }
+
   void _handleResult(String? error) {
     if (!mounted) return;
     setState(() {
@@ -105,9 +154,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
-                autofillHints: const [AutofillHints.username, AutofillHints.email],
+                autofillHints: const [
+                  AutofillHints.username,
+                  AutofillHints.email
+                ],
                 onEditingComplete: () => _passwordFocus.requestFocus(),
-                decoration: authInputDecoration(l10n.authEmail, Icons.mail_outline),
+                decoration: authInputDecoration(
+                    context, l10n.authEmail, Icons.mail_outline),
                 validator: (v) => (v == null || !v.contains('@'))
                     ? l10n.authInvalidEmail
                     : null,
@@ -121,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 autofillHints: const [AutofillHints.password],
                 onFieldSubmitted: (_) => _submit(),
                 decoration: authInputDecoration(
+                  context,
                   l10n.authPassword,
                   Icons.lock_outline,
                   suffixIcon: IconButton(
@@ -128,15 +182,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     icon: Icon(
                       _obscure ? Icons.visibility_off : Icons.visibility,
                       size: 20,
-                      color: greyText,
+                      color: context.colors.onSurfaceMuted,
                     ),
                   ),
                 ),
-                validator: (v) => (v == null || v.length < 6)
-                    ? l10n.authMinChars
-                    : null,
+                validator: (v) =>
+                    (v == null || v.length < 6) ? l10n.authMinChars : null,
               ),
-              const SizedBox(height: 24),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: _forgotPassword,
+                  child: Text(l10n.authForgotPassword),
+                ),
+              ),
+              const SizedBox(height: 8),
               AuthPrimaryButton(
                 label: l10n.authEnter,
                 busy: _busy,

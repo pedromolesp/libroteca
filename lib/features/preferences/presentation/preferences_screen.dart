@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tomora/core/config/di/dependency_injector.dart';
 import 'package:tomora/core/config/l10n/l10n_extension.dart';
 import 'package:tomora/core/config/l10n/locale_cubit.dart';
+import 'package:tomora/core/config/theme/theme_cubit.dart';
+import 'package:tomora/core/routes/routes.dart';
 import 'package:tomora/core/theme/app_colors.dart';
 import 'package:tomora/core/theme/app_fonts.dart';
 import 'package:tomora/features/auth/presentation/bloc/auth_cubit.dart';
@@ -20,15 +23,20 @@ class PreferencesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Container(
-      color: primaryColorLight,
+      color: context.colors.background,
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
         children: [
           _SectionTitle(l10n.settingsAccount),
           const _AccountTile(),
+          const SizedBox(height: 8),
+          const _DeleteAccountButton(),
           const SizedBox(height: 24),
           _SectionTitle(l10n.settingsLanguage),
           const _LanguageDropdown(),
+          const SizedBox(height: 24),
+          _SectionTitle(l10n.settingsTheme),
+          const _ThemeDropdown(),
           const SizedBox(height: 24),
           _SectionTitle(l10n.settingsBackup),
           _BackupButtons(),
@@ -70,7 +78,7 @@ class _Card extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
@@ -123,7 +131,9 @@ class _AccountTile extends StatelessWidget {
                         state.email != name &&
                         state.email!.isNotEmpty)
                       Text(state.email!,
-                          style: const TextStyle(color: greyText, fontSize: 13)),
+                          style: TextStyle(
+                              color: context.colors.onSurfaceMuted,
+                              fontSize: 13)),
                   ],
                 ),
               ),
@@ -136,6 +146,65 @@ class _AccountTile extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _DeleteAccountButton extends StatelessWidget {
+  const _DeleteAccountButton();
+
+  Future<void> _confirmAndDelete(BuildContext context) async {
+    final l10n = context.l10n;
+    final authCubit = context.read<AuthCubit>();
+    final messenger = ScaffoldMessenger.of(context);
+    final router = GoRouter.of(context);
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.deleteAccountConfirmTitle),
+        content: Text(l10n.deleteAccountConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: red),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.settingsDeleteAccount),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final rootNavigator = Navigator.of(context, rootNavigator: true);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+    final ok = await authCubit.deleteAccount();
+    rootNavigator.pop(); // cierra el spinner
+    if (ok) {
+      router.goNamed(RouteNames.login);
+    } else {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.deleteAccountFailed)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: TextButton.icon(
+        onPressed: () => _confirmAndDelete(context),
+        icon: const Icon(Icons.delete_forever_outlined, size: 18, color: red),
+        label: Text(l10n.settingsDeleteAccount,
+            style: const TextStyle(color: red)),
+      ),
     );
   }
 }
@@ -155,7 +224,10 @@ class _LanguageDropdown extends StatelessWidget {
           _ => '🌐  ${l10n.languageSystem}',
         };
 
-    final codes = <String?>[null, ...LocaleCubit.supported.map((l) => l.languageCode)];
+    final codes = <String?>[
+      null,
+      ...LocaleCubit.supported.map((l) => l.languageCode)
+    ];
 
     return _Card(
       child: DropdownButtonHideUnderline(
@@ -177,6 +249,46 @@ class _LanguageDropdown extends StatelessWidget {
           onChanged: (code) => context
               .read<LocaleCubit>()
               .setLocale(code == null ? null : Locale(code)),
+        ),
+      ),
+    );
+  }
+}
+
+class _ThemeDropdown extends StatelessWidget {
+  const _ThemeDropdown();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final current = context.watch<ThemeCubit>().state;
+
+    String labelFor(ThemeMode mode) => switch (mode) {
+          ThemeMode.light => l10n.themeLight,
+          ThemeMode.dark => l10n.themeDark,
+          ThemeMode.system => l10n.themeSystem,
+        };
+
+    return _Card(
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<ThemeMode>(
+          value: current,
+          isExpanded: true,
+          borderRadius: BorderRadius.circular(12),
+          icon: const Icon(Icons.expand_more, color: primaryColorDark),
+          items: [
+            for (final mode in ThemeMode.values)
+              DropdownMenuItem<ThemeMode>(
+                value: mode,
+                child: Text(
+                  labelFor(mode),
+                  style: const TextStyle(fontFamily: Fonts.muliRegular),
+                ),
+              ),
+          ],
+          onChanged: (mode) {
+            if (mode != null) context.read<ThemeCubit>().setThemeMode(mode);
+          },
         ),
       ),
     );

@@ -19,7 +19,7 @@ class FriendsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      backgroundColor: primaryColorLight,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
         backgroundColor: primaryColorDark,
         iconTheme: const IconThemeData(color: whiteRed),
@@ -31,6 +31,7 @@ class FriendsScreen extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<FriendsCubit, FriendsState>(
           builder: (context, state) {
+            final list = [...state.friends, ...state.outgoingRequests];
             return ListView(
               children: [
                 const Padding(
@@ -39,18 +40,28 @@ class FriendsScreen extends StatelessWidget {
                 ),
                 _SectionLabel(l10n.friendsTitle),
                 const _AddFriendField(),
+                if (state.incomingRequests.isNotEmpty) ...[
+                  const Divider(height: 1),
+                  _SectionLabel(l10n.friendsPendingTitle),
+                  for (var i = 0; i < state.incomingRequests.length; i++) ...[
+                    if (i > 0) const Divider(height: 1, indent: 72),
+                    _RequestTile(request: state.incomingRequests[i]),
+                  ],
+                ],
                 const Divider(height: 1),
                 if (state.loading)
                   const Padding(
                     padding: EdgeInsets.all(32),
                     child: Center(child: CircularProgressIndicator()),
                   )
-                else if (state.friends.isEmpty)
+                else if (state.error)
+                  _EmptyHint(l10n.genericLoadError)
+                else if (list.isEmpty)
                   _EmptyHint(l10n.friendsEmpty)
                 else
-                  for (var i = 0; i < state.friends.length; i++) ...[
+                  for (var i = 0; i < list.length; i++) ...[
                     if (i > 0) const Divider(height: 1, indent: 72),
-                    _FriendTile(friend: state.friends[i]),
+                    _FriendTile(friend: list[i]),
                   ],
                 const SizedBox(height: 24),
               ],
@@ -103,10 +114,11 @@ class _AddFriendFieldState extends State<_AddFriendField> {
   Future<void> _add() async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
-    final result = await context.read<FriendsCubit>().addByCode(_controller.text);
+    final result =
+        await context.read<FriendsCubit>().addByCode(_controller.text);
     if (!mounted) return;
     final message = switch (result) {
-      AddFriendResult.ok => l10n.friendsAddedOk,
+      AddFriendResult.ok => l10n.friendsRequestSentHint,
       AddFriendResult.ownCode => l10n.friendsAddSelf,
       AddFriendResult.unknownCode => l10n.friendsAddUnknown,
       AddFriendResult.alreadyFriends => l10n.friendsAddAlready,
@@ -121,8 +133,7 @@ class _AddFriendFieldState extends State<_AddFriendField> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final working =
-        context.select((FriendsCubit c) => c.state.working);
+    final working = context.select((FriendsCubit c) => c.state.working);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -145,7 +156,7 @@ class _AddFriendFieldState extends State<_AddFriendField> {
                 decoration: InputDecoration(
                   hintText: l10n.friendsAddHint,
                   filled: true,
-                  fillColor: white,
+                  fillColor: context.colors.surface,
                   prefixIcon: const Icon(Icons.person_add_alt_1),
                 ),
                 onSubmitted: (_) => _add(),
@@ -221,9 +232,11 @@ class _FriendTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: primaryColor,
+        backgroundColor:
+            friend.isPending ? context.colors.onSurfaceMuted : primaryColor,
         child: Text(
           friend.label.isNotEmpty ? friend.label[0].toUpperCase() : '?',
           style: const TextStyle(color: whiteRed, fontFamily: Fonts.muliBold),
@@ -231,13 +244,77 @@ class _FriendTile extends StatelessWidget {
       ),
       title: Text(friend.label,
           style: const TextStyle(fontFamily: Fonts.muliBold)),
-      subtitle: friend.email.isNotEmpty && friend.email != friend.label
-          ? Text(friend.email)
-          : null,
+      subtitle: Text(
+        friend.isPending
+            ? l10n.friendsRequestSentHint
+            : (friend.email.isNotEmpty && friend.email != friend.label
+                ? friend.email
+                : ''),
+        style: friend.isPending
+            ? const TextStyle(fontStyle: FontStyle.italic)
+            : null,
+      ),
       trailing: IconButton(
-        icon: const Icon(Icons.person_remove_alt_1, color: red),
-        tooltip: context.l10n.friendsRemove,
+        icon: Icon(
+          friend.isPending ? Icons.close : Icons.person_remove_alt_1,
+          color: red,
+        ),
+        tooltip: l10n.friendsRemove,
         onPressed: () => _confirmRemove(context),
+      ),
+    );
+  }
+}
+
+class _RequestTile extends StatelessWidget {
+  const _RequestTile({required this.request});
+
+  final Friend request;
+
+  Future<void> _respond(BuildContext context, {required bool accept}) async {
+    final l10n = context.l10n;
+    final cubit = context.read<FriendsCubit>();
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await cubit.respond(request, accept: accept);
+    if (!ok) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.friendsRemoveFailed)),
+      );
+    } else if (accept) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.friendsRequestAccepted)),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: primaryColor,
+        child: Text(
+          request.label.isNotEmpty ? request.label[0].toUpperCase() : '?',
+          style: const TextStyle(color: whiteRed, fontFamily: Fonts.muliBold),
+        ),
+      ),
+      title: Text(request.label,
+          style: const TextStyle(fontFamily: Fonts.muliBold)),
+      subtitle: Text(l10n.friendsRequestFrom),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.check_circle, color: green),
+            tooltip: l10n.friendsRequestAccept,
+            onPressed: () => _respond(context, accept: true),
+          ),
+          IconButton(
+            icon: const Icon(Icons.cancel_outlined, color: red),
+            tooltip: l10n.friendsRequestDecline,
+            onPressed: () => _respond(context, accept: false),
+          ),
+        ],
       ),
     );
   }
@@ -255,7 +332,9 @@ class _EmptyHint extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: const TextStyle(color: greyText, fontFamily: Fonts.muliRegular),
+        style: TextStyle(
+            color: context.colors.onSurfaceMuted,
+            fontFamily: Fonts.muliRegular),
       ),
     );
   }

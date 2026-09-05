@@ -52,3 +52,6 @@ app.*.map.json
 !/dart_defines/*.example.json
 # Firebase deploy cache (local)
 .firebase/
+
+# Claude Code local settings (no compartir/commitear)
+.claude/settings.local.json
