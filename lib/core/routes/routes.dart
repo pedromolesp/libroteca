@@ -65,8 +65,9 @@ final goRouter = GoRouter(
     if (state.matchedLocation == '/loading') return null;
 
     if (!loggedIn && !atPublic) return '/login';
-    if (loggedIn && (state.matchedLocation == '/login' ||
-        state.matchedLocation == '/register')) {
+    if (loggedIn &&
+        (state.matchedLocation == '/login' ||
+            state.matchedLocation == '/register')) {
       return '/library';
     }
     return null;

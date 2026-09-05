@@ -50,10 +50,10 @@ class BookListItem extends StatelessWidget {
                   width: size.height * 0.08,
                   height: size.height * 0.08,
                   padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white70,
-                    boxShadow: [
+                    color: context.colors.surface,
+                    boxShadow: const [
                       BoxShadow(
                         blurRadius: 2,
                         color: fillerGrey,
@@ -75,8 +75,8 @@ class BookListItem extends StatelessWidget {
                         minFontSize: 14,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: const TextStyle(
-                          color: black,
+                        style: TextStyle(
+                          color: context.colors.onSurface,
                           fontFamily: Fonts.muliBold,
                           fontSize: 18,
                         ),
@@ -87,7 +87,7 @@ class BookListItem extends StatelessWidget {
                         maxLines: 1,
                         minFontSize: 14,
                         style: TextStyle(
-                          color: black,
+                          color: context.colors.onSurface,
                           fontFamily: Fonts.muliRegular,
                           fontSize: size.width * 0.04,
                         ),
@@ -103,7 +103,7 @@ class BookListItem extends StatelessWidget {
                           ),
                           Icon(
                             book.isRated ? Icons.star : Icons.star_border,
-                            color: black,
+                            color: context.colors.onSurface,
                             size: size.height * 0.02,
                           ),
                         ],
@@ -111,7 +111,7 @@ class BookListItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.arrow_forward_ios, color: black),
+                Icon(Icons.arrow_forward_ios, color: context.colors.onSurface),
               ],
             ),
           ),

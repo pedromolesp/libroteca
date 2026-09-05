@@ -1,9 +1,12 @@
 part of '../dependency_injector.dart';
 
 void _uiModulesInit({required bool firebaseReady}) {
-  // Idioma elegido (persistido). App-wide, bajo TopBlocProviders.
+  // Idioma y tema elegidos (persistidos). App-wide, bajo TopBlocProviders.
   getIt.registerLazySingleton(
     () => LocaleCubit(getIt<SharedPreferencesService>()),
+  );
+  getIt.registerLazySingleton(
+    () => ThemeCubit(getIt<SharedPreferencesService>()),
   );
 
   // Cubits por pantalla (instancia nueva cada vez).
@@ -16,6 +19,7 @@ void _uiModulesInit({required bool firebaseReady}) {
     getIt.registerLazySingleton(
       () => AuthCubit(
         usersRepository: getIt<UsersRepository>(),
+        accountRepository: getIt<AccountRepository>(),
         auth: getIt<FirebaseAuth>(),
       ),
     );

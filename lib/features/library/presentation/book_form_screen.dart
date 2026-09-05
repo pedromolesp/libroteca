@@ -119,12 +119,12 @@ class _BookFormScreenState extends State<BookFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: primaryColorDark,
         title: Text(
           _isEdit ? 'Editar libro' : 'Añadir libro',
-          style: const TextStyle(color: white, fontFamily: Fonts.muliBold),
+          style: const TextStyle(color: whiteRed, fontFamily: Fonts.muliBold),
         ),
       ),
       body: Scrollbar(
@@ -227,7 +227,8 @@ class _RadioRow<T> extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
-              style: const TextStyle(fontFamily: Fonts.muliBold, color: black)),
+              style: TextStyle(
+                  fontFamily: Fonts.muliBold, color: context.colors.onSurface)),
           RadioGroup<T>(
             groupValue: value,
             onChanged: (v) {

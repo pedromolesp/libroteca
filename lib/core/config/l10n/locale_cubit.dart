@@ -7,8 +7,7 @@ import 'package:tomora/core/storage/shared_preferences_service.dart';
 /// El estado es un [Locale] nullable: `null` significa "seguir al sistema"
 /// (`MaterialApp` resolverá contra `supportedLocales`).
 class LocaleCubit extends Cubit<Locale?> {
-  LocaleCubit(this._prefs)
-      : super(_localeFromCode(_prefs.languageCode));
+  LocaleCubit(this._prefs) : super(_localeFromCode(_prefs.languageCode));
 
   final SharedPreferencesService _prefs;
 

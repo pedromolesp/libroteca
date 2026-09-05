@@ -3,6 +3,7 @@ import {onCall, HttpsError} from "firebase-functions/v2/https";
 import {onDocumentDeleted} from "firebase-functions/v2/firestore";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore, FieldValue, Timestamp} from "firebase-admin/firestore";
+import {getAuth} from "firebase-admin/auth";
 
 initializeApp();
 const db = getFirestore();
@@ -136,3 +137,37 @@ export const onConnectionDeleted = onDocumentDeleted(
     if (pending > 0) await batch.commit();
   },
 );
+
+/**
+ * Elimina la cuenta de quien llama: su cuenta de Firebase Auth, su perfil
+ * (`users/{uid}`), su código de invitación reservado y todas sus
+ * `connections` (borrar cada una dispara `onConnectionDeleted`, que limpia
+ * lo compartido con cada amigo). Solo se puede borrar la propia cuenta —
+ * `request.auth.uid` lo verifica el propio SDK a partir del token, un
+ * cliente no puede suplantar a otro usuario.
+ */
+export const deleteAccount = onCall(async (request) => {
+  const uid = request.auth?.uid;
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "Inicia sesión primero.");
+  }
+
+  const connectionsSnap = await db
+    .collection("connections")
+    .where("members", "array-contains", uid)
+    .get();
+  const codesSnap = await db
+    .collection("referralCodes")
+    .where("uid", "==", uid)
+    .get();
+
+  const batch = db.batch();
+  for (const doc of connectionsSnap.docs) batch.delete(doc.ref);
+  for (const doc of codesSnap.docs) batch.delete(doc.ref);
+  batch.delete(db.doc(`users/${uid}`));
+  await batch.commit();
+
+  await getAuth().deleteUser(uid);
+
+  return {ok: true};
+});

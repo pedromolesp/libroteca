@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tomora/features/auth/data/account_repository.dart';
 import 'package:tomora/features/auth/data/users_repository.dart';
 import 'package:tomora/features/auth/domain/model/user_profile.dart';
 import 'package:tomora/features/auth/presentation/bloc/auth_state.dart';
@@ -23,8 +24,10 @@ import 'package:tomora/features/auth/presentation/bloc/auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit({
     required UsersRepository usersRepository,
+    required AccountRepository accountRepository,
     FirebaseAuth? auth,
   })  : _usersRepository = usersRepository,
+        _accountRepository = accountRepository,
         _auth = auth ?? FirebaseAuth.instance,
         _enabled = true,
         super(AuthState.initial) {
@@ -33,11 +36,13 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit.disabled()
       : _usersRepository = null,
+        _accountRepository = null,
         _auth = null,
         _enabled = false,
         super(AuthState.initial);
 
   final UsersRepository? _usersRepository;
+  final AccountRepository? _accountRepository;
   final FirebaseAuth? _auth;
   final bool _enabled;
   StreamSubscription<User?>? _authSubscription;
@@ -108,6 +113,18 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  /// Envía el correo de restablecimiento de contraseña. Devuelve `null` si va
+  /// bien, o un [FirebaseAuthException.code] para mostrar.
+  Future<String?> sendPasswordReset(String email) async {
+    if (!_enabled) return 'operation-not-allowed';
+    try {
+      await _auth!.sendPasswordResetEmail(email: email.trim());
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.code;
+    }
+  }
+
   /// Devuelve `null` si va bien, o un [FirebaseAuthException.code] para mostrar.
   ///
   /// Crea la cuenta en Auth y su documento `users/{uid}` en Firestore. Si la
@@ -140,7 +157,8 @@ class AuthCubit extends Cubit<AuthState> {
           );
         } on FirebaseException catch (e) {
           if (kDebugMode) {
-            debugPrint('perfil no creado (${e.code}); se reintentará al arrancar');
+            debugPrint(
+                'perfil no creado (${e.code}); se reintentará al arrancar');
           }
         }
       }
@@ -195,6 +213,25 @@ class AuthCubit extends Cubit<AuthState> {
       // Google no inicializado / sin sesión de Google: no pasa nada.
     }
     await _auth!.signOut();
+  }
+
+  /// Borra permanentemente la cuenta (Auth + perfil + amistades + código de
+  /// invitación) vía la Cloud Function `deleteAccount`, y cierra sesión
+  /// localmente. `true` si se completó.
+  Future<bool> deleteAccount() async {
+    if (!_enabled) return false;
+    final ok = await _accountRepository!.deleteAccount();
+    if (ok) {
+      try {
+        await GoogleSignIn.instance.signOut();
+      } catch (_) {
+        // Google no inicializado / sin sesión de Google: no pasa nada.
+      }
+      // El usuario ya no existe en el servidor; esto limpia la sesión local
+      // sin esperar a que el SDK lo detecte solo en el próximo refresco.
+      await _auth!.signOut();
+    }
+    return ok;
   }
 
   @override

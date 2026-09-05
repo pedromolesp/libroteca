@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tomora/core/config/di/dependency_injector.dart';
+import 'package:tomora/core/config/l10n/l10n_extension.dart';
 import 'package:tomora/core/constants/app_constants.dart';
 import 'package:tomora/core/routes/routes.dart';
 import 'package:tomora/core/theme/app_colors.dart';
@@ -63,16 +64,17 @@ class _DetailScaffoldState extends State<_DetailScaffold> {
       builder: (context, state) {
         final book = state.book;
         return Scaffold(
-          backgroundColor: white,
+          backgroundColor: context.colors.surface,
           appBar: AppBar(
             backgroundColor: primaryColorDark,
             title: Text(
               _titleCase(book.titulo),
-              style: const TextStyle(color: white, fontFamily: Fonts.muliBold),
+              style:
+                  const TextStyle(color: whiteRed, fontFamily: Fonts.muliBold),
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.edit, color: white),
+                icon: const Icon(Icons.edit, color: whiteRed),
                 onPressed: () async {
                   await context.pushNamed(
                     RouteNames.bookEdit,
@@ -88,6 +90,10 @@ class _DetailScaffoldState extends State<_DetailScaffold> {
                   }
                 },
               ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: whiteRed),
+                onPressed: () => _confirmDelete(context),
+              ),
             ],
           ),
           body: Scrollbar(
@@ -101,8 +107,8 @@ class _DetailScaffoldState extends State<_DetailScaffold> {
                   child: AutoSizeText(
                     book.titulo ?? 'Sin título',
                     maxLines: 2,
-                    style: const TextStyle(
-                      color: black,
+                    style: TextStyle(
+                      color: context.colors.onSurface,
                       fontSize: 22,
                       fontFamily: Fonts.muliBlack,
                     ),
@@ -111,8 +117,9 @@ class _DetailScaffoldState extends State<_DetailScaffold> {
                 Center(
                   child: Text(
                     book.autor ?? 'Autor desconocido',
-                    style: const TextStyle(
-                        color: black, fontFamily: Fonts.muliRegular),
+                    style: TextStyle(
+                        color: context.colors.onSurface,
+                        fontFamily: Fonts.muliRegular),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -152,12 +159,12 @@ class _DetailScaffoldState extends State<_DetailScaffold> {
                 _InfoRow('Género', book.genero),
                 _InfoRow('Tapa', _tapaLabel(book.tapa)),
                 const Divider(height: 32),
-                const Text(
+                Text(
                   'Opinión',
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: Fonts.muliBold,
-                    color: black,
+                    color: context.colors.onSurface,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -166,8 +173,9 @@ class _DetailScaffoldState extends State<_DetailScaffold> {
                       ? book.opinion!
                       : 'Aún no has escrito una opinión',
                   style: TextStyle(
-                    color:
-                        (book.opinion?.isNotEmpty ?? false) ? black : greyText,
+                    color: (book.opinion?.isNotEmpty ?? false)
+                        ? context.colors.onSurface
+                        : context.colors.onSurfaceMuted,
                     fontFamily: Fonts.muliLight,
                   ),
                 ),
@@ -178,6 +186,33 @@ class _DetailScaffoldState extends State<_DetailScaffold> {
         );
       },
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context) async {
+    final l10n = context.l10n;
+    final cubit = context.read<BookDetailCubit>();
+    final title = cubit.state.book.titulo ?? '';
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.deleteBookConfirmTitle),
+        content: Text(l10n.deleteBookConfirmBody(title)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: red),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await cubit.delete();
+    if (context.mounted) context.pop();
   }
 
   Future<void> _openRatingDialog(BuildContext context) async {
@@ -227,14 +262,16 @@ class _InfoRow extends StatelessWidget {
           SizedBox(
             width: 110,
             child: Text('$label:',
-                style:
-                    const TextStyle(fontFamily: Fonts.muliBold, color: black)),
+                style: TextStyle(
+                    fontFamily: Fonts.muliBold,
+                    color: context.colors.onSurface)),
           ),
           Expanded(
             child: Text(
               (value == null || value!.isEmpty) ? 'No indicado' : value!,
-              style:
-                  const TextStyle(fontFamily: Fonts.muliRegular, color: black),
+              style: TextStyle(
+                  fontFamily: Fonts.muliRegular,
+                  color: context.colors.onSurface),
             ),
           ),
         ],
@@ -253,7 +290,7 @@ class _RatingBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       borderRadius: BorderRadius.circular(20),
-      color: white,
+      color: context.colors.surface,
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: onTap,
@@ -334,7 +371,7 @@ class _RatingDialogState extends State<_RatingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: white,
+      backgroundColor: context.colors.surface,
       title: const Text('Tu valoración'),
       content: Column(
         mainAxisSize: MainAxisSize.min,

@@ -538,6 +538,210 @@ abstract class AppLocalizations {
   /// **'No se pudo eliminar. Inténtalo de nuevo.'**
   String get friendsRemoveFailed;
 
+  /// No description provided for @delete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get delete;
+
+  /// No description provided for @deleteBookConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar libro'**
+  String get deleteBookConfirmTitle;
+
+  /// No description provided for @deleteBookConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminará \"{title}\" de tu biblioteca. Esta acción no se puede deshacer.'**
+  String deleteBookConfirmBody(String title);
+
+  /// No description provided for @authForgotPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Olvidaste tu contraseña?'**
+  String get authForgotPassword;
+
+  /// No description provided for @authResetDialogTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Restablecer contraseña'**
+  String get authResetDialogTitle;
+
+  /// No description provided for @authResetDialogBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviaremos un enlace a tu email para elegir una contraseña nueva.'**
+  String get authResetDialogBody;
+
+  /// No description provided for @authResetSend.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar enlace'**
+  String get authResetSend;
+
+  /// No description provided for @authResetSent.
+  ///
+  /// In es, this message translates to:
+  /// **'Te hemos enviado un correo con las instrucciones.'**
+  String get authResetSent;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cuenta'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @deleteAccountConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cuenta'**
+  String get deleteAccountConfirmTitle;
+
+  /// No description provided for @deleteAccountConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminará tu cuenta, tu perfil, tus amistades y tu código de invitación. Esta acción no se puede deshacer.'**
+  String get deleteAccountConfirmBody;
+
+  /// No description provided for @deleteAccountFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo eliminar la cuenta. Vuelve a iniciar sesión e inténtalo de nuevo.'**
+  String get deleteAccountFailed;
+
+  /// No description provided for @friendsPendingTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitudes'**
+  String get friendsPendingTitle;
+
+  /// No description provided for @friendsRequestSentHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Se ha enviado una solicitud. Tu amigo tiene que aceptarla.'**
+  String get friendsRequestSentHint;
+
+  /// No description provided for @friendsRequestAccept.
+  ///
+  /// In es, this message translates to:
+  /// **'Aceptar'**
+  String get friendsRequestAccept;
+
+  /// No description provided for @friendsRequestDecline.
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazar'**
+  String get friendsRequestDecline;
+
+  /// No description provided for @friendsRequestFrom.
+  ///
+  /// In es, this message translates to:
+  /// **'te ha invitado a ser su amigo'**
+  String get friendsRequestFrom;
+
+  /// No description provided for @friendsRequestAccepted.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora sois amigos'**
+  String get friendsRequestAccepted;
+
+  /// No description provided for @friendsRequestDeclined.
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitud rechazada'**
+  String get friendsRequestDeclined;
+
+  /// No description provided for @genericLoadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo cargar. Comprueba tu conexión.'**
+  String get genericLoadError;
+
+  /// No description provided for @sortLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Ordenar'**
+  String get sortLabel;
+
+  /// No description provided for @sortRecent.
+  ///
+  /// In es, this message translates to:
+  /// **'Más recientes'**
+  String get sortRecent;
+
+  /// No description provided for @sortTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Título (A-Z)'**
+  String get sortTitle;
+
+  /// No description provided for @sortAuthor.
+  ///
+  /// In es, this message translates to:
+  /// **'Autor (A-Z)'**
+  String get sortAuthor;
+
+  /// No description provided for @sortRating.
+  ///
+  /// In es, this message translates to:
+  /// **'Mejor valorados'**
+  String get sortRating;
+
+  /// No description provided for @emptyLibraryTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu biblioteca está vacía'**
+  String get emptyLibraryTitle;
+
+  /// No description provided for @emptyLibraryHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Busca un libro por título, autor o ISBN y empieza a construir tu colección.'**
+  String get emptyLibraryHint;
+
+  /// No description provided for @emptyLibraryCta.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir mi primer libro'**
+  String get emptyLibraryCta;
+
+  /// No description provided for @emptyRatedHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Valora los libros que leas y aparecerán aquí.'**
+  String get emptyRatedHint;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In es, this message translates to:
+  /// **'Tema'**
+  String get settingsTheme;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In es, this message translates to:
+  /// **'Igual que el sistema'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In es, this message translates to:
+  /// **'Claro'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In es, this message translates to:
+  /// **'Oscuro'**
+  String get themeDark;
+
+  /// No description provided for @noResultsHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin resultados con este filtro.'**
+  String get noResultsHint;
+
   /// No description provided for @cancel.
   ///
   /// In es, this message translates to:

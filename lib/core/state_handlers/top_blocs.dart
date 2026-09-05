@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tomora/core/ads/ads_cubit.dart';
 import 'package:tomora/core/config/di/dependency_injector.dart';
 import 'package:tomora/core/config/l10n/locale_cubit.dart';
+import 'package:tomora/core/config/theme/theme_cubit.dart';
 import 'package:tomora/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:tomora/features/auth/presentation/bloc/referral_cubit.dart';
 import 'package:tomora/features/friends/presentation/bloc/friends_cubit.dart';
@@ -19,6 +20,7 @@ class TopBlocProviders extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<LocaleCubit>()),
+        BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<AuthCubit>()),
         BlocProvider(create: (_) => getIt<ReferralCubit>()),
         BlocProvider(create: (_) => getIt<AdsCubit>()),

@@ -43,8 +43,8 @@ class _LoadingScreenState extends State<LoadingScreen>
     parent: _entrance,
     curve: const Interval(0.05, 0.72, curve: Curves.easeOutCubic),
   );
-  late final Animation<double> _emblemScale = Tween<double>(begin: 0.7, end: 1)
-      .animate(CurvedAnimation(
+  late final Animation<double> _emblemScale =
+      Tween<double>(begin: 0.7, end: 1).animate(CurvedAnimation(
     parent: _entrance,
     curve: const Interval(0.4, 0.85, curve: Curves.easeOutBack),
   ));
@@ -56,8 +56,8 @@ class _LoadingScreenState extends State<LoadingScreen>
     parent: _entrance,
     curve: const Interval(0.68, 1, curve: Curves.easeOut),
   );
-  late final Animation<double> _tailSlide = Tween<double>(begin: 20, end: 0)
-      .animate(CurvedAnimation(
+  late final Animation<double> _tailSlide =
+      Tween<double>(begin: 20, end: 0).animate(CurvedAnimation(
     parent: _entrance,
     curve: const Interval(0.68, 1, curve: Curves.easeOutCubic),
   ));

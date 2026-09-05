@@ -246,5 +246,117 @@ class AppLocalizationsDe extends AppLocalizations {
       'Entfernen fehlgeschlagen. Versuch es erneut.';
 
   @override
+  String get delete => 'Löschen';
+
+  @override
+  String get deleteBookConfirmTitle => 'Buch löschen';
+
+  @override
+  String deleteBookConfirmBody(String title) {
+    return '\"$title\" wird aus deiner Bibliothek entfernt. Das kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String get authForgotPassword => 'Passwort vergessen?';
+
+  @override
+  String get authResetDialogTitle => 'Passwort zurücksetzen';
+
+  @override
+  String get authResetDialogBody =>
+      'Wir senden dir einen Link, um ein neues Passwort zu wählen.';
+
+  @override
+  String get authResetSend => 'Link senden';
+
+  @override
+  String get authResetSent =>
+      'Wir haben dir eine E-Mail mit Anweisungen gesendet.';
+
+  @override
+  String get settingsDeleteAccount => 'Konto löschen';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Konto löschen';
+
+  @override
+  String get deleteAccountConfirmBody =>
+      'Dein Konto, Profil, deine Freundschaften und dein Einladungscode werden gelöscht. Das kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get deleteAccountFailed =>
+      'Konto konnte nicht gelöscht werden. Melde dich erneut an und versuch es noch einmal.';
+
+  @override
+  String get friendsPendingTitle => 'Anfragen';
+
+  @override
+  String get friendsRequestSentHint =>
+      'Anfrage gesendet. Dein Freund muss sie annehmen.';
+
+  @override
+  String get friendsRequestAccept => 'Annehmen';
+
+  @override
+  String get friendsRequestDecline => 'Ablehnen';
+
+  @override
+  String get friendsRequestFrom => 'hat dich als Freund eingeladen';
+
+  @override
+  String get friendsRequestAccepted => 'Ihr seid jetzt Freunde';
+
+  @override
+  String get friendsRequestDeclined => 'Anfrage abgelehnt';
+
+  @override
+  String get genericLoadError =>
+      'Konnte nicht geladen werden. Überprüfe deine Verbindung.';
+
+  @override
+  String get sortLabel => 'Sortieren';
+
+  @override
+  String get sortRecent => 'Zuletzt hinzugefügt';
+
+  @override
+  String get sortTitle => 'Titel (A-Z)';
+
+  @override
+  String get sortAuthor => 'Autor (A-Z)';
+
+  @override
+  String get sortRating => 'Am besten bewertet';
+
+  @override
+  String get emptyLibraryTitle => 'Deine Bibliothek ist leer';
+
+  @override
+  String get emptyLibraryHint =>
+      'Suche ein Buch nach Titel, Autor oder ISBN und beginne deine Sammlung.';
+
+  @override
+  String get emptyLibraryCta => 'Erstes Buch hinzufügen';
+
+  @override
+  String get emptyRatedHint =>
+      'Bewerte die Bücher, die du liest, und sie erscheinen hier.';
+
+  @override
+  String get settingsTheme => 'Design';
+
+  @override
+  String get themeSystem => 'Wie das System';
+
+  @override
+  String get themeLight => 'Hell';
+
+  @override
+  String get themeDark => 'Dunkel';
+
+  @override
+  String get noResultsHint => 'Keine Ergebnisse für diesen Filter.';
+
+  @override
   String get cancel => 'Abbrechen';
 }

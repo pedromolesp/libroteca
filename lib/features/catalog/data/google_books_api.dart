@@ -43,8 +43,7 @@ class GoogleBooksApi {
   final http.Client _client;
   final String _apiKey;
 
-  static const _apiKeyFromEnv =
-      String.fromEnvironment('GOOGLE_BOOKS_API_KEY');
+  static const _apiKeyFromEnv = String.fromEnvironment('GOOGLE_BOOKS_API_KEY');
 
   static const _base = 'https://www.googleapis.com/books/v1/volumes';
   static const _timeout = Duration(seconds: 10);
@@ -72,7 +71,8 @@ class GoogleBooksApi {
     try {
       response = await _client.get(uri).timeout(_timeout);
     } catch (error) {
-      throw GoogleBooksException('No se pudo conectar con Google Books: $error');
+      throw GoogleBooksException(
+          'No se pudo conectar con Google Books: $error');
     }
 
     if (response.statusCode != 200) {

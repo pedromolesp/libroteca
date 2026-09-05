@@ -19,5 +19,8 @@ void _repositoryModulesInit({required bool firebaseReady}) {
     getIt.registerLazySingleton(
       () => FriendsRepository(firestore: getIt<FirebaseFirestore>()),
     );
+    getIt.registerLazySingleton(
+      () => AccountRepository(functions: getIt<FirebaseFunctions>()),
+    );
   }
 }

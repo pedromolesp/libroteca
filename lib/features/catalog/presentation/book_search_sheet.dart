@@ -18,7 +18,7 @@ class BookSearchSheet extends StatelessWidget {
     return showModalBottomSheet<GoogleBook>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: white,
+      backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -93,8 +93,27 @@ class _Results extends StatelessWidget {
                 final book = state.results[index];
                 return ListTile(
                   leading: book.thumbnail != null
-                      ? Image.network(book.thumbnail!,
-                          width: 40, fit: BoxFit.cover)
+                      ? Image.network(
+                          book.thumbnail!,
+                          width: 40,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, progress) =>
+                              progress == null
+                                  ? child
+                                  : const SizedBox(
+                                      width: 40,
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                              strokeWidth: 2),
+                                        ),
+                                      ),
+                                    ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.menu_book),
+                        )
                       : const Icon(Icons.menu_book),
                   title: Text(book.title,
                       maxLines: 2, overflow: TextOverflow.ellipsis),
@@ -123,8 +142,9 @@ class _Hint extends StatelessWidget {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style:
-              const TextStyle(color: greyText, fontFamily: Fonts.muliRegular),
+          style: TextStyle(
+              color: context.colors.onSurfaceMuted,
+              fontFamily: Fonts.muliRegular),
         ),
       ),
     );
@@ -148,8 +168,8 @@ class _ErrorHint extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: greyText,
+              style: TextStyle(
+                color: context.colors.onSurfaceMuted,
                 fontFamily: Fonts.muliRegular,
               ),
             ),
